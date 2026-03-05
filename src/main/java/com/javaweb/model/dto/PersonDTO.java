@@ -13,6 +13,10 @@ public class PersonDTO extends AbstractDTO<PersonDTO> {
     private String branchName;
     private String gender;
     private String avatar;
+    private String hometown;
+    private String currentResidence;
+    private String occupation;
+    private String otherNote;
     private Long userId;
     private Long existingPersonId;
     private Long fatherId;
@@ -25,6 +29,10 @@ public class PersonDTO extends AbstractDTO<PersonDTO> {
     private String spouseAvatar;
     private LocalDate spouseDob;
     private LocalDate spouseDod;
+    private String spouseHometown;
+    private String spouseCurrentResidence;
+    private String spouseOccupation;
+    private String spouseOtherNote;
     private List<PersonDTO> children = new ArrayList<>();
     private List<Long> mediaIds;
     private List<Long> childrenIds;
@@ -91,6 +99,38 @@ public class PersonDTO extends AbstractDTO<PersonDTO> {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getHometown() {
+        return hometown;
+    }
+
+    public void setHometown(String hometown) {
+        this.hometown = hometown;
+    }
+
+    public String getCurrentResidence() {
+        return currentResidence;
+    }
+
+    public void setCurrentResidence(String currentResidence) {
+        this.currentResidence = currentResidence;
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
+
+    public String getOtherNote() {
+        return otherNote;
+    }
+
+    public void setOtherNote(String otherNote) {
+        this.otherNote = otherNote;
     }
 
     public Long getUserId() {
@@ -187,6 +227,38 @@ public class PersonDTO extends AbstractDTO<PersonDTO> {
 
     public void setSpouseDod(LocalDate spouseDod) {
         this.spouseDod = spouseDod;
+    }
+
+    public String getSpouseHometown() {
+        return spouseHometown;
+    }
+
+    public void setSpouseHometown(String spouseHometown) {
+        this.spouseHometown = spouseHometown;
+    }
+
+    public String getSpouseCurrentResidence() {
+        return spouseCurrentResidence;
+    }
+
+    public void setSpouseCurrentResidence(String spouseCurrentResidence) {
+        this.spouseCurrentResidence = spouseCurrentResidence;
+    }
+
+    public String getSpouseOccupation() {
+        return spouseOccupation;
+    }
+
+    public void setSpouseOccupation(String spouseOccupation) {
+        this.spouseOccupation = spouseOccupation;
+    }
+
+    public String getSpouseOtherNote() {
+        return spouseOtherNote;
+    }
+
+    public void setSpouseOtherNote(String spouseOtherNote) {
+        this.spouseOtherNote = spouseOtherNote;
     }
 
     public List<PersonDTO> getChildren() {

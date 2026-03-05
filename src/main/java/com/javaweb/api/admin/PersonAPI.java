@@ -37,6 +37,15 @@ public class PersonAPI {
         return ResponseEntity.ok(iPersonService.countPersons());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPersonById(@PathVariable("id") Long personId) {
+        try {
+            return ResponseEntity.ok(iPersonService.findPersonById(personId));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
+
     @GetMapping("/available")
     public ResponseEntity<List<PersonDTO>> findAvailablePersons(
             @RequestParam(value = "branchId") Long branchId,
@@ -61,6 +70,13 @@ public class PersonAPI {
     ) {
         PersonDTO root = iPersonService.findRootPersonByBranchId(branchId);
         return ResponseEntity.ok(root);
+    }
+
+    @GetMapping("/roots")
+    public ResponseEntity<List<PersonDTO>> getRootPersons(
+            @RequestParam(value = "branchId", defaultValue = "1") Long branchId
+    ) {
+        return ResponseEntity.ok(iPersonService.findRootPersonsByBranchId(branchId));
     }
 
     @PostMapping("/{id}/spouse")

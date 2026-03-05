@@ -27,6 +27,15 @@ public interface PersonRepository extends JpaRepository<PersonEntity,Long> {
 
     Optional<PersonEntity> findFirstByBranch_IdOrderByGenerationAscIdAsc(Long branchId);
 
+    @Query("select p from PersonEntity p " +
+            "left join p.father f " +
+            "left join p.mother m " +
+            "where p.branch.id = :branchId " +
+            "and (f is null or f.branch.id <> :branchId) " +
+            "and (m is null or m.branch.id <> :branchId) " +
+            "order by p.generation asc, p.id asc")
+    List<PersonEntity> findRootCandidatesByBranchId(@Param("branchId") Long branchId);
+
     @Query("select p from PersonEntity p where p.branch.id = :branchId and (p.father.id = :parentId or p.mother.id = :parentId) order by p.id asc")
     List<PersonEntity> findChildrenByParentIdAndBranchId(@Param("parentId") Long parentId, @Param("branchId") Long branchId);
 

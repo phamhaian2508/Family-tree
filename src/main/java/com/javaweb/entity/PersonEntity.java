@@ -41,6 +41,18 @@ public class PersonEntity extends BaseEntity {
     @Column(name = "generation")
     private Integer generation;
 
+    @Column(name = "hometown")
+    private String hometown;
+
+    @Column(name = "current_residence")
+    private String currentResidence;
+
+    @Column(name = "occupation")
+    private String occupation;
+
+    @Column(name = "other_note", columnDefinition = "TEXT")
+    private String otherNote;
+
     // self reference: father/mother
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "father_id")

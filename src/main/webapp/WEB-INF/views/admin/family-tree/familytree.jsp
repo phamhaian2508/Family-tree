@@ -50,6 +50,23 @@
                     </button>
                     <ul id="generationMenu" class="dropdown-menu dropdown-menu-end"></ul>
                 </div>
+                <div id="advancedFilterBar" class="d-flex align-items-center gap-2" style="flex-wrap: wrap;">
+                    <input id="ftFilterName" class="form-control input-sm" style="width: 170px;" placeholder="Tim theo ten..." />
+                    <select id="ftFilterGender" class="form-control input-sm" style="width: 120px;">
+                        <option value="">Gioi tinh</option>
+                        <option value="male">Nam</option>
+                        <option value="female">Nu</option>
+                        <option value="other">Khac</option>
+                    </select>
+                    <select id="ftFilterLifeStatus" class="form-control input-sm" style="width: 120px;">
+                        <option value="">Tinh trang</option>
+                        <option value="alive">Con song</option>
+                        <option value="deceased">Da mat</option>
+                    </select>
+                    <input id="ftFilterBirthYearFrom" type="number" min="1000" max="3000" class="form-control input-sm" style="width: 100px;" placeholder="Nam tu" />
+                    <input id="ftFilterBirthYearTo" type="number" min="1000" max="3000" class="form-control input-sm" style="width: 100px;" placeholder="Nam den" />
+                    <button id="ftFilterReset" class="btn btn-sm btn-light" type="button">Reset</button>
+                </div>
                 <% if (canManageMember) { %>
                     <button id="btnCreateFirst" class="btn btn-dark d-flex align-items-center gap-2">
                         <i class="bi bi-person-plus"></i> Tạo thành viên đầu tiên
@@ -175,6 +192,22 @@
                             <input id="mAvatar" type="hidden" />
                             <input id="mAvatarFile" type="file" accept="image/*" class="form-control" />
                         </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Quê quán</label>
+                            <input id="mHometown" class="form-control" placeholder="Nhập quê quán" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Nơi ở hiện tại (mộ phần)</label>
+                            <input id="mCurrentResidence" class="form-control" placeholder="Nhập nơi ở hiện tại hoặc mộ phần" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Nghề nghiệp</label>
+                            <input id="mOccupation" class="form-control" placeholder="Nhập nghề nghiệp" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Ghi chú khác</label>
+                            <textarea id="mOtherNote" class="form-control" rows="3" placeholder="Nhập ghi chú khác"></textarea>
+                        </div>
                     </div>
                 </div>
 
@@ -273,6 +306,22 @@
                             <input id="aAvatar" type="hidden" />
                             <input id="aAvatarFile" type="file" accept="image/*" class="form-control" />
                         </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">QUÊ QUÁN</label>
+                            <input id="aHometown" class="form-control" placeholder="Nhập quê quán" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">NƠI Ở HIỆN TẠI (MỘ PHẦN)</label>
+                            <input id="aCurrentResidence" class="form-control" placeholder="Nhập nơi ở hiện tại hoặc mộ phần" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">NGHỀ NGHIỆP</label>
+                            <input id="aOccupation" class="form-control" placeholder="Nhập nghề nghiệp" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">GHI CHÚ KHÁC</label>
+                            <textarea id="aOtherNote" class="form-control" rows="3" placeholder="Nhập ghi chú khác"></textarea>
+                        </div>
                     </div>
                 </div>
                 <div class="action-footer">
@@ -306,16 +355,18 @@
 
     <div id="ftToastWrap" class="ft-toast-wrap" aria-live="polite" aria-atomic="true"></div>
 
-    <!-- Detail Offcanvas -->
-    <div class="offcanvas offcanvas-end" id="detailDrawer">
-        <div class="offcanvas-header bg-light">
-            <h6 class="offcanvas-title fw-semibold">Hồ sơ thành viên</h6>
-            <button type="button" class="btn-close" data-close="detailDrawer"></button>
-        </div>
-        <div class="offcanvas-body" id="detailBody"></div>
-        <div class="p-3 border-top d-flex gap-2" style="padding:12px 16px">
-            <a id="detailLink" class="btn btn-dark w-50" href="#">Xem hồ sơ chi tiết</a>
-            <button id="detailEdit" class="btn btn-outline-secondary w-50"><i class="bi bi-pencil"></i> Sửa thông tin</button>
+    <!-- Detail Member Modal -->
+    <div class="modal" id="detailMemberModal" aria-hidden="true">
+        <div class="modal-backdrop" data-close="detailMemberModal"></div>
+        <div class="modal-dialog" style="max-width: 760px;">
+            <div class="modal-content">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title fw-semibold">Chi tiết thành viên</h5>
+                    <button type="button" class="btn-close" data-close="detailMemberModal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="detailMemberBody"></div>
+                <div class="modal-footer bg-light" id="detailMemberActions"></div>
+            </div>
         </div>
     </div>
 
@@ -355,8 +406,13 @@
         })();
 
         let BRANCH_CACHE = [];
-        let CURRENT_TREE_ROOT = null;
+        let CURRENT_TREE_ROOTS = [];
         let CURRENT_GENERATION_FILTER = null;
+        let CURRENT_NAME_FILTER = '';
+        let CURRENT_GENDER_FILTER = '';
+        let CURRENT_LIFE_STATUS_FILTER = '';
+        let CURRENT_BIRTH_YEAR_FROM = null;
+        let CURRENT_BIRTH_YEAR_TO = null;
         const EXISTING_PERSON_CACHE = {
             m: [],
             a: []
@@ -386,9 +442,17 @@
             }).join('');
 
             const targetBranchId = preferredBranchId != null ? Number(preferredBranchId) : Number(BRANCH_ID);
-            const currentBranch = BRANCH_CACHE.find(function (branch) {
+            let currentBranch = BRANCH_CACHE.find(function (branch) {
                 return Number(branch.id) === targetBranchId;
-            }) || branches[0];
+            });
+            if (!currentBranch) {
+                currentBranch = BRANCH_CACHE.find(function (branch) {
+                    return String(branch.name || '').trim().toLowerCase() === 'chinh';
+                });
+            }
+            if (!currentBranch) {
+                currentBranch = branches[0];
+            }
 
             if (currentBranch) {
                 BRANCH_ID = Number(currentBranch.id);
@@ -412,12 +476,17 @@
 
                     BRANCH_ID = nextBranchId;
                     activeBranchLabel.textContent = selected.name || ('Chi ' + selected.id);
+                    CURRENT_GENERATION_FILTER = null;
+                    const activeGenerationLabel = document.getElementById('activeGenerationLabel');
+                    if (activeGenerationLabel) {
+                        activeGenerationLabel.textContent = 'Tất cả đời';
+                    }
                     const mBranch = document.getElementById('mBranch');
                     const aBranch = document.getElementById('aBranch');
                     if (mBranch) mBranch.value = String(nextBranchId);
                     if (aBranch) aBranch.value = String(nextBranchId);
                     branchMenu.classList.remove('show');
-                    loadRootPerson();
+                    loadRootPersons();
                 });
             }
         }
@@ -430,6 +499,13 @@
                 maxGen = Math.max(maxGen, getMaxGeneration(child));
             });
             return maxGen;
+        }
+
+        function getMaxGenerationFromRoots(roots) {
+            if (!Array.isArray(roots) || roots.length === 0) return 1;
+            return roots.reduce(function (maxGen, root) {
+                return Math.max(maxGen, getMaxGeneration(root));
+            }, 1);
         }
 
         function renderGenerationMenu(maxGeneration) {
@@ -485,6 +561,84 @@
                 .toLowerCase()
                 .normalize('NFD')
                 .replace(/[\u0300-\u036f]/g, '');
+        }
+
+        function getBirthYearFromDateString(dateStr) {
+            if (!dateStr || typeof dateStr !== 'string') return null;
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) return null;
+            const year = Number(parts[0]);
+            return Number.isFinite(year) ? year : null;
+        }
+
+        function collectMembersFromTree(person, out, seen) {
+            if (!person || !out || !seen) return;
+            const personId = Number(person.id || 0);
+            if (personId > 0 && seen.has(personId)) return;
+            if (personId > 0) seen.add(personId);
+            out.push(person);
+            const children = Array.isArray(person.children) ? person.children : [];
+            children.forEach(function (child) {
+                collectMembersFromTree(child, out, seen);
+            });
+        }
+
+        function memberMatchesAdvancedFilters(person) {
+            if (!person) return false;
+            const normalizedNameFilter = normalizeSearchText(CURRENT_NAME_FILTER).trim();
+            const fullName = normalizeSearchText(person.fullName || '');
+            const spouseName = normalizeSearchText(person.spouseFullName || '');
+            if (normalizedNameFilter) {
+                const nameMatched = fullName.indexOf(normalizedNameFilter) >= 0
+                    || spouseName.indexOf(normalizedNameFilter) >= 0;
+                if (!nameMatched) return false;
+            }
+
+            if (CURRENT_GENDER_FILTER) {
+                const g = String(person.gender || '').toLowerCase();
+                if (g !== CURRENT_GENDER_FILTER) return false;
+            }
+
+            if (CURRENT_LIFE_STATUS_FILTER) {
+                const hasDod = !!person.dod;
+                if (CURRENT_LIFE_STATUS_FILTER === 'alive' && hasDod) return false;
+                if (CURRENT_LIFE_STATUS_FILTER === 'deceased' && !hasDod) return false;
+            }
+
+            const birthYear = getBirthYearFromDateString(person.dob || '');
+            if (CURRENT_BIRTH_YEAR_FROM != null) {
+                if (birthYear == null || birthYear < CURRENT_BIRTH_YEAR_FROM) return false;
+            }
+            if (CURRENT_BIRTH_YEAR_TO != null) {
+                if (birthYear == null || birthYear > CURRENT_BIRTH_YEAR_TO) return false;
+            }
+
+            return true;
+        }
+
+        function hasAdvancedFilter() {
+            return !!(CURRENT_NAME_FILTER
+                || CURRENT_GENDER_FILTER
+                || CURRENT_LIFE_STATUS_FILTER
+                || CURRENT_BIRTH_YEAR_FROM != null
+                || CURRENT_BIRTH_YEAR_TO != null);
+        }
+
+        function dedupeMembersForList(members) {
+            const sorted = (members || []).slice().sort(function (a, b) {
+                return Number(a.id || 0) - Number(b.id || 0);
+            });
+            const consumed = new Set();
+            const result = [];
+            sorted.forEach(function (person) {
+                const id = Number(person.id || 0);
+                if (!id || consumed.has(id)) return;
+                result.push(person);
+                consumed.add(id);
+                const spouseId = Number(person.spouseId || 0);
+                if (spouseId) consumed.add(spouseId);
+            });
+            return result;
         }
 
         function filterExistingPersons(persons, keyword, gender, dob) {
@@ -565,6 +719,18 @@
             if (person.generation != null) {
                 document.getElementById('mGeneration').value = String(person.generation);
             }
+            if (person.hometown) {
+                document.getElementById('mHometown').value = person.hometown;
+            }
+            if (person.currentResidence) {
+                document.getElementById('mCurrentResidence').value = person.currentResidence;
+            }
+            if (person.occupation) {
+                document.getElementById('mOccupation').value = person.occupation;
+            }
+            if (person.otherNote) {
+                document.getElementById('mOtherNote').value = person.otherNote;
+            }
         }
 
         function fillActionFormFromExisting(person) {
@@ -591,6 +757,18 @@
             }
             if (person.generation != null) {
                 document.getElementById('aGeneration').value = String(person.generation);
+            }
+            if (person.hometown) {
+                document.getElementById('aHometown').value = person.hometown;
+            }
+            if (person.currentResidence) {
+                document.getElementById('aCurrentResidence').value = person.currentResidence;
+            }
+            if (person.occupation) {
+                document.getElementById('aOccupation').value = person.occupation;
+            }
+            if (person.otherNote) {
+                document.getElementById('aOtherNote').value = person.otherNote;
             }
         }
 
@@ -727,7 +905,7 @@
                 document.getElementById('memberModal')?.classList.remove('show');
                 document.getElementById('actionMemberModal')?.classList.remove('show');
                 document.getElementById('ftConfirmModal')?.classList.remove('show');
-                document.getElementById('detailDrawer')?.classList.remove('show');
+                document.getElementById('detailMemberModal')?.classList.remove('show');
                 document.getElementById('branchMenu')?.classList.remove('show');
                 document.getElementById('generationMenu')?.classList.remove('show');
             }
@@ -746,13 +924,13 @@
 
             window.ftRefreshCreateFirstVisibility = async function (fallbackVisible) {
                 try {
-                    const rootRes = await fetch('/api/person/root?branchId=' + encodeURIComponent(BRANCH_ID));
+                    const rootRes = await fetch('/api/person/roots?branchId=' + encodeURIComponent(BRANCH_ID));
                     if (!rootRes.ok) {
                         window.ftSetCreateFirstVisible(!!fallbackVisible);
                         return;
                     }
-                    const root = await rootRes.json();
-                    const hasRoot = !!(root && root.id);
+                    const roots = await rootRes.json();
+                    const hasRoot = Array.isArray(roots) && roots.some(function (item) { return item && item.id; });
                     window.ftSetCreateFirstVisible(!hasRoot);
                 } catch (e) {
                     window.ftSetCreateFirstVisible(!!fallbackVisible);
@@ -783,6 +961,10 @@
                 setVal('mBranchName', 'Tự động: Chính');
                 setVal('mAvatar', '');
                 setVal('mAvatarFile', '');
+                setVal('mHometown', '');
+                setVal('mCurrentResidence', '');
+                setVal('mOccupation', '');
+                setVal('mOtherNote', '');
                 setVal('mExistingPerson', '');
                 setVal('mExistingFilter', '');
                 setVal('mExistingGenderFilter', '');
@@ -824,6 +1006,10 @@
                 generation: generation ? parseInt(generation, 10) : null,
                 gender,
                 avatar,
+                hometown: document.getElementById('mHometown').value.trim() || null,
+                currentResidence: document.getElementById('mCurrentResidence').value.trim() || null,
+                occupation: document.getElementById('mOccupation').value.trim() || null,
+                otherNote: document.getElementById('mOtherNote').value.trim() || null,
                 fatherId: null,
                 motherId: null,
                 spouseId: null,
@@ -866,7 +1052,7 @@
                     window.ftUi.closeModal('memberModal');
                 }
                 await loadBranches(BRANCH_ID);
-                await loadRootPerson();
+                await loadRootPersons();
             } catch (err) {
                 console.error(err);
                 showToast("Có lỗi kết nối server", 'error');
@@ -979,6 +1165,10 @@
             }
             document.getElementById('aAvatar').value = mode === 'edit-member' ? (person?.avatar || '') : '';
             document.getElementById('aAvatarFile').value = '';
+            document.getElementById('aHometown').value = mode === 'edit-member' ? (person?.hometown || '') : '';
+            document.getElementById('aCurrentResidence').value = mode === 'edit-member' ? (person?.currentResidence || '') : '';
+            document.getElementById('aOccupation').value = mode === 'edit-member' ? (person?.occupation || '') : '';
+            document.getElementById('aOtherNote').value = mode === 'edit-member' ? (person?.otherNote || '') : '';
             document.getElementById('aExistingPerson').value = '';
             document.getElementById('aExistingFilter').value = '';
             document.getElementById('aExistingGenderFilter').value = mode === 'add-spouse' ? 'female' : '';
@@ -1050,7 +1240,11 @@
                 dod: document.getElementById('aDod').value || null,
                 generation: Number(document.getElementById('aGeneration').value || 1),
                 gender: document.getElementById('aGender').value || null,
-                avatar: document.getElementById('aAvatar').value.trim() || null
+                avatar: document.getElementById('aAvatar').value.trim() || null,
+                hometown: document.getElementById('aHometown').value.trim() || null,
+                currentResidence: document.getElementById('aCurrentResidence').value.trim() || null,
+                occupation: document.getElementById('aOccupation').value.trim() || null,
+                otherNote: document.getElementById('aOtherNote').value.trim() || null
             };
             if (sourceMode === 'existing' && mode !== 'edit-member') {
                 payload.existingPersonId = Number(selectedExistingId);
@@ -1073,7 +1267,7 @@
                     showToast('Thêm vợ thành công', 'success');
                     window.ftUi.closeModal('actionMemberModal');
                     await loadBranches(BRANCH_ID);
-                    await loadRootPerson();
+                    await loadRootPersons();
                     return;
                 } catch (err) {
                     console.error(err);
@@ -1098,7 +1292,7 @@
                     showToast('Thêm con thành công', 'success');
                     window.ftUi.closeModal('actionMemberModal');
                     await loadBranches(BRANCH_ID);
-                    await loadRootPerson();
+                    await loadRootPersons();
                     return;
                 } catch (err) {
                     console.error(err);
@@ -1122,7 +1316,7 @@
                     }
                     showToast('Cập nhật thành công', 'success');
                     window.ftUi.closeModal('actionMemberModal');
-                    await loadRootPerson();
+                    await loadRootPersons();
                     return;
                 } catch (err) {
                     console.error(err);
@@ -1138,6 +1332,111 @@
             const parts = dateStr.split('-');
             if (parts.length !== 3) return dateStr;
             return parts[2] + '/' + parts[1] + '/' + parts[0];
+        }
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function getGenderLabel(gender) {
+            const normalized = String(gender || '').toLowerCase();
+            if (normalized === 'male') return 'Nam';
+            if (normalized === 'female') return 'Nữ';
+            if (normalized === 'other') return 'Khác';
+            return '--';
+        }
+
+        function formatOptionalText(value) {
+            const text = String(value || '').trim();
+            return text ? escapeHtml(text) : '--';
+        }
+
+        async function loadPersonDetailById(personId) {
+            const res = await fetch('/api/person/' + encodeURIComponent(personId));
+            if (!res.ok) {
+                throw new Error(await res.text() || 'Không tải được thông tin thành viên');
+            }
+            return await res.json();
+        }
+
+        function renderDetailMemberModal(person) {
+            const body = document.getElementById('detailMemberBody');
+            const actions = document.getElementById('detailMemberActions');
+            if (!body || !actions || !person) return;
+
+            const children = Array.isArray(person.children) ? person.children : [];
+            const childrenText = children.length > 0
+                ? children.map(function (child) {
+                    const childName = escapeHtml(child.fullName || 'Chưa có tên');
+                    const childGen = child.generation != null ? ('Đời ' + child.generation) : '';
+                    return '<span class="badge" style="background:#f3f4f6;color:#111827;margin:2px;padding:4px 8px;border-radius:999px;">'
+                        + childName + (childGen ? ' (' + childGen + ')' : '') + '</span>';
+                }).join(' ')
+                : '--';
+
+            body.innerHTML = ''
+                + '<div class="row g-3">'
+                + '  <div class="col-md-6"><div class="form-label fw-semibold">Họ và tên</div><div>' + formatOptionalText(person.fullName) + '</div></div>'
+                + '  <div class="col-md-6"><div class="form-label fw-semibold">Giới tính</div><div>' + getGenderLabel(person.gender) + '</div></div>'
+                + '  <div class="col-md-6"><div class="form-label fw-semibold">Ngày sinh</div><div>' + formatOptionalText(formatDate(person.dob || '')) + '</div></div>'
+                + '  <div class="col-md-6"><div class="form-label fw-semibold">Ngày mất</div><div>' + formatOptionalText(formatDate(person.dod || '')) + '</div></div>'
+                + '  <div class="col-md-6"><div class="form-label fw-semibold">Đời</div><div>' + formatOptionalText(person.generation) + '</div></div>'
+                + '  <div class="col-md-6"><div class="form-label fw-semibold">Chi</div><div>' + formatOptionalText(person.branchName) + '</div></div>'
+                + '  <div class="col-md-6"><div class="form-label fw-semibold">Quê quán</div><div>' + formatOptionalText(person.hometown) + '</div></div>'
+                + '  <div class="col-md-6"><div class="form-label fw-semibold">Nơi ở hiện tại (mộ phần)</div><div>' + formatOptionalText(person.currentResidence) + '</div></div>'
+                + '  <div class="col-md-6"><div class="form-label fw-semibold">Nghề nghiệp</div><div>' + formatOptionalText(person.occupation) + '</div></div>'
+                + '  <div class="col-12"><div class="form-label fw-semibold">Ghi chú khác</div><div>' + formatOptionalText(person.otherNote) + '</div></div>'
+                + '  <div class="col-12"><div class="form-label fw-semibold">Con</div><div>' + childrenText + '</div></div>'
+                + '</div>';
+
+            if (!canManageMember) {
+                actions.innerHTML = '<button type="button" class="btn btn-link text-secondary" data-close="detailMemberModal">Đóng</button>';
+                return;
+            }
+
+            const canAddSpouse = String(person.gender || '').toLowerCase() === 'male' && !person.spouseId;
+            actions.innerHTML = ''
+                + '<button type="button" class="btn btn-link text-secondary" data-close="detailMemberModal">Đóng</button>'
+                + '<button type="button" class="btn btn-outline-secondary" id="detailEditMemberBtn"><i class="bi bi-pencil"></i> Sửa thông tin</button>'
+                + '<button type="button" class="btn btn-outline-secondary" id="detailAddChildBtn"><i class="bi bi-person-plus"></i> Thêm con</button>'
+                + (canAddSpouse
+                    ? '<button type="button" class="btn btn-outline-secondary" id="detailAddSpouseBtn"><i class="bi bi-heart"></i> Thêm vợ</button>'
+                    : '')
+                + '<button type="button" class="btn btn-dark" id="detailDeleteMemberBtn"><i class="bi bi-trash"></i> Xóa</button>';
+
+            document.getElementById('detailEditMemberBtn')?.addEventListener('click', function () {
+                window.ftUi.closeModal('detailMemberModal');
+                openActionMemberModal('edit-member', person);
+            });
+            document.getElementById('detailAddChildBtn')?.addEventListener('click', function () {
+                window.ftUi.closeModal('detailMemberModal');
+                openActionMemberModal('add-child', person);
+            });
+            document.getElementById('detailAddSpouseBtn')?.addEventListener('click', function () {
+                window.ftUi.closeModal('detailMemberModal');
+                openActionMemberModal('add-spouse', person);
+            });
+            document.getElementById('detailDeleteMemberBtn')?.addEventListener('click', async function () {
+                window.ftUi.closeModal('detailMemberModal');
+                await deleteMember(person);
+            });
+        }
+
+        async function openDetailMemberModal(personId) {
+            if (!personId) return;
+            try {
+                const detail = await loadPersonDetailById(personId);
+                renderDetailMemberModal(detail);
+                window.ftUi.openModal('detailMemberModal');
+            } catch (err) {
+                console.error(err);
+                showToast(err && err.message ? err.message : 'Không tải được thông tin thành viên', 'error');
+            }
         }
 
         async function deleteMember(person) {
@@ -1159,7 +1458,7 @@
 
                 showToast('Xử lý xóa thành công', 'success');
                 await loadBranches(BRANCH_ID);
-                await loadRootPerson();
+                await loadRootPersons();
             } catch (err) {
                 console.error('Delete person failed:', err);
                 showToast('Có lỗi kết nối server', 'error');
@@ -1258,6 +1557,15 @@
                 '</div>';
         }
 
+        function renderForest(roots) {
+            if (!Array.isArray(roots) || roots.length === 0) {
+                return '';
+            }
+            return roots.map(function (root) {
+                return '<div class="ft-forest-root" style="margin-bottom:24px;">' + renderTreeNode(root) + '</div>';
+            }).join('');
+        }
+
         function collectMembersByGeneration(person, generationFilter, result) {
             if (!person) return;
             if (Number(person.generation || 0) === Number(generationFilter)) {
@@ -1305,27 +1613,35 @@
         function applyGenerationFilterAndRender() {
             const treeRoot = document.getElementById('treeRoot');
             if (!treeRoot) return;
-            if (!CURRENT_TREE_ROOT) {
+            if (!Array.isArray(CURRENT_TREE_ROOTS) || CURRENT_TREE_ROOTS.length === 0) {
                 treeRoot.innerHTML = '';
                 return;
             }
 
-            if (CURRENT_GENERATION_FILTER == null) {
-                treeRoot.innerHTML = renderTreeNode(CURRENT_TREE_ROOT);
+            if (CURRENT_GENERATION_FILTER == null && !hasAdvancedFilter()) {
+                treeRoot.innerHTML = renderForest(CURRENT_TREE_ROOTS);
                 return;
             }
 
             const members = [];
-            collectMembersByGeneration(CURRENT_TREE_ROOT, CURRENT_GENERATION_FILTER, members);
-            treeRoot.innerHTML = renderGenerationOnly(members);
+            const seen = new Set();
+            CURRENT_TREE_ROOTS.forEach(function (root) {
+                if (CURRENT_GENERATION_FILTER == null) {
+                    collectMembersFromTree(root, members, seen);
+                } else {
+                    collectMembersByGeneration(root, CURRENT_GENERATION_FILTER, members);
+                }
+            });
+            const filtered = dedupeMembersForList(members.filter(memberMatchesAdvancedFilters));
+            treeRoot.innerHTML = renderGenerationOnly(filtered);
         }
 
-        async function loadRootPerson() {
+        async function loadRootPersons() {
             const treeRoot = document.getElementById('treeRoot');
             if (!treeRoot) return;
 
             try {
-                const res = await fetch("/api/person/root?branchId=" + encodeURIComponent(BRANCH_ID));
+                const res = await fetch("/api/person/roots?branchId=" + encodeURIComponent(BRANCH_ID));
                 if (!res.ok) {
                     treeRoot.innerHTML = '';
                     if (typeof window.ftRefreshCreateFirstVisibility === 'function') {
@@ -1334,9 +1650,12 @@
                     return;
                 }
 
-                const root = await res.json();
-                if (!root || !root.id) {
-                    CURRENT_TREE_ROOT = null;
+                const roots = await res.json();
+                const validRoots = Array.isArray(roots)
+                    ? roots.filter(function (item) { return item && item.id; })
+                    : [];
+                if (validRoots.length === 0) {
+                    CURRENT_TREE_ROOTS = [];
                     renderGenerationMenu(1);
                     treeRoot.innerHTML = '';
                     if (typeof window.ftRefreshCreateFirstVisibility === 'function') {
@@ -1344,15 +1663,15 @@
                     }
                     return;
                 }
-                CURRENT_TREE_ROOT = root;
+                CURRENT_TREE_ROOTS = validRoots;
                 if (typeof window.ftRefreshCreateFirstVisibility === 'function') {
                     await window.ftRefreshCreateFirstVisibility(false);
                 }
-                renderGenerationMenu(getMaxGeneration(root));
+                renderGenerationMenu(getMaxGenerationFromRoots(validRoots));
                 applyGenerationFilterAndRender();
             } catch (err) {
                 console.error('Load root person failed:', err);
-                CURRENT_TREE_ROOT = null;
+                CURRENT_TREE_ROOTS = [];
                 treeRoot.innerHTML = '';
                 if (typeof window.ftRefreshCreateFirstVisibility === 'function') {
                     await window.ftRefreshCreateFirstVisibility(true);
@@ -1366,46 +1685,11 @@
             treeRoot.dataset.actionsBound = 'true';
 
             treeRoot.addEventListener('click', function (e) {
-                const actionBtn = e.target.closest('button[data-action]');
-                if (actionBtn) {
-                    e.stopPropagation();
-                    const action = actionBtn.getAttribute('data-action');
-                    const card = actionBtn.closest('.person-card');
-                    const person = card ? {
-                        id: Number(card.getAttribute('data-id') || 0),
-                        fullName: decodeURIComponent(card.getAttribute('data-full-name') || ''),
-                        generation: Number(card.getAttribute('data-generation') || 1),
-                        gender: (card.getAttribute('data-gender') || '').toLowerCase(),
-                        avatar: decodeURIComponent(card.getAttribute('data-avatar') || ''),
-                        dob: decodeURIComponent(card.getAttribute('data-dob') || ''),
-                        dod: decodeURIComponent(card.getAttribute('data-dod') || ''),
-                        spouseId: card.getAttribute('data-has-spouse') === '1' ? 1 : null
-                    } : null;
-                    document.querySelectorAll('#treeRoot .person-card.menu-open').forEach(function (el) {
-                        el.classList.remove('menu-open');
-                    });
-                    if (action === 'delete-member') {
-                        deleteMember(person);
-                        return;
-                    }
-                    openActionMemberModal(action, person);
-                    return;
-                }
-
                 const card = e.target.closest('.person-card');
                 if (!card) return;
                 e.stopPropagation();
-
-                document.querySelectorAll('#treeRoot .person-card.menu-open').forEach(function (el) {
-                    if (el !== card) el.classList.remove('menu-open');
-                });
-                card.classList.toggle('menu-open');
-            });
-
-            document.addEventListener('click', function () {
-                document.querySelectorAll('#treeRoot .person-card.menu-open').forEach(function (el) {
-                    el.classList.remove('menu-open');
-                });
+                const personId = Number(card.getAttribute('data-id') || 0);
+                openDetailMemberModal(personId);
             });
         }
 
@@ -1467,14 +1751,58 @@
             });
         }
 
+        function bindAdvancedFilters() {
+            const nameInput = document.getElementById('ftFilterName');
+            const genderSelect = document.getElementById('ftFilterGender');
+            const lifeStatusSelect = document.getElementById('ftFilterLifeStatus');
+            const yearFromInput = document.getElementById('ftFilterBirthYearFrom');
+            const yearToInput = document.getElementById('ftFilterBirthYearTo');
+            const resetBtn = document.getElementById('ftFilterReset');
+            if (!nameInput || !genderSelect || !lifeStatusSelect || !yearFromInput || !yearToInput || !resetBtn) {
+                return;
+            }
+
+            const apply = function () {
+                CURRENT_NAME_FILTER = String(nameInput.value || '').trim();
+                CURRENT_GENDER_FILTER = String(genderSelect.value || '').trim().toLowerCase();
+                CURRENT_LIFE_STATUS_FILTER = String(lifeStatusSelect.value || '').trim().toLowerCase();
+
+                const fromYear = Number(yearFromInput.value || '');
+                const toYear = Number(yearToInput.value || '');
+                CURRENT_BIRTH_YEAR_FROM = Number.isFinite(fromYear) && fromYear > 0 ? fromYear : null;
+                CURRENT_BIRTH_YEAR_TO = Number.isFinite(toYear) && toYear > 0 ? toYear : null;
+                applyGenerationFilterAndRender();
+            };
+
+            nameInput.addEventListener('input', apply);
+            genderSelect.addEventListener('change', apply);
+            lifeStatusSelect.addEventListener('change', apply);
+            yearFromInput.addEventListener('input', apply);
+            yearToInput.addEventListener('input', apply);
+            resetBtn.addEventListener('click', function () {
+                nameInput.value = '';
+                genderSelect.value = '';
+                lifeStatusSelect.value = '';
+                yearFromInput.value = '';
+                yearToInput.value = '';
+                CURRENT_NAME_FILTER = '';
+                CURRENT_GENDER_FILTER = '';
+                CURRENT_LIFE_STATUS_FILTER = '';
+                CURRENT_BIRTH_YEAR_FROM = null;
+                CURRENT_BIRTH_YEAR_TO = null;
+                applyGenerationFilterAndRender();
+            });
+        }
+
         bindAvatarPicker('mAvatarFile', 'mAvatar');
         bindAvatarPicker('aAvatarFile', 'aAvatar');
+        bindAdvancedFilters();
         initZoomControls();
         setupPersonCardActions();
 
         async function bootstrapFamilyTree() {
             await loadBranches();
-            await loadRootPerson();
+            await loadRootPersons();
         }
 
         bootstrapFamilyTree();
@@ -1485,7 +1813,3 @@
         </div>
     </div>
 </div>
-
-
-
-
