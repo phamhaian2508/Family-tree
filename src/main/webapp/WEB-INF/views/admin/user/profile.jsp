@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/common/taglib.jsp" %>
 <c:url var="formUrl" value="/api/user"/>
+<c:url var="adminProfileBaseUrl" value="/admin/profile/"/>
 <html>
 <head>
     <title>Ch&#7881;nh s&#7917;a ng&#432;&#7901;i d&#249;ng</title>
@@ -75,7 +76,7 @@
             event.preventDefault();
             var normalizedFullName = $.trim($('#fullName').val() || '');
             if (!normalizedFullName) {
-                window.location.href = "<c:url value='/admin/profile/"+$('#userName').val()+"?message=full_name_invalid'/>";
+                window.location.href = "${adminProfileBaseUrl}" + encodeURIComponent($('#userName').val()) + "?message=full_name_invalid";
                 return;
             }
             var dataArray = {};
@@ -93,18 +94,18 @@
                 contentType: 'application/json',
                 data: JSON.stringify(data),
                 success: function (res) {
-                    window.location.href = "<c:url value='/admin/profile/"+res.userName+"?message=update_success'/>";
+                    window.location.href = "${adminProfileBaseUrl}" + encodeURIComponent(res.userName) + "?message=update_success";
                 },
                 error: function (res) {
                     if (res && res.responseText) {
                         if (res.responseText === 'full_name_invalid'
                             || res.responseText === 'access_denied'
                             || res.responseText === 'user_not_found') {
-                            window.location.href = "<c:url value='/admin/profile/"+username+"?message='/>" + res.responseText;
+                            window.location.href = "${adminProfileBaseUrl}" + encodeURIComponent(username) + "?message=" + res.responseText;
                             return;
                         }
                     }
-                    window.location.href = "<c:url value='/admin/profile/"+username+"?message=error_system'/>";
+                    window.location.href = "${adminProfileBaseUrl}" + encodeURIComponent(username) + "?message=error_system";
                 }
             });
         }
