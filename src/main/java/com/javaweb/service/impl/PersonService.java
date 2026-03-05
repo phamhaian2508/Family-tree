@@ -18,6 +18,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -394,15 +396,50 @@ public class PersonService implements IPersonService {
         if (branchId == null) {
             return new ArrayList<>();
         }
+        return buildBranchTreeRoots(branchId);
+    }
 
-        List<PersonEntity> candidates = personRepository.findRootCandidatesByBranchId(branchId);
+    private List<PersonDTO> buildBranchTreeRoots(Long branchId) {
+        List<PersonEntity> members = personRepository.findAllByBranchIdWithRelations(branchId);
+        if (members == null || members.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        Map<Long, PersonEntity> membersById = new LinkedHashMap<>();
+        Map<Long, List<PersonEntity>> childrenByParentId = new LinkedHashMap<>();
+        for (PersonEntity member : members) {
+            if (member == null || member.getId() == null) {
+                continue;
+            }
+            membersById.put(member.getId(), member);
+        }
+        for (PersonEntity member : membersById.values()) {
+            Set<Long> parentIds = new LinkedHashSet<>();
+            PersonEntity father = member.getFather();
+            if (father != null && father.getId() != null && membersById.containsKey(father.getId())) {
+                parentIds.add(father.getId());
+            }
+            PersonEntity mother = member.getMother();
+            if (mother != null && mother.getId() != null && membersById.containsKey(mother.getId())) {
+                parentIds.add(mother.getId());
+            }
+            for (Long parentId : parentIds) {
+                childrenByParentId.computeIfAbsent(parentId, key -> new ArrayList<>()).add(member);
+            }
+        }
+
+        List<PersonEntity> candidates = membersById.values()
+                .stream()
+                .filter(member -> !hasParentInsideBranch(member, branchId))
+                .collect(Collectors.toList());
+        if (candidates.isEmpty()) {
+            candidates.add(membersById.values().iterator().next());
+        }
+
         List<PersonDTO> roots = new ArrayList<>();
         Set<Long> consumed = new LinkedHashSet<>();
         for (PersonEntity candidate : candidates) {
-            if (candidate == null || candidate.getId() == null) {
-                continue;
-            }
-            if (consumed.contains(candidate.getId())) {
+            if (candidate == null || candidate.getId() == null || consumed.contains(candidate.getId())) {
                 continue;
             }
             PersonEntity spouse = candidate.getSpouse();
@@ -413,11 +450,10 @@ public class PersonService implements IPersonService {
                 if (spouse.getBranch() != null
                         && Objects.equals(spouse.getBranch().getId(), branchId)
                         && spouse.getId() < candidate.getId()) {
-                    // Keep only one root per spouse pair in the same branch (lower id).
                     continue;
                 }
             }
-            roots.add(toPersonDTOByBranch(candidate, branchId));
+            roots.add(toPersonDTOByBranch(candidate, branchId, childrenByParentId));
             consumed.add(candidate.getId());
             if (spouse != null && spouse.getId() != null) {
                 consumed.add(spouse.getId());
@@ -428,12 +464,21 @@ public class PersonService implements IPersonService {
             return roots;
         }
 
-        Optional<PersonEntity> fallback = personRepository.findFirstByBranch_IdOrderByGenerationAscIdAsc(branchId);
-        if (!fallback.isPresent()) {
-            return new ArrayList<>();
-        }
-        roots.add(toPersonDTOByBranch(fallback.get(), branchId));
+        PersonEntity fallback = membersById.values().iterator().next();
+        roots.add(toPersonDTOByBranch(fallback, branchId, childrenByParentId));
         return roots;
+    }
+
+    private boolean hasParentInsideBranch(PersonEntity member, Long branchId) {
+        if (member == null || branchId == null) {
+            return false;
+        }
+        PersonEntity father = member.getFather();
+        if (father != null && father.getBranch() != null && Objects.equals(father.getBranch().getId(), branchId)) {
+            return true;
+        }
+        PersonEntity mother = member.getMother();
+        return mother != null && mother.getBranch() != null && Objects.equals(mother.getBranch().getId(), branchId);
     }
 
     private PersonDTO toPersonDTO(PersonEntity entity) {
@@ -442,6 +487,10 @@ public class PersonService implements IPersonService {
 
     private PersonDTO toPersonDTOByBranch(PersonEntity entity, Long branchId) {
         return toPersonDTO(entity, 0, branchId, new LinkedHashSet<>());
+    }
+
+    private PersonDTO toPersonDTOByBranch(PersonEntity entity, Long branchId, Map<Long, List<PersonEntity>> childrenByParentId) {
+        return toPersonDTOByBranch(entity, 0, branchId, new LinkedHashSet<>(), childrenByParentId);
     }
 
     private PersonDTO toPersonDTO(PersonEntity entity, int level) {
@@ -477,6 +526,39 @@ public class PersonService implements IPersonService {
         dto.setChildren(children.stream()
                 .filter(child -> child != null && (child.getId() == null || !nextPath.contains(child.getId())))
                 .map(child -> toPersonDTO(child, level + 1, branchId, nextPath))
+                .collect(Collectors.toList()));
+        return dto;
+    }
+
+    private PersonDTO toPersonDTOByBranch(PersonEntity entity,
+                                          int level,
+                                          Long branchId,
+                                          Set<Long> path,
+                                          Map<Long, List<PersonEntity>> childrenByParentId) {
+        if (entity == null) {
+            return null;
+        }
+        if (level >= MAX_TREE_DEPTH) {
+            return buildPersonDtoWithoutChildren(entity, branchId);
+        }
+
+        Long entityId = entity.getId();
+        if (entityId != null && path.contains(entityId)) {
+            return buildPersonDtoWithoutChildren(entity, branchId);
+        }
+
+        Set<Long> nextPath = new LinkedHashSet<>(path);
+        if (entityId != null) {
+            nextPath.add(entityId);
+        }
+
+        PersonDTO dto = buildPersonDtoWithoutChildren(entity, branchId);
+        List<PersonEntity> children = entityId == null
+                ? Collections.emptyList()
+                : childrenByParentId.getOrDefault(entityId, Collections.emptyList());
+        dto.setChildren(children.stream()
+                .filter(child -> child != null && (child.getId() == null || !nextPath.contains(child.getId())))
+                .map(child -> toPersonDTOByBranch(child, level + 1, branchId, nextPath, childrenByParentId))
                 .collect(Collectors.toList()));
         return dto;
     }

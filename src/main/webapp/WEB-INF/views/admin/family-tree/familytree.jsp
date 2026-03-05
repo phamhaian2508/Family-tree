@@ -407,6 +407,7 @@
 
         let BRANCH_CACHE = [];
         let CURRENT_TREE_ROOTS = [];
+        const ROOT_PERSON_CACHE = {};
         let CURRENT_GENERATION_FILTER = null;
         let CURRENT_NAME_FILTER = '';
         let CURRENT_GENDER_FILTER = '';
@@ -549,6 +550,21 @@
             } catch (err) {
                 console.error('Load branches failed:', err);
             }
+        }
+
+        function getRootCacheKey(branchId) {
+            const normalized = Number(branchId || 0);
+            return String(Number.isFinite(normalized) ? normalized : 0);
+        }
+
+        function clearRootPersonCache(branchId) {
+            if (branchId == null) {
+                Object.keys(ROOT_PERSON_CACHE).forEach(function (key) {
+                    delete ROOT_PERSON_CACHE[key];
+                });
+                return;
+            }
+            delete ROOT_PERSON_CACHE[getRootCacheKey(branchId)];
         }
 
         function getSourceMode(groupName, fallback) {
@@ -922,8 +938,13 @@
                 btn.style.setProperty('display', visible ? 'inline-flex' : 'none', 'important');
             };
 
-            window.ftRefreshCreateFirstVisibility = async function (fallbackVisible) {
+            window.ftRefreshCreateFirstVisibility = async function (fallbackVisible, knownRoots) {
                 try {
+                    if (Array.isArray(knownRoots)) {
+                        const hasKnownRoot = knownRoots.some(function (item) { return item && item.id; });
+                        window.ftSetCreateFirstVisible(!hasKnownRoot);
+                        return;
+                    }
                     const rootRes = await fetch('/api/person/roots?branchId=' + encodeURIComponent(BRANCH_ID));
                     if (!rootRes.ok) {
                         window.ftSetCreateFirstVisible(!!fallbackVisible);
@@ -1062,7 +1083,8 @@
                     window.ftUi.closeModal('memberModal');
                 }
                 await loadBranches(BRANCH_ID);
-                await loadRootPersons();
+                clearRootPersonCache();
+                await loadRootPersons({ forceReload: true });
             } catch (err) {
                 console.error(err);
                 showToast("Có lỗi kết nối server", 'error');
@@ -1291,7 +1313,8 @@
                     showToast('Thêm vợ thành công', 'success');
                     window.ftUi.closeModal('actionMemberModal');
                     await loadBranches(BRANCH_ID);
-                    await loadRootPersons();
+                    clearRootPersonCache();
+                    await loadRootPersons({ forceReload: true });
                     return;
                 } catch (err) {
                     console.error(err);
@@ -1320,7 +1343,8 @@
                     showToast('Thêm con thành công', 'success');
                     window.ftUi.closeModal('actionMemberModal');
                     await loadBranches(BRANCH_ID);
-                    await loadRootPersons();
+                    clearRootPersonCache();
+                    await loadRootPersons({ forceReload: true });
                     return;
                 } catch (err) {
                     console.error(err);
@@ -1344,7 +1368,8 @@
                     }
                     showToast('Cập nhật thành công', 'success');
                     window.ftUi.closeModal('actionMemberModal');
-                    await loadRootPersons();
+                    clearRootPersonCache();
+                    await loadRootPersons({ forceReload: true });
                     return;
                 } catch (err) {
                     console.error(err);
@@ -1531,7 +1556,8 @@
 
                 showToast('Xử lý xóa thành công', 'success');
                 await loadBranches(BRANCH_ID);
-                await loadRootPersons();
+                clearRootPersonCache();
+                await loadRootPersons({ forceReload: true });
             } catch (err) {
                 console.error('Delete person failed:', err);
                 showToast('Có lỗi kết nối server', 'error');
@@ -1715,21 +1741,28 @@
             treeRoot.innerHTML = renderGenerationOnly(filtered);
         }
 
-        async function loadRootPersons() {
+        async function loadRootPersons(options) {
             const treeRoot = document.getElementById('treeRoot');
             if (!treeRoot) return;
+            const opts = options || {};
+            const forceReload = !!opts.forceReload;
 
             try {
-                const res = await fetch("/api/person/roots?branchId=" + encodeURIComponent(BRANCH_ID));
-                if (!res.ok) {
-                    treeRoot.innerHTML = '';
-                    if (typeof window.ftRefreshCreateFirstVisibility === 'function') {
-                        await window.ftRefreshCreateFirstVisibility(true);
+                const cacheKey = getRootCacheKey(BRANCH_ID);
+                let roots = forceReload ? null : ROOT_PERSON_CACHE[cacheKey];
+                if (!Array.isArray(roots)) {
+                    const res = await fetch("/api/person/roots?branchId=" + encodeURIComponent(BRANCH_ID));
+                    if (!res.ok) {
+                        treeRoot.innerHTML = '';
+                        if (typeof window.ftRefreshCreateFirstVisibility === 'function') {
+                            await window.ftRefreshCreateFirstVisibility(true, []);
+                        }
+                        return;
                     }
-                    return;
+                    roots = await res.json();
+                    ROOT_PERSON_CACHE[cacheKey] = roots;
                 }
 
-                const roots = await res.json();
                 const validRoots = Array.isArray(roots)
                     ? roots.filter(function (item) { return item && item.id; })
                     : [];
@@ -1738,13 +1771,13 @@
                     renderGenerationMenu(1);
                     treeRoot.innerHTML = '';
                     if (typeof window.ftRefreshCreateFirstVisibility === 'function') {
-                        await window.ftRefreshCreateFirstVisibility(true);
+                        await window.ftRefreshCreateFirstVisibility(true, []);
                     }
                     return;
                 }
                 CURRENT_TREE_ROOTS = validRoots;
                 if (typeof window.ftRefreshCreateFirstVisibility === 'function') {
-                    await window.ftRefreshCreateFirstVisibility(false);
+                    await window.ftRefreshCreateFirstVisibility(false, validRoots);
                 }
                 renderGenerationMenu(getMaxGenerationFromRoots(validRoots));
                 applyGenerationFilterAndRender();
@@ -1753,7 +1786,7 @@
                 CURRENT_TREE_ROOTS = [];
                 treeRoot.innerHTML = '';
                 if (typeof window.ftRefreshCreateFirstVisibility === 'function') {
-                    await window.ftRefreshCreateFirstVisibility(true);
+                    await window.ftRefreshCreateFirstVisibility(true, []);
                 }
             }
         }

@@ -40,7 +40,7 @@ public class HomeController {
     public ModelAndView homePage() {
         ModelAndView mav = new ModelAndView("admin/home");
 
-        long totalMembers = personRepository.count();
+        long totalMembers = personRepository.countByBranchIsNotNull();
         long totalBranches = branchRepository.count();
         long totalMediaFiles = mediaRepository.count();
         long activeUsers = userRepository.countByStatusNot(0);
@@ -49,8 +49,8 @@ public class HomeController {
         Date previousMonthStart = atStartOfMonth(LocalDate.now().minusMonths(1));
         Date nextMonthStart = atStartOfMonth(LocalDate.now().plusMonths(1));
 
-        long membersCurrentMonth = personRepository.countByCreatedDateBetween(currentMonthStart, nextMonthStart);
-        long membersPreviousMonth = personRepository.countByCreatedDateBetween(previousMonthStart, currentMonthStart);
+        long membersCurrentMonth = personRepository.countByBranchIsNotNullAndCreatedDateBetween(currentMonthStart, nextMonthStart);
+        long membersPreviousMonth = personRepository.countByBranchIsNotNullAndCreatedDateBetween(previousMonthStart, currentMonthStart);
 
         long branchesCurrentMonth = countByCreatedDate(branchRepository.findAll(), currentMonthStart, nextMonthStart);
         long branchesPreviousMonth = countByCreatedDate(branchRepository.findAll(), previousMonthStart, currentMonthStart);
@@ -85,7 +85,7 @@ public class HomeController {
             LocalDate month = now.minusMonths(i);
             Date from = atStartOfMonth(month);
             Date to = atStartOfMonth(month.plusMonths(1));
-            long newMembers = personRepository.countByCreatedDateBetween(from, to);
+            long newMembers = personRepository.countByBranchIsNotNullAndCreatedDateBetween(from, to);
             long uploadedMedia = mediaRepository.countByCreatedDateBetween(from, to);
             result.add(new MonthlyStat(month.format(formatter), newMembers, uploadedMedia));
         }

@@ -39,6 +39,18 @@ public interface PersonRepository extends JpaRepository<PersonEntity,Long> {
     @Query("select p from PersonEntity p where p.branch.id = :branchId and (p.father.id = :parentId or p.mother.id = :parentId) order by p.id asc")
     List<PersonEntity> findChildrenByParentIdAndBranchId(@Param("parentId") Long parentId, @Param("branchId") Long branchId);
 
+    @Query("select distinct p from PersonEntity p " +
+            "left join fetch p.branch " +
+            "left join fetch p.spouse s " +
+            "left join fetch s.branch " +
+            "left join fetch p.father f " +
+            "left join fetch f.branch " +
+            "left join fetch p.mother m " +
+            "left join fetch m.branch " +
+            "where p.branch.id = :branchId " +
+            "order by p.generation asc, p.id asc")
+    List<PersonEntity> findAllByBranchIdWithRelations(@Param("branchId") Long branchId);
+
     @Query("select p from PersonEntity p left join fetch p.branch where p.createdDate is not null order by p.createdDate desc, p.id desc")
     List<PersonEntity> findRecentCreated(Pageable pageable);
 
@@ -58,6 +70,10 @@ public interface PersonRepository extends JpaRepository<PersonEntity,Long> {
     Optional<PersonEntity> findByIdAndFatherIsNullAndMotherIsNullAndSpouseIsNull(Long id);
 
     long countByBranch_Id(Long branchId);
+
+    long countByBranchIsNotNull();
+
+    long countByBranchIsNotNullAndCreatedDateBetween(Date from, Date to);
 
     long countByCreatedDateBetween(Date from, Date to);
 }
