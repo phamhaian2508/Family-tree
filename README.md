@@ -8,7 +8,7 @@
 ![Container](https://img.shields.io/badge/Container-Docker-2496ED)
 ![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF)
 
-### Dự án này dùng để làm gì?
+### Dự án này dùng để làm gì ?
 
 Hệ thống giúp dòng họ lưu trữ và quản lý thông tin gia phả trên nền tảng online, thay cho cách ghi chép rời rạc bằng giấy hoặc file cá nhân.
 
