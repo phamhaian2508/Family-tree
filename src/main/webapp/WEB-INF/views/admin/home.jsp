@@ -38,8 +38,8 @@
                 <div class="col-xs-12 col-sm-6 col-lg-3">
                     <div class="widget-box overview-card">
                         <div class="overview-card-body">
-                            <div class="overview-number overview-text">Tùy chỉnh website</div>
-                            <div class="overview-label">&nbsp;</div>
+                            <div class="overview-number overview-text">Hướng dẫn sử dụng</div>
+                            <div class="overview-label">Thiết lập nhanh</div>
                             <span class="overview-icon"><i class="fa-solid fa-gear"></i></span>
                         </div>
                         <a class="overview-more" href="${guideUrl}">Xem thêm <i class="fa-solid fa-circle-info"></i></a>
@@ -192,14 +192,3 @@
     </div>
 </div>
 
-<script>
-    (function () {
-        var overviewTexts = document.querySelectorAll('.overview-number.overview-text');
-        overviewTexts.forEach(function (el) {
-            var text = String(el.textContent || '').toLowerCase();
-            if (text.indexOf('website') !== -1) {
-                el.textContent = 'Hướng dẫn';
-            }
-        });
-    })();
-</script>
