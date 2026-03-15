@@ -68,6 +68,17 @@ jobs:
               chmod +x ~/.docker/cli-plugins/docker-compose
             fi
 
+            compose() {
+              if docker compose version >/dev/null 2>&1; then
+                docker compose "$@"
+              elif command -v docker-compose >/dev/null 2>&1; then
+                docker-compose "$@"
+              else
+                echo "Docker Compose not found."
+                exit 1
+              fi
+            }
+
             echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
 
             cat > .env <<EOF
@@ -80,6 +91,7 @@ jobs:
             # Cleanup legacy standalone containers from old deploy flow.
             docker rm -f family-tree-app family-tree-mysql family-tree-nginx family-tree-coturn || true
 
-            docker compose -f deploy/stack/docker-compose.ec2.yml --env-file .env pull
-            docker compose -f deploy/stack/docker-compose.ec2.yml --env-file .env up -d --remove-orphans
-            docker compose -f deploy/stack/docker-compose.ec2.yml --env-file .env ps
+            compose -f deploy/stack/docker-compose.ec2.yml --env-file .env pull
+            compose -f deploy/stack/docker-compose.ec2.yml --env-file .env up -d --remove-orphans
+            compose -f deploy/stack/docker-compose.ec2.yml --env-file .env ps
+            docker image prune -f || true
