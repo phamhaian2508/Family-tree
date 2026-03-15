@@ -1,14 +1,13 @@
-name: Build & Deploy Spring Boot App to AWS EC2
+name: Build & Deploy Full Stack to AWS EC2
 
 on:
   push:
     branches: [main]
 
 jobs:
-  build-push-deploy:
+  build-push-deploy-compose:
     runs-on: ubuntu-latest
     env:
-      APP_NAME: family-tree-app
       IMAGE_NAME: ${{ secrets.DOCKER_USER }}/family-tree-app:latest
 
     steps:
@@ -33,35 +32,51 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: SSH into EC2 and deploy container
+      - name: Upload deploy files to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          source: "deploy/stack/docker-compose.ec2.yml,database/family_tree_db.sql"
+          target: "~/family-tree"
+
+      - name: SSH into EC2 and deploy full stack
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
+          command_timeout: 40m
           script: |
-            APP_NAME="${{ env.APP_NAME }}"
+            set -e
             IMAGE_NAME="${{ env.IMAGE_NAME }}"
+            DEPLOY_DIR="$HOME/family-tree"
 
-            echo ">>> Pulling latest image from Docker Hub"
-            docker pull "$IMAGE_NAME"
+            mkdir -p "$DEPLOY_DIR"
+            cd "$DEPLOY_DIR"
 
-            echo ">>> Stopping and removing old container if exists"
-            docker rm -f "$APP_NAME" || true
+            if ! docker compose version >/dev/null 2>&1; then
+              mkdir -p ~/.docker/cli-plugins
+              ARCH="$(uname -m)"
+              if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+                COMPOSE_BIN="docker-compose-linux-aarch64"
+              else
+                COMPOSE_BIN="docker-compose-linux-x86_64"
+              fi
+              curl -SL "https://github.com/docker/compose/releases/latest/download/${COMPOSE_BIN}" -o ~/.docker/cli-plugins/docker-compose
+              chmod +x ~/.docker/cli-plugins/docker-compose
+            fi
 
-            echo ">>> Running container"
-            docker run -d \
-              --name "$APP_NAME" \
-              --restart unless-stopped \
-              -p 8080:8080 \
-              -e SPRING_PROFILES_ACTIVE=pro \
-              -e DB_URL='${{ secrets.DB_URL }}' \
-              -e DB_USERNAME='${{ secrets.DB_USERNAME }}' \
-              -e DB_PASSWORD='${{ secrets.DB_PASSWORD }}' \
-              -e LIVESTREAM_ICE_SERVERS_JSON='${{ secrets.LIVESTREAM_ICE_SERVERS_JSON }}' \
-              -e JAVA_OPTS="-Xms512m -Xmx512m -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0" \
-              -e TZ=Asia/Ho_Chi_Minh \
-              "$IMAGE_NAME"
+            echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
 
-            echo ">>> Status & logs"
-            docker ps -a --filter "name=$APP_NAME"
+            cat > .env <<EOF
+            APP_IMAGE=$IMAGE_NAME
+            MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+            MYSQL_DATABASE=family_tree_db
+            LIVESTREAM_ICE_SERVERS_JSON=${{ secrets.LIVESTREAM_ICE_SERVERS_JSON }}
+            EOF
+
+            docker compose -f deploy/stack/docker-compose.ec2.yml --env-file .env pull
+            docker compose -f deploy/stack/docker-compose.ec2.yml --env-file .env up -d --remove-orphans
+            docker compose -f deploy/stack/docker-compose.ec2.yml --env-file .env ps
