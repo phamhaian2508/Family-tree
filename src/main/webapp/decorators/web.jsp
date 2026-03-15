@@ -116,7 +116,12 @@
         /* HERO SECTION */
         .gpo-hero {
             padding: 10rem 0 5rem;
-            background: linear-gradient(180deg, var(--gpo-bg-light) 0%, #fff 100%);
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.40), rgba(255, 255, 255, 0.40)),
+                url('/web/images/paper-texture.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
         .gpo-hero-title {
@@ -143,7 +148,7 @@
         .gpo-stats {
             margin-top: 2rem;
             padding-top: 2rem;
-            border-top: 1px solid var(--gpo-border);
+            border-top: none;
         }
 
         .gpo-stat-number {

@@ -2066,7 +2066,7 @@
             const cssGender = gender === 'female' ? 'female' : (gender === 'other' ? 'other' : 'male');
             const className = isSpouse ? 'person-spouse spouse-block' : 'person-familly position-relative child-block';
             const showManageMenu = canManageMember;
-            const showGenerationBadge = true;
+            const showGenerationBadge = false;
             const spouseIdAttr = isSpouse ? (' data-spouse-id="' + personId + '"') : '';
 
             return '' +
