@@ -14,7 +14,7 @@
     <div class="app-sidebar-overlay" id="appSidebarOverlay"></div>
     <div class="app-brand">
         <div class="brand-icon"><i class="fa fa-sitemap"></i></div>
-        <div class="brand-text">Quản lý Gia phả</div>
+        <div class="brand-text">Gia phả họ Trần Đức</div>
     </div>
 
     <nav class="app-nav">

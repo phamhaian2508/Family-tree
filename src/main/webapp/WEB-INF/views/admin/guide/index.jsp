@@ -86,8 +86,9 @@
             width: 28px;
             height: 28px;
             border-radius: 50%;
-            background: #0ea5e9;
-            color: #fff;
+            background: #ffffff;
+            color: #111827;
+            border: 1px solid #d1d5db;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -129,8 +130,9 @@
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            background: #e0f2fe;
-            color: #0369a1;
+            background: #ffffff;
+            color: #111827;
+            border: 1px solid #d1d5db;
             font-weight: 700;
             font-size: 12px;
             display: flex;

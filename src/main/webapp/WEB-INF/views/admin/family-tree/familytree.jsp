@@ -89,7 +89,7 @@
 
     /* Lam o loc ten de thay ro hon */
     #ftApp #advancedFilterBar #ftFilterName {
-        width: 320px !important;
+        width: 280px !important;
         min-height: 40px;
         font-size: 14px;
         font-weight: 600;
@@ -110,9 +110,26 @@
     #ftApp #advancedFilterBar {
         display: grid !important;
         grid-template-columns: 1.5fr 1fr auto;
-        align-items: center;
+        align-items: end;
         gap: 10px !important;
         min-width: min(760px, 100%);
+    }
+    #ftApp #advancedFilterBar .ft-filter-field {
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    #ftApp #advancedFilterBar .ft-filter-label {
+        font-size: 13px;
+        font-weight: 700;
+        color: #475569;
+        line-height: 1.2;
+        white-space: nowrap;
+        margin: 0;
+    }
+    #ftApp #advancedFilterBar .ft-filter-action {
+        align-self: end;
     }
     #ftApp #advancedFilterBar .form-control {
         width: 100% !important;
@@ -161,6 +178,9 @@
         font-weight: 700;
         white-space: nowrap;
     }
+    #ftApp #legend {
+        display: none !important;
+    }
 
     @media (max-width: 991px) {
         #ftApp #treeRoot .box-person {
@@ -179,6 +199,11 @@
         }
         #ftApp #advancedFilterBar #ftFilterReset {
             width: 100%;
+        }
+        #ftApp #advancedFilterBar .ft-filter-field {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 4px;
         }
         #ftApp #treeQuickStats {
             width: 100%;
@@ -221,9 +246,17 @@
                     <ul id="generationMenu" class="dropdown-menu dropdown-menu-end"></ul>
                 </div>
                 <div id="advancedFilterBar" class="d-flex align-items-center gap-2" style="flex-wrap: wrap;">
-                    <input id="ftFilterName" class="form-control input-sm" style="width: 320px;" placeholder="Tim theo ten..." />
-                    <input id="ftFilterDob" type="date" class="form-control input-sm" style="width: 170px;" />
-                    <button id="ftFilterReset" class="btn btn-sm btn-light" type="button">Làm mới</button>
+                    <div class="ft-filter-field">
+                        <label for="ftFilterName" class="ft-filter-label">Họ tên</label>
+                        <input id="ftFilterName" class="form-control input-sm" style="width: 280px;" placeholder="Tìm theo tên thành viên..." />
+                    </div>
+                    <div class="ft-filter-field">
+                        <label for="ftFilterDob" class="ft-filter-label">Ngày sinh</label>
+                        <input id="ftFilterDob" type="date" class="form-control input-sm" aria-label="Lọc theo ngày sinh" />
+                    </div>
+                    <div class="ft-filter-field ft-filter-action">
+                        <button id="ftFilterReset" class="btn btn-sm btn-light" type="button">Làm mới</button>
+                    </div>
                 </div>
                 <div id="treeQuickStats">
                     <span id="ftStatGenerations" class="ft-stat-chip">0 thế hệ</span>
@@ -2067,6 +2100,7 @@
                 dod: person.spouseDod,
                 spouseId: person.id
             } : null;
+
             const mainCardPerson = (spouse
                 && String(person.gender || '').toLowerCase() === 'female'
                 && String(spouse.gender || '').toLowerCase() === 'male')
@@ -2410,7 +2444,7 @@
                 });
             }
 
-            treeRoot.addEventListener('click', function (e) {
+            treeRoot.addEventListener('click', async function (e) {
                 if (Date.now() < FT_SUPPRESS_CLICK_UNTIL) {
                     return;
                 }
@@ -2438,7 +2472,16 @@
                     closeAllTreeMenus();
                     const action = String(actionEl.getAttribute('data-tree-action') || '');
                     const personId = Number(actionEl.getAttribute('data-person-id') || 0);
-                    const person = findPersonByIdInRoots(personId);
+                    let person = findPersonByIdInRoots(personId);
+                    if (!person && action !== 'back-root' && personId > 0) {
+                        try {
+                            person = await loadPersonDetailById(personId);
+                        } catch (err) {
+                            console.error('Load person detail for action failed:', err);
+                            showToast('Không tải được thông tin thành viên', 'error');
+                            return;
+                        }
+                    }
                     if (!person && action !== 'back-root') return;
 
                     if (action === 'add-root') {

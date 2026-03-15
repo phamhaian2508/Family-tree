@@ -996,38 +996,59 @@ public class PersonService implements IPersonService {
                         LinkedHashMap::new
                 ));
 
-        Map<Long, Long> inverse = new LinkedHashMap<>();
+        Map<Long, List<Long>> claimantsByTarget = new LinkedHashMap<>();
         for (PersonDTO person : byId.values()) {
-            if (person.getSpouseId() != null && !Objects.equals(person.getSpouseId(), person.getId())) {
-                inverse.put(person.getSpouseId(), person.getId());
+            if (person == null || person.getId() == null) {
+                continue;
+            }
+            Long spouseId = person.getSpouseId();
+            if (spouseId != null && !Objects.equals(spouseId, person.getId()) && byId.containsKey(spouseId)) {
+                claimantsByTarget.computeIfAbsent(spouseId, key -> new ArrayList<>()).add(person.getId());
             }
         }
 
+        // Clear only invalid self-link entries.
         for (PersonDTO person : byId.values()) {
             if (person.getId() == null) continue;
             Long spouseId = person.getSpouseId();
-            if (spouseId == null) {
-                Long inferred = inverse.get(person.getId());
-                if (inferred != null) {
-                    PersonDTO spouse = byId.get(inferred);
-                    if (spouse != null && !Objects.equals(spouse.getId(), person.getId())) {
-                        bindSpouseFields(person, spouse);
-                        bindSpouseFields(spouse, person);
-                    }
+            if (spouseId != null && Objects.equals(spouseId, person.getId())) {
+                clearSpouseFields(person);
+            }
+        }
+
+        // Pass 1: synchronize only reciprocal links (A -> B and B -> A).
+        for (PersonDTO person : byId.values()) {
+            if (person == null || person.getId() == null) continue;
+            Long spouseId = person.getSpouseId();
+            if (spouseId == null || Objects.equals(spouseId, person.getId())) continue;
+            PersonDTO spouse = byId.get(spouseId);
+            if (spouse == null || spouse.getId() == null) continue;
+            if (Objects.equals(spouse.getSpouseId(), person.getId())) {
+                bindSpouseFields(person, spouse);
+                bindSpouseFields(spouse, person);
+            }
+        }
+
+        // Pass 2: fill reverse link only for unique one-way claims.
+        for (PersonDTO person : byId.values()) {
+            if (person == null || person.getId() == null) continue;
+            Long spouseId = person.getSpouseId();
+            if (spouseId == null || Objects.equals(spouseId, person.getId())) continue;
+            PersonDTO spouse = byId.get(spouseId);
+            if (spouse == null || spouse.getId() == null) continue;
+
+            if (spouse.getSpouseId() == null) {
+                List<Long> claimants = claimantsByTarget.getOrDefault(spouseId, Collections.emptyList());
+                if (claimants.size() == 1 && Objects.equals(claimants.get(0), person.getId())) {
+                    bindSpouseFields(spouse, person);
                 }
                 continue;
             }
-            if (Objects.equals(spouseId, person.getId())) {
-                clearSpouseFields(person);
+
+            // If spouse points to someone else, do not override either side.
+            if (!Objects.equals(spouse.getSpouseId(), person.getId())) {
                 continue;
             }
-            PersonDTO spouse = byId.get(spouseId);
-            if (spouse == null) {
-                continue;
-            }
-            // Loose mode: spouse_id points to valid id => bind both directions.
-            bindSpouseFields(person, spouse);
-            bindSpouseFields(spouse, person);
         }
     }
 

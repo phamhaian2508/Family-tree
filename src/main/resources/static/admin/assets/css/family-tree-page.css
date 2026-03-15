@@ -620,7 +620,7 @@
     margin-top: 8px;
 }
 #ftApp #treeRoot .box-person {
-    --node-width: 145px;
+    --node-width: 152px;
     --spouse-gap: 30px;
     position: relative;
     display: inline-block;
@@ -644,10 +644,13 @@
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
 }
 #ftApp #treeRoot .person-node * {
     user-select: none;
     -webkit-user-select: none;
+    -webkit-font-smoothing: antialiased;
 }
 #ftApp #treeRoot .person-node.male { background: #78bbea; }
 #ftApp #treeRoot .person-node.female { background: #e398dc; }
@@ -694,7 +697,7 @@
     padding-right: 0;
 }
 #ftApp #treeRoot .avatar-tree {
-    width: 104px;
+    width: 108px;
     height: 92px;
     object-fit: cover;
     border-radius: 10px;
@@ -704,12 +707,13 @@
     -webkit-user-drag: none;
     user-drag: none;
     pointer-events: none;
+    image-rendering: auto;
 }
 #ftApp #treeRoot .name-phado {
     display: block;
     max-width: 100%;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.25;
     white-space: normal;
     overflow: visible;
@@ -722,9 +726,9 @@
 }
 #ftApp #treeRoot .person-dates {
     color: #1f2937;
-    font-size: 10px;
+    font-size: 11px;
     margin-top: 4px;
-    line-height: 1.35;
+    line-height: 1.4;
 }
 #ftApp #treeRoot .person-date-line {
     white-space: nowrap;
@@ -735,13 +739,22 @@
 #ftApp #treeRoot .generation-number {
     position: absolute;
     top: 30px;
-    right: 6px;
-    min-width: 20px;
-    padding: 1px 6px;
+    right: 4px;
+    min-width: 27px;
+    height: 25px;
+    padding: 0 3px;
     border: 1px solid #e5e7eb;
-    color: #334155;
-    font-size: 11px;
-    border-radius: 8px;
+    background: #ffffff;
+    color: #111827;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    border-radius: 7px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.1);
+    z-index: 4;
 }
 #ftApp #treeRoot .person-node > .dropdown.btn-setting-custom {
     position: absolute;
@@ -807,7 +820,7 @@
         min-width: calc((var(--node-width) * 2) + var(--spouse-gap));
     }
     #ftApp #treeRoot .box-person {
-        --node-width: 130px;
+        --node-width: 136px;
         --spouse-gap: 24px;
         min-width: var(--node-width);
         padding-right: calc(var(--node-width) + var(--spouse-gap));
@@ -826,20 +839,24 @@
         border-top-color: #dc2626;
     }
     #ftApp #treeRoot .avatar-tree {
-        width: 90px;
+        width: 96px;
         height: 78px;
         margin-top: 14px;
     }
     #ftApp #treeRoot .name-phado {
-        font-size: 12px;
+        font-size: 13px;
     }
     #ftApp #treeRoot .generation-number {
         top: 28px;
-        right: 6px;
-        font-size: 10px;
+        right: 4px;
+        min-width: 24px;
+        height: 23px;
+        padding: 0 3px;
+        font-size: 13px;
+        border-radius: 6px;
     }
     #ftApp #treeRoot .person-dates {
-        font-size: 9.5px;
+        font-size: 10px;
     }
 }
 
