@@ -90,12 +90,6 @@ jobs:
 
             # Cleanup legacy standalone containers from old deploy flow.
             docker rm -f family-tree-app family-tree-mysql family-tree-nginx family-tree-coturn || true
-            # Free port 80 if occupied by host web servers.
-            sudo systemctl stop nginx httpd 2>/dev/null || true
-            sudo systemctl disable nginx httpd 2>/dev/null || true
-            # Cleanup any container currently binding host port 80.
-            docker ps --format '{{.ID}} {{.Ports}}' | awk '/0.0.0.0:80->/ {print $1}' | xargs -r docker rm -f
-
             compose -f deploy/stack/docker-compose.ec2.yml --env-file .env pull
             compose -f deploy/stack/docker-compose.ec2.yml --env-file .env up -d --remove-orphans
             compose -f deploy/stack/docker-compose.ec2.yml --env-file .env ps
