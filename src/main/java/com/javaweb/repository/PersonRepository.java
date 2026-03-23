@@ -63,6 +63,18 @@ public interface PersonRepository extends JpaRepository<PersonEntity,Long> {
             "order by p.generation asc, p.id asc")
     List<PersonEntity> findAllWithRelations();
 
+    @Query("select distinct p from PersonEntity p " +
+            "left join fetch p.branch " +
+            "left join fetch p.spouse s " +
+            "left join fetch s.branch " +
+            "left join fetch p.father f " +
+            "left join fetch f.branch " +
+            "left join fetch p.mother m " +
+            "left join fetch m.branch " +
+            "left join fetch p.medias medias " +
+            "where p.id = :personId")
+    Optional<PersonEntity> findByIdWithDetails(@Param("personId") Long personId);
+
     @Query("select p from PersonEntity p left join fetch p.branch where p.createdDate is not null order by p.createdDate desc, p.id desc")
     List<PersonEntity> findRecentCreated(Pageable pageable);
 

@@ -2,190 +2,164 @@
 <%@include file="/common/taglib.jsp"%>
 <html>
 <head>
-    <title>Gia phả Họ Trần Đức - Nhân Hữu, Nhân Thắng, Bắc Ninh</title>
+    <title>Gia phả họ Trần Đức - Nhân Hữu - Nhân Thắng - Bắc Ninh</title>
 </head>
 <body>
 
-    <!-- ============================================ -->
-    <!-- HERO SECTION                                 -->
-    <!-- ============================================ -->
-    <section class="gpo-hero">
-        <div class="container text-center">
-            <h1 class="gpo-hero-title">
-                Gia phả <span class="gpo-text-primary">Họ Trần Đức</span>
-            </h1>
-            <p class="gpo-hero-subtitle mx-auto">
-                Chi Nhân Hữu - Nhân Thắng, Bắc Ninh.<br/>
-                Nơi con cháu cùng lưu giữ thông tin gia tộc, ghi nhớ công đức tổ tiên
-                và tiếp nối truyền thống cho các thế hệ sau.
-            </p>
-            <div class="d-flex justify-content-center gap-3 mb-5">
-                <a href="/login" class="btn btn-gpo btn-lg">
-                    Vào trang quản lý <i class="fa-solid fa-arrow-right ms-2"></i>
-                </a>
-                <a href="#about" class="btn btn-outline-gpo btn-lg">
-                    Xem giới thiệu
-                </a>
-            </div>
-
-            <%-- Thông tin nhanh về dòng họ --%>
-            <div class="row justify-content-center gpo-stats">
-                <div class="col-6 col-md-3">
-                    <div class="gpo-stat-number">Họ Trần Đức</div>
-                    <div class="gpo-stat-label">Dòng họ</div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="gpo-stat-number">Nhân Hữu</div>
-                    <div class="gpo-stat-label">Chi họ</div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="gpo-stat-number">Nhân Thắng</div>
-                    <div class="gpo-stat-label">Khu vực</div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="gpo-stat-number">Bắc Ninh</div>
-                    <div class="gpo-stat-label">Quê quán</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============================================ -->
-    <!-- FEATURES SECTION                             -->
-    <!-- ============================================ -->
-    <section id="features" class="gpo-features">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="gpo-section-title">Các chức năng đang sử dụng</h2>
-                <p class="gpo-section-subtitle mx-auto">
-                    Những công cụ phục vụ trực tiếp cho việc cập nhật và lưu trữ gia phả Họ Trần Đức.
-                </p>
-            </div>
-
-            <div class="row g-4">
-                <%-- Tính năng 1: Cây gia phả --%>
-                <div class="col-md-6 col-lg-4">
-                    <div class="gpo-feature-card">
-                        <div class="gpo-feature-icon">
-                            <i class="fa-solid fa-sitemap"></i>
-                        </div>
-                        <h3>Cây Gia phả</h3>
-                        <p>Xây dựng và trực quan hóa cây phả hệ nhiều đời với
-                           giao diện kéo thả trực quan.</p>
-                    </div>
-                </div>
-
-                <%-- Tính năng 2: Thư viện ảnh/video --%>
-                <div class="col-md-6 col-lg-4">
-                    <div class="gpo-feature-card">
-                        <div class="gpo-feature-icon">
-                            <i class="fa-solid fa-photo-film"></i>
-                        </div>
-                        <h3>Thư viện Tư liệu</h3>
-                        <p>Lưu trữ và sắp xếp ảnh, video, tài liệu gia đình
-                           trong thư viện media an toàn.</p>
-                    </div>
-                </div>
-
-                <%-- Tính năng 3: Phát trực tuyến --%>
-                <div class="col-md-6 col-lg-4">
-                    <div class="gpo-feature-card">
-                        <div class="gpo-feature-icon">
-                            <i class="fa-solid fa-video"></i>
-                        </div>
-                        <h3>Phát trực tuyến</h3>
-                        <p>Livestream các buổi lễ, giỗ, họp mặt dòng họ
-                           với tính năng trò chuyện tích hợp.</p>
-                    </div>
-                </div>
-
-                <%-- Tính năng 4: Phân quyền --%>
-                <div class="col-md-6 col-lg-4">
-                    <div class="gpo-feature-card">
-                        <div class="gpo-feature-icon">
-                            <i class="fa-solid fa-shield-halved"></i>
-                        </div>
-                        <h3>Phân quyền truy cập</h3>
-                        <p>Kiểm soát ai được xem, chỉnh sửa hay quản lý dữ liệu
-                           gia phả với hệ thống phân quyền chi tiết.</p>
-                    </div>
-                </div>
-
-                <%-- Tính năng 5: Mô hình dữ liệu nhiều đời --%>
-                <div class="col-md-6 col-lg-4">
-                    <div class="gpo-feature-card">
-                        <div class="gpo-feature-icon">
-                            <i class="fa-solid fa-database"></i>
-                        </div>
-                        <h3>Dữ liệu nhiều đời</h3>
-                        <p>Theo dõi quan hệ huyết thống qua nhiều thế hệ với
-                           mô hình dữ liệu gia phả chuyên sâu.</p>
-                    </div>
-                </div>
-
-                <%-- Tính năng 6: Bảo mật --%>
-                <div class="col-md-6 col-lg-4">
-                    <div class="gpo-feature-card">
-                        <div class="gpo-feature-icon">
-                            <i class="fa-solid fa-lock"></i>
-                        </div>
-                        <h3>An toàn &amp; Bảo mật</h3>
-                        <p>Dữ liệu được mã hóa, nhật ký hoạt động được ghi lại
-                           đầy đủ phục vụ kiểm soát an toàn thông tin.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============================================ -->
-    <!-- ABOUT SECTION                                -->
-    <!-- ============================================ -->
-    <section id="about" class="gpo-about">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6 mb-4 mb-lg-0">
-                    <h2 class="gpo-section-title text-start">Đôi lời về Gia phả Họ Trần Đức</h2>
-                    <p class="text-muted">
-                        Trang web này được lập để con cháu Họ Trần Đức tại Nhân Hữu - Nhân Thắng - Bắc Ninh
-                        cùng nhau lưu giữ gia phả, bổ sung thông tin các đời, bảo tồn ký ức gia đình và
-                        gìn giữ đạo lý uống nước nhớ nguồn.
+<section id="coi-nguon" class="gpo-hero-shell">
+    <div class="container">
+        <div class="gpo-hero-frame gpo-reveal">
+            <div class="row g-4 align-items-center">
+                <div class="col-lg-7">
+                    <p class="gpo-kicker">Gia phả họ Trần Đức</p>
+                    <h1 class="gpo-hero-title">
+                        Họ Trần Đức
+                        <span>Nhân Hữu - Nhân Thắng - Bắc Ninh</span>
+                    </h1>
+                    <p class="gpo-hero-lead">Nơi lưu giữ cội nguồn và kết nối các thế hệ</p>
+                    <p class="gpo-hero-subtitle">
+                        Gia phả họ Trần Đức tại Nhân Hữu - Nhân Thắng - Bắc Ninh là nơi ghi chép các thế hệ trong dòng họ,
+                        lưu giữ thông tin tổ tiên và kết nối con cháu qua nhiều đời.
                     </p>
-                    <ul class="gpo-check-list">
-                        <li><i class="fa-solid fa-check"></i> Ghi chép thông tin tổ tiên và các thế hệ con cháu</li>
-                        <li><i class="fa-solid fa-check"></i> Cập nhật ngày giỗ, sự kiện họ tộc và thông tin quan trọng</li>
-                        <li><i class="fa-solid fa-check"></i> Lưu giữ ảnh, video và tư liệu của gia đình</li>
-                        <li><i class="fa-solid fa-check"></i> Kết nối con cháu Nhân Hữu - Nhân Thắng ở mọi nơi</li>
+                    <div class="gpo-hero-actions">
+                        <a href="/login" class="btn-gpo-primary btn-gpo-lg">Vào gia phả</a>
+                        <a href="/dang-ky" class="btn-gpo-outline btn-gpo-lg">Đăng ký thành viên</a>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="gpo-hero-board">
+                        <div class="gpo-board-top">
+                            <span>Giá trị dòng họ</span>
+                            <strong>Những nét bền vững của họ Trần Đức</strong>
+                        </div>
+                        <div class="gpo-board-grid">
+                            <article class="gpo-board-cell">
+                                <h2>LONG</h2>
+                                <strong>Gia phong</strong>
+                                <p>Gìn giữ nề nếp, đạo lý và truyền thống tốt đẹp của dòng họ Trần Đức.</p>
+                            </article>
+                            <article class="gpo-board-cell">
+                                <h2>PHỤNG</h2>
+                                <strong>Tôn kính tổ tiên</strong>
+                                <p>Nhắc nhở con cháu luôn ghi nhớ công đức tổ tiên và cội nguồn.</p>
+                            </article>
+                            <article class="gpo-board-cell">
+                                <h2>LIÊN</h2>
+                                <strong>Kết nối thế hệ</strong>
+                                <p>Gắn kết các thế hệ trong dòng họ, tạo sự đoàn kết và tương trợ.</p>
+                            </article>
+                            <article class="gpo-board-cell">
+                                <h2>VÂN</h2>
+                                <strong>Lưu truyền</strong>
+                                <p>Gìn giữ và truyền lại ký ức, câu chuyện và giá trị cho đời sau.</p>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="gia-tri" class="gpo-section">
+    <div class="container">
+        <div class="gpo-section-heading gpo-reveal">
+            <p class="gpo-section-eyebrow">Giá trị cốt lõi</p>
+            <h2 class="gpo-section-title">Những giá trị làm nên hồn cốt dòng họ</h2>
+            <p class="gpo-section-desc">
+                Gia phả không chỉ là ghi chép, mà là nơi lưu giữ ký ức,
+                đạo lý và tình cảm của nhiều thế hệ trong cùng một dòng họ.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-xl-3">
+                <article class="gpo-motif-card gpo-reveal">
+                    <span class="gpo-card-mark">01</span>
+                    <h3>Tôn kính tổ tiên</h3>
+                    <p>Mỗi trang gia phả là một lời nhắc về công đức tổ tiên và nguồn cội của con cháu.</p>
+                </article>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <article class="gpo-motif-card gpo-reveal">
+                    <span class="gpo-card-mark">02</span>
+                    <h3>Giữ gìn gia phong</h3>
+                    <p>Nề nếp và đạo lý được gìn giữ qua từng thế hệ trong dòng họ.</p>
+                </article>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <article class="gpo-motif-card gpo-reveal">
+                    <span class="gpo-card-mark">03</span>
+                    <h3>Kết nối thế hệ</h3>
+                    <p>Ông bà, cha mẹ, con cháu cùng nhìn về một cội nguồn và hiểu rõ vị trí của mình.</p>
+                </article>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <article class="gpo-motif-card gpo-reveal">
+                    <span class="gpo-card-mark">04</span>
+                    <h3>Lưu truyền ký ức</h3>
+                    <p>Những câu chuyện, hình ảnh và tư liệu được giữ lại để đời sau còn biết và còn nhớ.</p>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="so-do" class="gpo-section gpo-section-alt">
+    <div class="container">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-5">
+                <div class="gpo-frame-panel gpo-reveal">
+                    <p class="gpo-section-eyebrow">Mạch nối gia tộc</p>
+                    <h2 class="gpo-section-title gpo-title-left">Nhìn rõ các nhánh, hiểu sâu cội nguồn</h2>
+                    <p class="gpo-section-desc gpo-desc-left">
+                        Sơ đồ gia phả giúp con cháu dễ dàng nhận ra các thế hệ, các chi họ
+                        và mối liên kết giữa những người cùng chung huyết thống.
+                    </p>
+                    <ul class="gpo-feature-list">
+                        <li><strong>Thủy tổ</strong> là gốc rễ khởi nguồn của dòng họ Trần Đức.</li>
+                        <li><strong>Chi trưởng</strong> gìn giữ nề nếp và truyền thống của dòng họ.</li>
+                        <li><strong>Chi giữa</strong> tiếp nối mạch sống gia tộc qua từng thế hệ.</li>
+                        <li><strong>Chi hậu</strong> phát triển hậu duệ, giữ gìn cội nguồn không đứt đoạn.</li>
                     </ul>
                 </div>
-                <div class="col-lg-6">
-                    <div class="gpo-about-visual">
-                        <div class="gpo-about-card">
-                            <i class="fa-solid fa-users fa-3x mb-3 text-success"></i>
-                            <h4>Uống nước nhớ nguồn</h4>
-                            <p>Cùng nhau gìn giữ gia phả để truyền lại giá trị dòng họ cho thế hệ mai sau.</p>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="gpo-tree-panel gpo-reveal">
+                    <div class="gpo-tree-badge">Sơ đồ dòng họ</div>
+
+                    <div class="gpo-tree-level gpo-tree-level-top">
+                        <div class="gpo-tree-node gpo-tree-node-featured">
+                            <span class="gpo-tree-label">THỦY TỔ</span>
+                            <strong>Thủy tổ</strong>
+                            <small>Là gốc rễ khởi nguồn của dòng họ Trần Đức.</small>
+                        </div>
+                    </div>
+
+                    <div class="gpo-tree-level gpo-tree-level-mid">
+                        <div class="gpo-tree-node">
+                            <span class="gpo-tree-label">CHI TRƯỞNG</span>
+                            <strong>Chi trưởng</strong>
+                            <small>Gìn giữ nề nếp và truyền thống của dòng họ.</small>
+                        </div>
+                        <div class="gpo-tree-node">
+                            <span class="gpo-tree-label">CHI GIỮA</span>
+                            <strong>Chi giữa</strong>
+                            <small>Tiếp nối mạch sống gia tộc qua từng thế hệ.</small>
+                        </div>
+                        <div class="gpo-tree-node">
+                            <span class="gpo-tree-label">CHI HẬU</span>
+                            <strong>Chi hậu</strong>
+                            <small>Phát triển hậu duệ, giữ gìn cội nguồn không đứt đoạn.</small>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- ============================================ -->
-    <!-- CONTACT / CTA SECTION                        -->
-    <!-- ============================================ -->
-    <section id="contact" class="gpo-cta">
-        <div class="container text-center">
-            <h2 class="gpo-section-title text-white">Cùng xây dựng Gia phả Họ Trần Đức</h2>
-            <p class="text-white-50 mx-auto mb-4" style="max-width: 600px;">
-                Mời các thành viên trong họ cùng đăng nhập để bổ sung thông tin chính xác,
-                đầy đủ và thống nhất cho gia phả chung.
-            </p>
-            <a href="/login" class="btn btn-light btn-lg">
-                Đăng nhập để cập nhật <i class="fa-solid fa-arrow-right ms-2"></i>
-            </a>
-        </div>
-    </section>
+    </div>
+</section>
 
 </body>
 </html>

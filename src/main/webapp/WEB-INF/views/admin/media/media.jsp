@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="/common/taglib.jsp"%>
-<title>Thư viện</title>
+<title>Tư liệu dòng họ</title>
 <link rel="stylesheet" href="assets/css/media-page.css" />
 
 <div class="main-content">
@@ -9,8 +9,8 @@
             <div id="mediaLibraryApp">
                 <div id="libraryListView">
                     <div class="library-header">
-                        <h2>Album ảnh/video dòng họ</h2>
-                        <div class="library-breadcrumb">Trang chủ / Album ảnh/video dòng họ</div>
+                        <h2>Thư viện tư liệu dòng họ</h2>
+                        <div class="library-breadcrumb">Lưu giữ ảnh, video và tư liệu gia phả theo phong cách trang nghiêm, đồng bộ với trang chủ và cây gia phả.</div>
                     </div>
 
                     <div class="library-panel">
@@ -24,23 +24,23 @@
                                 </select>
                             </div>
                             <div class="toolbar-right">
-                                <input id="albumSearchInput" class="tool-search" type="text" placeholder="Tìm kiếm">
-                                <button id="albumSearchBtn" class="tool-btn tool-btn-teal" type="button"><i class="fa fa-search"></i></button>
-                                <button id="albumRefreshBtn" class="tool-btn tool-btn-slate" type="button"><i class="fa fa-refresh"></i></button>
+                                <input id="albumSearchInput" class="tool-search" type="text" placeholder="Tìm theo tên album hoặc tư liệu">
+                                <button id="albumSearchBtn" class="tool-btn tool-btn-teal" type="button"><i class="fa fa-search"></i> Tra cứu</button>
+                                <button id="albumRefreshBtn" class="tool-btn tool-btn-slate" type="button"><i class="fa fa-refresh"></i> Làm mới</button>
                                 <security:authorize access="hasAnyRole('MANAGER','EDITOR')">
                                     <button id="addLibraryBtn" class="tool-btn tool-btn-teal add-btn" type="button"><i class="fa fa-plus"></i> Thêm thư viện</button>
                                 </security:authorize>
                             </div>
                         </div>
                         <div id="albumGrid" class="album-grid"></div>
-                        <div id="albumEmpty" class="empty-box" style="display:none;">Không có album phù hợp.</div>
+                        <div id="albumEmpty" class="empty-box" style="display:none;">Chưa có album phù hợp với điều kiện đang chọn.</div>
                     </div>
                 </div>
 
                 <div id="libraryDetailView" style="display:none;">
                     <div class="library-header">
-                        <h2>Chi tiết album</h2>
-                        <div class="library-breadcrumb">Trang chủ / Album / Chi tiết</div>
+                        <h2>Chi tiết album tư liệu</h2>
+                        <div class="library-breadcrumb">Theo dõi đầy đủ ảnh và video của từng album tư liệu, giữ mạch lưu trữ thống nhất với gia phả.</div>
                     </div>
                     <div class="detail-layout">
                         <div class="panel-card info-card">
@@ -66,10 +66,10 @@
                                 </security:authorize>
                             </div>
                             <div id="albumMediaGrid" class="media-grid"></div>
-                            <div id="albumMediaEmpty" class="empty-box" style="display:none;">Chưa có tệp trong album này.</div>
+                            <div id="albumMediaEmpty" class="empty-box" style="display:none;">Chưa có tệp nào trong album này.</div>
                         </div>
                     </div>
-                    <div class="back-wrap"><button id="backToListBtn" class="back-btn" type="button"><i class="fa fa-arrow-left"></i> Quay lại</button></div>
+                    <div class="back-wrap"><button id="backToListBtn" class="back-btn" type="button"><i class="fa fa-arrow-left"></i> Quay lại thư viện</button></div>
                 </div>
             </div>
 

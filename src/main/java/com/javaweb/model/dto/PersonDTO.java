@@ -21,6 +21,8 @@ public class PersonDTO extends AbstractDTO<PersonDTO> {
     private Long existingPersonId;
     private Long fatherId;
     private Long motherId;
+    private String fatherFullName;
+    private String motherFullName;
     private Long spouseId;
     private String spouseFullName;
     private String spouseGender;
@@ -36,6 +38,7 @@ public class PersonDTO extends AbstractDTO<PersonDTO> {
     private List<PersonDTO> spouses = new ArrayList<>();
     private List<PersonDTO> children = new ArrayList<>();
     private List<Long> mediaIds;
+    private List<String> mediaUrls = new ArrayList<>();
     private List<Long> childrenIds;
 
     public String getFullName() {
@@ -166,6 +169,22 @@ public class PersonDTO extends AbstractDTO<PersonDTO> {
         this.motherId = motherId;
     }
 
+    public String getFatherFullName() {
+        return fatherFullName;
+    }
+
+    public void setFatherFullName(String fatherFullName) {
+        this.fatherFullName = fatherFullName;
+    }
+
+    public String getMotherFullName() {
+        return motherFullName;
+    }
+
+    public void setMotherFullName(String motherFullName) {
+        this.motherFullName = motherFullName;
+    }
+
     public Long getSpouseId() {
         return spouseId;
     }
@@ -284,6 +303,14 @@ public class PersonDTO extends AbstractDTO<PersonDTO> {
 
     public void setMediaIds(List<Long> mediaIds) {
         this.mediaIds = mediaIds;
+    }
+
+    public List<String> getMediaUrls() {
+        return mediaUrls;
+    }
+
+    public void setMediaUrls(List<String> mediaUrls) {
+        this.mediaUrls = mediaUrls == null ? new ArrayList<>() : mediaUrls;
     }
 
     public List<Long> getChildrenIds() {

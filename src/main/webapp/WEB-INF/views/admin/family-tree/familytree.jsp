@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="/common/taglib.jsp"%>
 <c:url var="homeUrl" value="/admin/home"/>
+<c:url var="guideUrl" value="/admin/guide"/>
 <title>Cây gia phả</title>
 <!-- Icons (Bootstrap Icons) -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
@@ -217,6 +218,816 @@
             min-width: 220px;
         }
     }
+
+    /* ===== Heritage redesign overrides ===== */
+    #ftApp {
+        background: transparent !important;
+        color: #35241a;
+        font-family: "Segoe UI", Tahoma, sans-serif;
+    }
+    #ftApp .container-fluid {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    #ftApp .btn {
+        border-radius: 6px !important;
+        border: 1px solid rgba(120, 73, 42, 0.2) !important;
+        background: #f7efdd !important;
+        color: #6d231f !important;
+        min-height: 42px;
+        font-weight: 700;
+        box-shadow: none !important;
+    }
+    #ftApp .btn:hover {
+        background: #efe0bf !important;
+        color: #561816 !important;
+    }
+    #ftApp .btn-dark {
+        background: #8c241f !important;
+        border-color: #8c241f !important;
+        color: #fff3d2 !important;
+    }
+    #ftApp .btn-dark:hover {
+        background: #741917 !important;
+        border-color: #741917 !important;
+    }
+    #ftApp .form-control,
+    #ftApp .form-select {
+        min-height: 42px;
+        border: 1px solid rgba(137, 96, 60, 0.22) !important;
+        border-radius: 6px !important;
+        background: rgba(255, 250, 240, 0.96) !important;
+        color: #3b291e !important;
+        box-shadow: none !important;
+    }
+    #ftApp .form-control:focus,
+    #ftApp .form-select:focus {
+        border-color: rgba(140, 36, 31, 0.38) !important;
+        box-shadow: 0 0 0 3px rgba(140, 36, 31, 0.08) !important;
+    }
+    #ftApp .dropdown-menu {
+        border: 1px solid rgba(120, 73, 42, 0.18) !important;
+        border-radius: 8px !important;
+        background: #f8f0df url("/web/images/paper-texture.png") !important;
+        background-size: 240px !important;
+        box-shadow: 0 12px 28px rgba(73, 37, 18, 0.12) !important;
+    }
+    #ftApp .dropdown-item {
+        border-radius: 5px !important;
+        color: #593f2e !important;
+        font-weight: 600;
+    }
+    #ftApp .dropdown-item:hover {
+        background: rgba(140, 36, 31, 0.08) !important;
+        color: #6c1717 !important;
+    }
+    #ftApp .ft-page-banner {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 12px;
+        padding: 14px 18px;
+        border: 1px solid rgba(122, 74, 42, 0.14);
+        border-radius: 8px;
+        background:
+            linear-gradient(180deg, rgba(255, 248, 229, 0.96), rgba(244, 228, 191, 0.96)),
+            url("/web/images/hero-paper-bg.png");
+        background-size: auto, 360px;
+        box-shadow: inset 0 0 0 1px rgba(183, 143, 61, 0.08);
+        position: relative;
+        overflow: hidden;
+    }
+    #ftApp .ft-page-banner::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(circle at 10% 35%, rgba(143, 32, 32, 0.05), transparent 16%),
+            radial-gradient(circle at 88% 40%, rgba(180, 136, 47, 0.08), transparent 16%);
+        pointer-events: none;
+    }
+    #ftApp .ft-page-banner-copy,
+    #ftApp .ft-page-banner-actions {
+        position: relative;
+        z-index: 1;
+    }
+    #ftApp .ft-page-banner-kicker {
+        color: #8a3b22;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+    #ftApp .ft-page-banner-title {
+        margin: 2px 0 4px;
+        color: #6a201d;
+        font-family: "Noto Serif", "Palatino Linotype", Georgia, serif;
+        font-size: 28px;
+        line-height: 1.18;
+        font-weight: 700;
+    }
+    #ftApp .ft-page-banner-text {
+        max-width: 680px;
+        margin: 0;
+        color: #5e4738;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    #ftApp .ft-page-banner-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: flex-end;
+    }
+    #ftApp .ft-filter-strip {
+        margin-bottom: 12px;
+        padding: 12px 14px;
+        border: 1px solid rgba(122, 74, 42, 0.14);
+        border-radius: 8px;
+        background:
+            linear-gradient(180deg, rgba(255, 250, 238, 0.96), rgba(244, 230, 199, 0.98)),
+            url("/web/images/paper-texture.png");
+        background-size: auto, 280px;
+        box-shadow: 0 8px 20px rgba(73, 37, 18, 0.06);
+    }
+    #ftApp .ft-filter-grid {
+        display: grid !important;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 10px !important;
+        align-items: end;
+        min-width: 100% !important;
+    }
+    #ftApp .ft-filter-field {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    #ftApp .ft-filter-field.ft-view-mode-field {
+        display: none !important;
+    }
+    #ftApp .ft-filter-field-search {
+        grid-column: span 2;
+    }
+    #ftApp .ft-filter-label {
+        margin: 0;
+        color: #704f37 !important;
+        font-size: 13px;
+        font-weight: 700;
+    }
+    #ftApp .ft-filter-dropdown .btn {
+        width: 100%;
+        justify-content: space-between;
+        min-height: 40px;
+    }
+    #ftApp .ft-filter-grid .form-control,
+    #ftApp .ft-filter-grid .form-select,
+    #ftApp .ft-filter-grid .btn {
+        min-height: 40px;
+    }
+    #ftApp .ft-filter-grid .form-control,
+    #ftApp .ft-filter-grid .form-select {
+        font-size: 14px;
+    }
+    #ftApp .ft-quick-strip {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(177, 144, 88, 0.22);
+    }
+    #ftApp .ft-quick-stats,
+    #ftApp .ft-tree-controls {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    #ftApp .ft-stat-chip,
+    #ftApp .ft-meta-chip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 34px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(167, 119, 49, 0.24);
+        background: rgba(247, 238, 214, 0.95);
+        color: #6c211e;
+        font-size: 13px;
+        font-weight: 700;
+    }
+    #ftApp .ft-canvas-shell {
+        border: 1px solid rgba(122, 74, 42, 0.14);
+        border-radius: 8px;
+        overflow: hidden;
+        background:
+            linear-gradient(180deg, rgba(255, 251, 243, 0.96), rgba(244, 229, 194, 0.98)),
+            url("/web/images/paper-texture.png");
+        background-size: auto, 300px;
+        box-shadow: 0 10px 22px rgba(73, 37, 18, 0.06);
+    }
+    #ftApp .ft-canvas-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 12px 16px;
+        background: #84221e;
+        border-bottom: 1px solid rgba(230, 198, 132, 0.22);
+        box-shadow: inset 0 0 0 1px rgba(230, 198, 132, 0.1);
+    }
+    #ftApp .ft-canvas-title {
+        color: #fae8bc;
+        font-family: "Noto Serif", "Palatino Linotype", Georgia, serif;
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+    #ftApp .ft-canvas-note {
+        margin-top: 2px;
+        max-width: 720px;
+        color: rgba(255, 241, 207, 0.84);
+        font-size: 13px;
+        line-height: 1.45;
+    }
+    #ftApp .ft-canvas-meta {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    #ftApp .ft-canvas {
+        height: calc(100vh - 218px) !important;
+        min-height: 620px;
+        background:
+            linear-gradient(180deg, rgba(255, 250, 241, 0.88), rgba(238, 220, 178, 0.74)),
+            url("/web/images/hero-paper-bg.png") !important;
+        background-size: auto, 480px !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+    #ftApp .ft-scroll {
+        padding: 22px 28px 44px !important;
+        overflow: hidden !important;
+        position: relative;
+    }
+    #ftApp .ft-tree-scale {
+        position: relative;
+        min-width: max-content;
+        min-height: max-content;
+    }
+    #ftApp .ft-legend {
+        left: 18px;
+        bottom: 18px;
+        background: rgba(249, 241, 222, 0.95) !important;
+        border: 1px solid rgba(167, 119, 49, 0.2) !important;
+        color: #5d4232;
+        box-shadow: 0 8px 18px rgba(73, 37, 18, 0.08) !important;
+        border-radius: 8px !important;
+    }
+    #ftApp .ft-legend-line {
+        display: inline-block;
+        width: 22px;
+        border-top: 2px solid #8b5a36;
+    }
+    #ftApp .dot {
+        border: 1px solid rgba(120, 73, 42, 0.22);
+    }
+    #ftApp .bg-male { background: #b58c52 !important; }
+    #ftApp .bg-female { background: #8c241f !important; }
+    #ftApp .bg-other { background: #6b4c35 !important; }
+    #ftApp #treeRoot {
+        --connector-color: #8b5a36 !important;
+        --connector-width: 4px !important;
+        --connector-height: 72px !important;
+    }
+    #ftApp #treeRoot .li-person::before,
+    #ftApp #treeRoot .li-person::after {
+        border-top-color: #8b5a36 !important;
+        border-top-width: 4px !important;
+    }
+    #ftApp #treeRoot .li-person::after,
+    #ftApp #treeRoot .ul-person .ul-person::before,
+    #ftApp #treeRoot .li-person:last-child::before {
+        border-left-color: #8b5a36 !important;
+        border-left-width: 4px !important;
+        border-right-color: #8b5a36 !important;
+        border-right-width: 4px !important;
+    }
+    #ftApp #treeRoot .box-person {
+        --node-width: 206px;
+        --spouse-gap: 20px;
+        min-height: 248px;
+        padding-right: calc(var(--node-width) + var(--spouse-gap));
+    }
+    #ftApp #treeRoot .box-person.no-spouse {
+        padding-right: 0;
+    }
+    #ftApp #treeRoot .box-person.has-spouse {
+        min-width: calc((var(--node-width) * 2) + var(--spouse-gap));
+    }
+    #ftApp #treeRoot .box-person.has-spouse::before {
+        content: "" !important;
+        width: 10px;
+        height: 10px;
+        background: #8c241f;
+        border: 2px solid #f7efdd;
+        box-shadow: 0 0 0 1px rgba(140, 36, 31, 0.2);
+    }
+    #ftApp #treeRoot .box-person.has-spouse::after {
+        content: "" !important;
+        border-top: 3px solid #8c241f !important;
+        box-shadow: none !important;
+    }
+    #ftApp #treeRoot .person-node {
+        width: var(--node-width);
+        min-height: 224px;
+        border-radius: 6px !important;
+        border: 1px solid rgba(120, 73, 42, 0.18) !important;
+        padding: 10px 10px 12px !important;
+        background:
+            linear-gradient(180deg, rgba(255, 249, 231, 0.98), rgba(243, 230, 198, 0.98)),
+            url("/web/images/paper-texture.png") !important;
+        background-size: auto, 240px !important;
+        box-shadow: 0 8px 20px rgba(73, 37, 18, 0.08) !important;
+        position: relative;
+        overflow: visible;
+        transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    }
+    #ftApp #treeRoot .person-node::before,
+    #ftApp #treeRoot .person-node::after {
+        content: "";
+        position: absolute;
+        width: 22px;
+        height: 22px;
+        pointer-events: none;
+        border-color: rgba(180, 136, 47, 0.44);
+    }
+    #ftApp #treeRoot .person-node::before {
+        top: 6px;
+        left: 6px;
+        border-top: 1px solid rgba(180, 136, 47, 0.44);
+        border-left: 1px solid rgba(180, 136, 47, 0.44);
+    }
+    #ftApp #treeRoot .person-node::after {
+        right: 6px;
+        bottom: 6px;
+        border-right: 1px solid rgba(180, 136, 47, 0.44);
+        border-bottom: 1px solid rgba(180, 136, 47, 0.44);
+    }
+    #ftApp #treeRoot .person-node:hover {
+        transform: translateY(-2px);
+        border-color: rgba(140, 36, 31, 0.34) !important;
+        box-shadow: 0 12px 28px rgba(73, 37, 18, 0.12) !important;
+    }
+    #ftApp #treeRoot .person-node.male,
+    #ftApp #treeRoot .person-node.female,
+    #ftApp #treeRoot .person-node.other {
+        background:
+            linear-gradient(180deg, rgba(255, 249, 231, 0.98), rgba(243, 230, 198, 0.98)),
+            url("/web/images/paper-texture.png") !important;
+    }
+    #ftApp #treeRoot .person-node.female {
+        border-color: rgba(140, 36, 31, 0.22) !important;
+    }
+    #ftApp #treeRoot .person-node.male {
+        border-color: rgba(181, 140, 82, 0.26) !important;
+    }
+    #ftApp #treeRoot .person-node.person-role-founder {
+        background:
+            linear-gradient(180deg, rgba(255, 245, 213, 1), rgba(238, 214, 162, 0.98)),
+            url("/web/images/paper-texture.png") !important;
+        border-color: rgba(140, 36, 31, 0.28) !important;
+    }
+    #ftApp #treeRoot .person-node.person-role-lineage-head {
+        border-color: rgba(151, 97, 43, 0.34) !important;
+    }
+    #ftApp #treeRoot .person-node.person-role-notable {
+        box-shadow: 0 10px 24px rgba(140, 36, 31, 0.08) !important;
+    }
+    #ftApp #treeRoot .person-node.person-role-deceased .avatar-tree {
+        filter: grayscale(0.18);
+    }
+    #ftApp #treeRoot .avatar-tree {
+        width: 104px !important;
+        height: 96px !important;
+        margin-top: 14px !important;
+        border-radius: 6px !important;
+        border: 2px solid rgba(255, 244, 214, 0.9);
+        box-shadow: 0 4px 10px rgba(73, 37, 18, 0.12);
+        pointer-events: none;
+    }
+    #ftApp #treeRoot .ft-node-headline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        min-height: 22px;
+        padding: 0 2px;
+    }
+    #ftApp #treeRoot .ft-node-role,
+    #ftApp #treeRoot .ft-node-gender,
+    #ftApp #treeRoot .ft-node-status {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 22px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    #ftApp #treeRoot .ft-node-role {
+        background: rgba(140, 36, 31, 0.08);
+        color: #7b221f;
+        border: 1px solid rgba(140, 36, 31, 0.12);
+    }
+    #ftApp #treeRoot .ft-node-gender {
+        background: rgba(181, 140, 82, 0.14);
+        color: #6a4b33;
+        border: 1px solid rgba(181, 140, 82, 0.16);
+    }
+    #ftApp #treeRoot .ft-node-status {
+        margin-top: 6px;
+        background: rgba(76, 50, 38, 0.08);
+        color: #4c3226;
+        border: 1px solid rgba(76, 50, 38, 0.1);
+    }
+    #ftApp #treeRoot .person-text {
+        margin-top: 6px !important;
+        padding: 0 4px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    #ftApp #treeRoot .name-phado {
+        color: #46271d;
+        font-family: "Noto Serif", "Palatino Linotype", Georgia, serif;
+        font-size: 20px !important;
+        line-height: 1.35 !important;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        text-shadow: 0 0 0 rgba(0, 0, 0, 0.01);
+    }
+    #ftApp #treeRoot .person-dates {
+        margin-top: 6px;
+        color: #654c3c;
+        font-size: 14px !important;
+        line-height: 1.55 !important;
+        font-weight: 500;
+        text-shadow: 0 0 0 rgba(0, 0, 0, 0.01);
+    }
+    #ftApp #treeRoot .person-date-line .date-label {
+        color: #6f231f;
+    }
+    #ftApp #treeRoot .btn-setting-custom {
+        opacity: 0;
+        transform: translateY(-2px);
+        transition: opacity 0.14s ease, transform 0.14s ease;
+    }
+    #ftApp #treeRoot .person-node:hover .btn-setting-custom,
+    #ftApp #treeRoot .person-node.menu-open .btn-setting-custom {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    #ftApp #treeRoot .btn-setting-custom .btn {
+        width: 30px;
+        height: 24px;
+        min-height: 24px;
+        padding: 0;
+        border-radius: 0 6px 0 6px !important;
+        background: rgba(99, 29, 26, 0.92) !important;
+        color: #f8e7b8 !important;
+        border: 0 !important;
+    }
+    #ftApp #treeRoot .tree-action-menu {
+        min-width: 210px;
+        border-radius: 6px;
+        border: 1px solid rgba(120, 73, 42, 0.16);
+        background: #f8f0df url("/web/images/paper-texture.png") !important;
+        background-size: 220px !important;
+        box-shadow: 0 14px 30px rgba(73, 37, 18, 0.16);
+    }
+    #ftApp #treeRoot .tree-action-menu .dropdown-item {
+        padding: 9px 12px;
+        font-size: 14px;
+    }
+    #ftApp .ft-branch-toggle-wrap {
+        display: flex;
+        justify-content: center;
+        margin: 6px 0 2px;
+    }
+    #ftApp .ft-branch-subtree {
+        overflow: hidden;
+        transform-origin: top center;
+        transition: max-height 190ms ease, opacity 190ms ease;
+        opacity: 1;
+    }
+    #ftApp .ft-branch-subtree.is-collapsed {
+        max-height: 0 !important;
+        opacity: 0;
+        pointer-events: none;
+    }
+    #ftApp .ft-branch-toggle {
+        border: 1px solid rgba(167, 119, 49, 0.2);
+        border-radius: 999px;
+        background: rgba(249, 239, 214, 0.95);
+        color: #6a201d;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 5px 12px;
+    }
+    #ftApp .ft-branch-toggle:hover {
+        background: rgba(245, 231, 196, 1);
+    }
+    #ftApp #treeRoot .ft-overflow-label,
+    #ftApp #treeRoot .ft-overflow-generation {
+        background: rgba(249, 239, 214, 0.98);
+        border: 1px solid rgba(167, 119, 49, 0.2);
+        color: #7a221e;
+        font-size: 12px;
+    }
+    #ftApp .ft-focus-hit {
+        animation: ftNodeFocusPulse 2.4s ease;
+    }
+    @keyframes ftNodeFocusPulse {
+        0% { box-shadow: 0 0 0 0 rgba(140, 36, 31, 0.26); }
+        40% { box-shadow: 0 0 0 12px rgba(140, 36, 31, 0.06); }
+        100% { box-shadow: 0 0 0 0 rgba(140, 36, 31, 0); }
+    }
+    #ftApp .ft-empty {
+        color: #6a201d;
+        font-size: 18px;
+    }
+    #ftApp .modal-content,
+    #ftApp .offcanvas {
+        border-radius: 8px !important;
+        background: #f8f0df url("/web/images/paper-texture.png") !important;
+        background-size: 260px !important;
+        border: 1px solid rgba(120, 73, 42, 0.16);
+        box-shadow: 0 18px 40px rgba(73, 37, 18, 0.16) !important;
+    }
+    #ftApp .modal-header,
+    #ftApp .modal-footer,
+    #ftApp .offcanvas-header {
+        background: transparent !important;
+        border-color: rgba(167, 119, 49, 0.16) !important;
+    }
+    #ftApp .modal-title,
+    #ftApp .offcanvas-title {
+        color: #6a201d;
+        font-family: "Noto Serif", "Palatino Linotype", Georgia, serif;
+        font-size: 24px;
+    }
+    #ftApp .btn-close {
+        background: rgba(255, 248, 229, 0.92) !important;
+        border-color: rgba(120, 73, 42, 0.18) !important;
+    }
+    #ftApp .ft-detail-shell {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+    #ftApp .ft-detail-hero {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px;
+        border: 1px solid rgba(167, 119, 49, 0.14);
+        border-radius: 6px;
+        background: rgba(255, 249, 233, 0.88);
+    }
+    #ftApp .ft-detail-avatar {
+        width: 96px;
+        height: 96px;
+        border-radius: 6px;
+        object-fit: cover;
+        border: 2px solid rgba(255, 244, 214, 0.9);
+    }
+    #ftApp .ft-detail-role {
+        color: #8a3b22;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    #ftApp .ft-detail-name {
+        margin: 4px 0 6px;
+        color: #4a281b;
+        font-family: "Noto Serif", "Palatino Linotype", Georgia, serif;
+        font-size: 30px;
+        line-height: 1.3;
+    }
+    #ftApp .ft-detail-subline {
+        color: #6a5140;
+        font-size: 16px;
+    }
+    #ftApp .ft-detail-tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+    #ftApp .ft-detail-pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 30px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(167, 119, 49, 0.22);
+        background: rgba(249, 239, 214, 0.95);
+        color: #6a201d;
+        font-size: 14px;
+        font-weight: 700;
+        margin: 2px 6px 2px 0;
+    }
+    #ftApp .ft-detail-empty {
+        color: #7a6452;
+        font-size: 15px;
+    }
+    #ftApp .ft-detail-media-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 12px;
+        margin-top: 8px;
+    }
+    #ftApp .ft-detail-media-item {
+        display: block;
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid rgba(167, 119, 49, 0.16);
+        background: rgba(255, 250, 238, 0.92);
+    }
+    #ftApp .ft-detail-media-item img {
+        width: 100%;
+        height: 108px;
+        object-fit: cover;
+        display: block;
+    }
+    #ftApp.ft-view-minimal #treeRoot .avatar-tree,
+    #ftApp.ft-view-minimal #treeRoot .person-dates,
+    #ftApp.ft-view-minimal #treeRoot .ft-node-status,
+    #ftApp.ft-view-minimal #treeRoot .ft-node-role {
+        display: none !important;
+    }
+    #ftApp.ft-view-minimal #treeRoot .person-node {
+        min-height: 126px !important;
+        padding-top: 14px !important;
+    }
+    #ftApp.ft-view-minimal #treeRoot .person-text {
+        margin-top: 16px !important;
+    }
+    #ftApp.ft-view-print .ft-filter-strip,
+    #ftApp.ft-view-print .ft-page-banner,
+    #ftApp.ft-view-print .ft-canvas-head,
+    #ftApp.ft-view-print .btn-setting-custom,
+    #ftApp.ft-view-print .ft-legend {
+        display: none !important;
+    }
+    #ftApp.ft-view-print .ft-canvas {
+        height: auto !important;
+        min-height: 0 !important;
+        background: #fffdf8 !important;
+    }
+    @media (max-width: 1200px) {
+        #ftApp .ft-filter-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+    }
+    @media (max-width: 991px) {
+        #ftApp .ft-page-banner,
+        #ftApp .ft-quick-strip,
+        #ftApp .ft-canvas-head {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        #ftApp .ft-page-banner-title {
+            font-size: 24px;
+        }
+        #ftApp .ft-filter-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        #ftApp .ft-filter-field-search {
+            grid-column: span 3;
+        }
+        #ftApp .ft-canvas {
+            height: calc(100vh - 200px) !important;
+            min-height: 560px;
+        }
+        #ftApp #treeRoot .box-person {
+            --node-width: 168px;
+            --spouse-gap: 16px;
+        }
+        #ftApp #treeRoot .person-node {
+            min-height: 210px;
+        }
+        #ftApp #treeRoot .name-phado {
+            font-size: 18px !important;
+        }
+        #ftApp #treeRoot .person-dates {
+            font-size: 13px !important;
+        }
+    }
+    @media (max-width: 767px) {
+        #ftApp .ft-filter-grid {
+            grid-template-columns: 1fr;
+        }
+        #ftApp .ft-filter-field-search {
+            grid-column: auto;
+        }
+        #ftApp .ft-page-banner,
+        #ftApp .ft-filter-strip {
+            padding: 12px;
+        }
+        #ftApp .ft-page-banner-title {
+            font-size: 22px;
+        }
+        #ftApp .ft-page-banner-text,
+        #ftApp .ft-canvas-note {
+            font-size: 13px;
+        }
+        #ftApp .ft-canvas {
+            min-height: 480px;
+            height: calc(100vh - 170px) !important;
+        }
+        #ftApp .ft-scroll {
+            padding: 16px 12px 28px !important;
+        }
+        #ftApp #treeRoot .box-person {
+            --node-width: 166px;
+            --spouse-gap: 12px;
+        }
+        #ftApp #treeRoot .person-node {
+            min-height: 198px;
+        }
+        #ftApp #treeRoot .avatar-tree {
+            width: 90px !important;
+            height: 82px !important;
+        }
+        #ftApp #treeRoot .name-phado {
+            font-size: 17px !important;
+        }
+        #ftApp #treeRoot .person-dates {
+            font-size: 13px !important;
+        }
+        #ftApp .modal-dialog {
+            padding: 0 !important;
+            margin: 0 !important;
+            min-height: 100% !important;
+        }
+        #ftApp .modal-content {
+            min-height: 100vh;
+            max-height: none !important;
+            border-radius: 0 !important;
+        }
+        #ftApp .ft-detail-hero {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        #ftApp .ft-detail-name {
+            font-size: 24px;
+        }
+    }
+    @media print {
+        body.admin-modern .app-sidebar,
+        body.admin-modern .app-topbar,
+        body.admin-modern .app-footer,
+        #ftApp .ft-page-banner,
+        #ftApp .ft-filter-strip,
+        #ftApp .ft-canvas-head,
+        #ftApp .btn-setting-custom,
+        #ftApp .ft-legend {
+            display: none !important;
+        }
+        body.admin-modern .main-content,
+        body.admin-modern .main-content-inner {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #fff !important;
+        }
+        #ftApp .ft-canvas-shell,
+        #ftApp .ft-canvas {
+            border: 0 !important;
+            box-shadow: none !important;
+            background: #fff !important;
+            height: auto !important;
+            min-height: 0 !important;
+        }
+        #ftApp .ft-scroll {
+            overflow: visible !important;
+            height: auto !important;
+            padding: 0 !important;
+        }
+        #ftApp .ft-tree-scale {
+            transform: none !important;
+        }
+    }
 </style>
 
 <% boolean canManageMember = request.isUserInRole("MANAGER") || request.isUserInRole("EDITOR"); %>
@@ -235,60 +1046,149 @@
         <div class="page-content family-tree-page">
 <div id="ftApp" class="bg-light">
     <div class="container-fluid">
-        <div class="ft-filter-strip">
-            <!-- RIGHT TOOLBAR -->
-            <div class="ft-toolbar-right">
-                <div id="advancedFilterBar" class="d-flex align-items-center gap-2" style="flex-wrap: wrap;">
-                    <div class="ft-filter-field">
-                        <label for="ftFilterName" class="ft-filter-label">Họ tên</label>
-                        <input id="ftFilterName" class="form-control input-sm" style="width: 280px;" placeholder="Tìm theo tên thành viên..." />
-                    </div>
-                    <div class="ft-filter-field">
-                        <label for="ftFilterDob" class="ft-filter-label">Ngày sinh</label>
-                        <input id="ftFilterDob" type="date" class="form-control input-sm" aria-label="Lọc theo ngày sinh" />
-                    </div>
-                    <div class="ft-filter-field ft-filter-action">
-                        <button id="ftFilterReset" class="btn btn-sm btn-light" type="button">Làm mới</button>
-                    </div>
-                </div>
-                <div id="branchDropdown" class="dropdown">
-                    <button type="button" class="btn btn-sm btn-light dropdown-toggle">
-                        <i class="bi bi-diagram-3"></i>
-                        <span id="activeBranchLabel">Toàn bộ</span>
-                    </button>
-                    <ul id="branchMenu" class="dropdown-menu"></ul>
-                </div>
-                <div id="treeQuickStats">
-                    <span id="ftStatGenerations" class="ft-stat-chip">0 thế hệ</span>
-                    <span id="ftStatMembers" class="ft-stat-chip">0 thành viên</span>
-                </div>
+        <div class="ft-page-banner">
+            <div class="ft-page-banner-copy">
+                <div class="ft-page-banner-kicker">Sơ đồ huyết thống</div>
+                <h2 class="ft-page-banner-title">Theo dõi nhiều thế hệ trong dòng họ</h2>
+                <p class="ft-page-banner-text">Tra cứu quan hệ, chi họ và thế hệ để nhìn rõ mạch nối giữa các nhánh gia phả.</p>
+            </div>
+            <div class="ft-page-banner-actions">
+                <a href="${guideUrl}" class="btn btn-light ft-hero-guide-btn">
+                    <i class="fa fa-book"></i>
+                    Xem hướng dẫn sử dụng
+                </a>
                 <% if (canManageMember) { %>
                     <button id="btnCreateFirst" class="btn btn-dark d-flex align-items-center gap-2">
-                        <i class="bi bi-person-plus"></i> Tạo thành viên đầu tiên
+                        <i class="fa fa-user-plus"></i>
+                        Thêm thành viên
                     </button>
                 <% } %>
             </div>
         </div>
-        <div class="ft-canvas">
-            <!-- CONTENT -->
-            <div id="contentArea" class="ft-scroll">
-                <div id="scaleWrap" class="ft-tree-scale">
-                    <div class="d-flex justify-content-center">
-                        <div id="treeRoot"></div>
+
+        <div class="ft-filter-strip">
+            <div id="advancedFilterBar" class="ft-filter-grid">
+                <div class="ft-filter-field ft-filter-field-search">
+                    <label for="ftFilterName" class="ft-filter-label">Tìm theo họ tên</label>
+                    <input id="ftFilterName" class="form-control input-sm" placeholder="Nhập tên người cần tra cứu..." />
+                </div>
+
+                <div class="ft-filter-field">
+                    <label class="ft-filter-label">Chi họ / nhánh họ</label>
+                    <div id="branchDropdown" class="dropdown ft-filter-dropdown">
+                        <button type="button" class="btn btn-sm btn-light dropdown-toggle">
+                            <i class="fa fa-sitemap"></i>
+                            <span id="activeBranchLabel">Toàn bộ</span>
+                        </button>
+                        <ul id="branchMenu" class="dropdown-menu"></ul>
                     </div>
+                </div>
+
+                <div class="ft-filter-field">
+                    <label for="ftFilterGeneration" class="ft-filter-label">Thế hệ</label>
+                    <select id="ftFilterGeneration" class="form-control form-select">
+                        <option value="">Tất cả thế hệ</option>
+                    </select>
+                </div>
+
+                <div class="ft-filter-field">
+                    <label for="ftFilterGender" class="ft-filter-label">Giới tính</label>
+                    <select id="ftFilterGender" class="form-control form-select">
+                        <option value="">Tất cả</option>
+                        <option value="male">Nam</option>
+                        <option value="female">Nữ</option>
+                        <option value="other">Khác</option>
+                    </select>
+                </div>
+
+                <div class="ft-filter-field">
+                    <label for="ftFilterLifeStatus" class="ft-filter-label">Tình trạng</label>
+                    <select id="ftFilterLifeStatus" class="form-control form-select">
+                        <option value="">Còn sống và đã mất</option>
+                        <option value="alive">Còn sống</option>
+                        <option value="deceased">Đã mất</option>
+                    </select>
+                </div>
+
+                <div class="ft-filter-field">
+                    <label for="ftFilterDob" class="ft-filter-label">Ngày sinh</label>
+                    <input id="ftFilterDob" type="date" class="form-control input-sm" aria-label="Lọc theo ngày sinh" />
+                </div>
+
+                <div class="ft-filter-field">
+                    <label for="ftFilterBirthYear" class="ft-filter-label">Năm sinh</label>
+                    <input id="ftFilterBirthYear" type="number" min="1" max="9999" class="form-control input-sm" placeholder="Ví dụ 1942" />
+                </div>
+
+                <div class="ft-filter-field">
+                    <label for="ftFilterDeathYear" class="ft-filter-label">Năm mất</label>
+                    <input id="ftFilterDeathYear" type="number" min="1" max="9999" class="form-control input-sm" placeholder="Ví dụ 2020" />
+                </div>
+
+                <div class="ft-filter-field ft-view-mode-field">
+                    <label for="ftViewMode" class="ft-filter-label">Chế độ xem</label>
+                    <select id="ftViewMode" class="form-control form-select">
+                        <option value="full">Đầy đủ</option>
+                        <option value="minimal">Tối giản</option>
+                        <option value="print">In ấn</option>
+                    </select>
+                </div>
+
+                <div class="ft-filter-field ft-filter-action">
+                    <button id="ftFilterReset" class="btn btn-sm btn-light" type="button">
+                        <i class="fa fa-refresh"></i>
+                        Làm mới
+                    </button>
                 </div>
             </div>
 
-            <!-- LEGEND -->
-            <div id="legend" class="ft-legend">
-                <span class="text-uppercase text-secondary fw-bold" style="font-size: 11px; letter-spacing: .12em;">Giới tính</span>
-                <span class="d-inline-flex align-items-center gap-1"><span class="dot bg-male">♂</span> Nam</span>
-                <span class="d-inline-flex align-items-center gap-1"><span class="dot bg-female">♀</span> Nữ</span>
-                <span class="d-inline-flex align-items-center gap-1"><span class="dot bg-other">⚥</span> Khác</span>
-                <span style="width:1px;height:16px;background:#e5e7eb;"></span>
-                <span class="d-inline-flex align-items-center gap-2">
-                    <span style="width:1px;height:14px;background:#6b7280;"></span> Con cái
-                </span>
+            <div class="ft-quick-strip">
+                <div id="treeQuickStats" class="ft-quick-stats">
+                    <span id="ftStatGenerations" class="ft-stat-chip">0 thế hệ</span>
+                    <span id="ftStatMembers" class="ft-stat-chip">0 thành viên</span>
+                </div>
+
+                <div class="ft-tree-controls">
+                    <button id="ftZoomOut" type="button" class="btn btn-sm btn-light"><i class="fa fa-search-minus"></i> Thu nhỏ</button>
+                    <button id="ftZoomIn" type="button" class="btn btn-sm btn-light"><i class="fa fa-search-plus"></i> Phóng to</button>
+                    <button id="ftCenterRoot" type="button" class="btn btn-sm btn-light"><i class="fa fa-bullseye"></i> Về trung tâm</button>
+                    <button id="ftCollapseAll" type="button" class="btn btn-sm btn-light"><i class="fa fa-compress"></i> Thu gọn nhánh</button>
+                    <button id="ftExpandAll" type="button" class="btn btn-sm btn-light"><i class="fa fa-expand"></i> Mở rộng nhánh</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="ft-canvas-shell">
+            <div class="ft-canvas-head">
+                <div>
+                    <div class="ft-canvas-title">Sơ đồ huyết thống</div>
+                    <div class="ft-canvas-note">Thủy tổ ở trên cùng, các đời tiếp nối theo tầng.</div>
+                </div>
+                <div class="ft-canvas-meta">
+                    <span class="ft-meta-chip">Quan hệ vợ chồng nằm ngang</span>
+                    <span class="ft-meta-chip">Cha mẹ - con cái theo trục dọc</span>
+                </div>
+            </div>
+
+            <div class="ft-canvas">
+                <div id="contentArea" class="ft-scroll">
+                    <div id="scaleWrap" class="ft-tree-scale">
+                        <div class="d-flex justify-content-center">
+                            <div id="treeRoot"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="legend" class="ft-legend">
+                    <span class="text-uppercase text-secondary fw-bold" style="font-size: 11px; letter-spacing: .12em;">Chú giải</span>
+                    <span class="d-inline-flex align-items-center gap-1"><span class="dot bg-male"></span> Nam</span>
+                    <span class="d-inline-flex align-items-center gap-1"><span class="dot bg-female"></span> Nữ</span>
+                    <span class="d-inline-flex align-items-center gap-1"><span class="dot bg-other"></span> Khác</span>
+                    <span style="width:1px;height:16px;background:#c9b78e;"></span>
+                    <span class="d-inline-flex align-items-center gap-2">
+                        <span class="ft-legend-line"></span> Huyết thống
+                    </span>
+                </div>
             </div>
         </div>
     </div>
@@ -589,21 +1489,29 @@
         const ROOT_PERSON_CACHE = {};
         let CURRENT_NAME_FILTER = '';
         let CURRENT_DOB_FILTER = '';
+        let CURRENT_GENERATION_FILTER = null;
         let CURRENT_GENDER_FILTER = '';
         let CURRENT_LIFE_STATUS_FILTER = '';
         let CURRENT_BIRTH_YEAR_FROM = null;
         let CURRENT_BIRTH_YEAR_TO = null;
+        let CURRENT_DEATH_YEAR = null;
+        let CURRENT_VIEW_MODE = 'full';
         let CURRENT_FOCUS_PERSON_ID = null;
+        let CURRENT_TREE_MODE = 'default';
+        let CURRENT_DESCENDANT_ROOT_ID = null;
         let FT_SUPPRESS_CLICK_UNTIL = 0;
         let ACTIVE_BRANCH_NAME = '';
         let FT_RENDER_PENDING = false;
         let FT_FILTER_RENDER_SEQ = 0;
         let FT_FILTER_DEBOUNCE = null;
+        const COLLAPSED_NODE_IDS = new Set();
+        const SERVER_TOTAL_GENERATIONS = Number('${empty totalGenerations ? 1 : totalGenerations}');
         const FT_VIEWPORT = {
             initialized: false,
             scale: 1,
             panX: 0,
-            panY: 0
+            panY: 0,
+            skipPanClampOnce: false
         };
         const EXISTING_PERSON_CACHE = {
             m: [],
@@ -768,6 +1676,7 @@
                         ? 'Toàn bộ'
                         : (selected.name || ('Chi ' + selected.id));
                     CURRENT_FOCUS_PERSON_ID = null;
+                    COLLAPSED_NODE_IDS.clear();
                     const formBranchId = getDefaultFormBranchId(allBranches);
                     const mBranch = document.getElementById('mBranch');
                     const aBranch = document.getElementById('aBranch');
@@ -827,6 +1736,21 @@
             if (membersEl) {
                 const mem = Math.max(0, Number(memberCount || 0));
                 membersEl.textContent = mem + ' thành viên';
+            }
+        }
+
+        function syncGenerationFilterOptions(maxGeneration) {
+            const selectEl = document.getElementById('ftFilterGeneration');
+            if (!selectEl) return;
+            const normalizedMax = Math.max(1, Number(maxGeneration || 0), SERVER_TOTAL_GENERATIONS || 1);
+            const currentValue = String(selectEl.value || '');
+            let options = '<option value="">Tất cả thế hệ</option>';
+            for (let generation = 1; generation <= normalizedMax; generation += 1) {
+                options += '<option value="' + generation + '">Đời ' + generation + '</option>';
+            }
+            selectEl.innerHTML = options;
+            if (currentValue && selectEl.querySelector('option[value="' + currentValue + '"]')) {
+                selectEl.value = currentValue;
             }
         }
 
@@ -904,6 +1828,10 @@
             if (parts.length !== 3) return null;
             const year = Number(parts[0]);
             return Number.isFinite(year) ? year : null;
+        }
+
+        function getDeathYearFromDateString(dateStr) {
+            return getBirthYearFromDateString(dateStr);
         }
 
         function normalizeDateFilterValue(value) {
@@ -998,6 +1926,16 @@
 
         function memberMatchesAdvancedFilters(person) {
             if (!person) return false;
+            const personGeneration = getRawGeneration(person);
+            const spouseGenerations = getPersonSpouses(person)
+                .map(function (spouse) { return getRawGeneration(spouse); })
+                .filter(function (generation) { return generation != null; });
+            if (CURRENT_GENERATION_FILTER != null) {
+                const generationMatched = personGeneration === CURRENT_GENERATION_FILTER
+                    || spouseGenerations.indexOf(CURRENT_GENERATION_FILTER) >= 0;
+                if (!generationMatched) return false;
+            }
+
             const candidates = [];
             candidates.push({
                 fullName: person.fullName || '',
@@ -1063,16 +2001,26 @@
                 if (!matchedToYear) return false;
             }
 
+            if (CURRENT_DEATH_YEAR != null) {
+                const deathYearMatched = candidates.some(function (c) {
+                    const deathYear = getDeathYearFromDateString(c.dod || '');
+                    return deathYear != null && deathYear === CURRENT_DEATH_YEAR;
+                });
+                if (!deathYearMatched) return false;
+            }
+
             return true;
         }
 
         function hasAdvancedFilter() {
             return !!(CURRENT_NAME_FILTER
                 || CURRENT_DOB_FILTER
+                || CURRENT_GENERATION_FILTER != null
                 || CURRENT_GENDER_FILTER
                 || CURRENT_LIFE_STATUS_FILTER
                 || CURRENT_BIRTH_YEAR_FROM != null
-                || CURRENT_BIRTH_YEAR_TO != null);
+                || CURRENT_BIRTH_YEAR_TO != null
+                || CURRENT_DEATH_YEAR != null);
         }
 
         function hasAnyActiveFilter() {
@@ -1154,6 +2102,89 @@
             }
 
             return true;
+        }
+
+        function getCurrentRenderRoots() {
+            let renderRoots = Array.isArray(CURRENT_TREE_ROOTS) ? CURRENT_TREE_ROOTS : [];
+            if (CURRENT_DESCENDANT_ROOT_ID != null) {
+                const descendantRoot = findAnchorNodeByMemberIdInRoots(CURRENT_DESCENDANT_ROOT_ID);
+                if (descendantRoot) {
+                    return [descendantRoot];
+                }
+                CURRENT_DESCENDANT_ROOT_ID = null;
+            }
+            if (CURRENT_FOCUS_PERSON_ID != null) {
+                const focused = findAnchorNodeByMemberIdInRoots(CURRENT_FOCUS_PERSON_ID);
+                if (focused) {
+                    renderRoots = [focused];
+                }
+            }
+            return renderRoots;
+        }
+
+        function memberHasRenderableDescendants(person) {
+            if (!person) return false;
+            const children = Array.isArray(person.children) ? person.children : [];
+            if (!children.length) return false;
+            const maxDepth = getTreeHeightLimitForRoot(person);
+            return children.some(function (child) {
+                return shouldRenderChildNode(person, child, 2, maxDepth);
+            });
+        }
+
+        function clearTreeSearchState(options) {
+            const opts = options || {};
+            const preserveViewMode = opts.preserveViewMode === true;
+            const nameInput = document.getElementById('ftFilterName');
+            const dobInput = document.getElementById('ftFilterDob');
+            const generationInput = document.getElementById('ftFilterGeneration');
+            const genderInput = document.getElementById('ftFilterGender');
+            const lifeStatusInput = document.getElementById('ftFilterLifeStatus');
+            const birthYearInput = document.getElementById('ftFilterBirthYear');
+            const deathYearInput = document.getElementById('ftFilterDeathYear');
+            const viewModeInput = document.getElementById('ftViewMode');
+
+            if (nameInput) nameInput.value = '';
+            if (dobInput) dobInput.value = '';
+            if (generationInput) generationInput.value = '';
+            if (genderInput) genderInput.value = '';
+            if (lifeStatusInput) lifeStatusInput.value = '';
+            if (birthYearInput) birthYearInput.value = '';
+            if (deathYearInput) deathYearInput.value = '';
+            if (viewModeInput && !preserveViewMode) viewModeInput.value = 'full';
+
+            CURRENT_NAME_FILTER = '';
+            CURRENT_DOB_FILTER = '';
+            CURRENT_GENERATION_FILTER = null;
+            CURRENT_GENDER_FILTER = '';
+            CURRENT_LIFE_STATUS_FILTER = '';
+            CURRENT_BIRTH_YEAR_FROM = null;
+            CURRENT_BIRTH_YEAR_TO = null;
+            CURRENT_DEATH_YEAR = null;
+            if (!preserveViewMode) {
+                CURRENT_VIEW_MODE = 'full';
+                applyTreeViewMode();
+            }
+            if (FT_FILTER_DEBOUNCE) {
+                clearTimeout(FT_FILTER_DEBOUNCE);
+                FT_FILTER_DEBOUNCE = null;
+            }
+        }
+
+        function openDescendantSubtree(person) {
+            const personId = Number(person && person.id || 0);
+            if (personId <= 0) return;
+            const scopedPerson = findAnchorNodeByMemberIdInRoots(personId) || person;
+            if (!memberHasRenderableDescendants(scopedPerson)) {
+                showToast('Thành viên này chưa có dữ liệu hậu duệ', 'info');
+                return;
+            }
+            clearTreeSearchState({ preserveViewMode: true });
+            CURRENT_TREE_MODE = 'descendants';
+            CURRENT_DESCENDANT_ROOT_ID = personId;
+            CURRENT_FOCUS_PERSON_ID = personId;
+            COLLAPSED_NODE_IDS.clear();
+            requestTreeRender();
         }
 
         function filterExistingPersons(persons, keyword, gender, dob) {
@@ -1918,10 +2949,39 @@
 
         function buildDefaultAvatarDataUri(gender) {
             const normalizedGender = String(gender || '').toLowerCase();
-            const bodyPath = normalizedGender === 'female'
-                ? '<path d="M68 89c18 0 33 15 33 34v10H35v-10c0-19 15-34 33-34z" fill="#737887"/><path d="M68 35c11 0 20 9 20 20v10c0 9 6 15 12 20 3 2 3 6 0 8-9 7-20 11-32 11s-23-4-32-11c-3-2-3-6 0-8 6-5 12-11 12-20V55c0-11 9-20 20-20z" fill="#737887"/>'
-                : '<ellipse cx="68" cy="52" rx="18" ry="22" fill="#737887"/><path d="M68 86c20 0 35 16 35 35v12H33v-12c0-19 15-35 35-35z" fill="#737887"/>';
-            const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="136" height="136" viewBox="0 0 136 136"><rect x="0" y="0" width="136" height="136" rx="10" fill="#c5cad3"/>' + bodyPath + '</svg>';
+            const accent = normalizedGender === 'female' ? '#8c3b2f' : '#94662f';
+            const lineColor = normalizedGender === 'female' ? '#6f2a20' : '#6c4a25';
+            const shoulderPath = normalizedGender === 'female'
+                ? '<path d="M42 101c4-12 13-20 26-23 13 3 22 11 26 23" fill="none" stroke="' + lineColor + '" stroke-width="5.2" stroke-linecap="round"/>'
+                : '<path d="M39 103c5-14 16-22 29-25 13 3 24 11 29 25" fill="none" stroke="' + lineColor + '" stroke-width="5.6" stroke-linecap="round"/>';
+            const hairMark = normalizedGender === 'female'
+                ? '<path d="M52 52c2-10 9-16 16-16s14 6 16 16" fill="none" stroke="' + accent + '" stroke-width="4" stroke-linecap="round"/>'
+                : '<path d="M54 46c4-4 9-6 14-6s10 2 14 6" fill="none" stroke="' + accent + '" stroke-width="3.6" stroke-linecap="round"/>';
+            const svg = ''
+                + '<svg xmlns="http://www.w3.org/2000/svg" width="136" height="136" viewBox="0 0 136 136">'
+                + '<defs>'
+                + '  <linearGradient id="paperBg" x1="0" y1="0" x2="0" y2="1">'
+                + '    <stop offset="0%" stop-color="#fbf3de"/>'
+                + '    <stop offset="100%" stop-color="#e9d3a4"/>'
+                + '  </linearGradient>'
+                + '  <linearGradient id="medallionBg" x1="0" y1="0" x2="1" y2="1">'
+                + '    <stop offset="0%" stop-color="#f8ecd0"/>'
+                + '    <stop offset="100%" stop-color="#ead4a3"/>'
+                + '  </linearGradient>'
+                + '</defs>'
+                + '<rect x="0" y="0" width="136" height="136" rx="16" fill="url(#paperBg)"/>'
+                + '<circle cx="68" cy="68" r="47" fill="url(#medallionBg)" stroke="' + accent + '" stroke-width="2.6"/>'
+                + '<circle cx="68" cy="68" r="40" fill="none" stroke="rgba(255,248,227,0.75)" stroke-width="1.4"/>'
+                + '<path d="M24 26h18" stroke="rgba(148,102,47,0.22)" stroke-width="1.6" stroke-linecap="round"/>'
+                + '<path d="M94 110h18" stroke="rgba(148,102,47,0.22)" stroke-width="1.6" stroke-linecap="round"/>'
+                + '<path d="M68 44c-9 0-16 7-16 16 0 9 7 16 16 16s16-7 16-16c0-9-7-16-16-16z" fill="none" stroke="' + lineColor + '" stroke-width="4.8"/>'
+                + shoulderPath
+                + hairMark
+                + '<circle cx="43" cy="31" r="2.2" fill="rgba(140,59,47,0.12)"/>'
+                + '<circle cx="102" cy="42" r="1.8" fill="rgba(148,102,47,0.12)"/>'
+                + '<circle cx="35" cy="92" r="2.1" fill="rgba(148,102,47,0.10)"/>'
+                + '<circle cx="97" cy="98" r="2.4" fill="rgba(140,59,47,0.10)"/>'
+                + '</svg>';
             return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
         }
 
@@ -1975,32 +3035,63 @@
             if (!body || !actions || !person) return;
 
             const children = Array.isArray(person.children) ? person.children : [];
+            const spouses = Array.isArray(person.spouses) ? person.spouses : [];
+            const mediaUrls = Array.isArray(person.mediaUrls) ? person.mediaUrls : [];
             const childrenText = children.length > 0
                 ? children.map(function (child) {
                     const childName = escapeHtml(child.fullName || 'Chưa có tên');
                     const childGen = child.generation != null ? ('Đời ' + child.generation) : '';
-                    return '<span class="badge" style="background:#f3f4f6;color:#111827;margin:2px;padding:4px 8px;border-radius:999px;">'
-                        + childName + (childGen ? ' (' + childGen + ')' : '') + '</span>';
+                    return '<span class="ft-detail-pill">' + childName + (childGen ? ' (' + childGen + ')' : '') + '</span>';
                 }).join(' ')
-                : '--';
+                : '<span class="ft-detail-empty">Chưa có thông tin</span>';
+            const spousesText = spouses.length > 0
+                ? spouses.map(function (spouse) {
+                    const spouseName = escapeHtml(spouse.fullName || 'Chưa có tên');
+                    const spouseMeta = spouse.generation != null ? ('Đời ' + spouse.generation) : '';
+                    return '<span class="ft-detail-pill">' + spouseName + (spouseMeta ? ' (' + spouseMeta + ')' : '') + '</span>';
+                }).join(' ')
+                : '<span class="ft-detail-empty">Chưa có thông tin</span>';
+            const mediaHtml = mediaUrls.length > 0
+                ? '<div class="ft-detail-media-grid">' + mediaUrls.slice(0, 8).map(function (url, index) {
+                    const safeUrl = escapeHtml(url);
+                    return '<a class="ft-detail-media-item" href="' + safeUrl + '" target="_blank" rel="noopener noreferrer">'
+                        + '<img src="' + safeUrl + '" alt="Tư liệu ' + (index + 1) + '" />'
+                        + '</a>';
+                }).join('') + '</div>'
+                : '<div class="ft-detail-empty">Chưa có tư liệu đính kèm</div>';
+            const avatar = sanitizeAvatarUrl(person.avatar, person.gender);
+            const roleLabel = getNodeRoleLabel(person, { isRoot: !person.fatherId && !person.motherId });
 
             body.innerHTML = ''
-                + '<div class="row g-3">'
-                + '  <div class="col-md-6"><div class="form-label fw-semibold">Họ và tên</div><div>' + formatOptionalText(person.fullName) + '</div></div>'
-                + '  <div class="col-md-6"><div class="form-label fw-semibold">Giới tính</div><div>' + getGenderLabel(person.gender) + '</div></div>'
-                + '  <div class="col-md-6"><div class="form-label fw-semibold">Ngày sinh</div><div>' + formatOptionalText(formatDate(person.dob || '')) + '</div></div>'
-                + '  <div class="col-md-6"><div class="form-label fw-semibold">Ngày mất</div><div>' + formatOptionalText(formatDate(person.dod || '')) + '</div></div>'
-                + '  <div class="col-md-6"><div class="form-label fw-semibold">Đời</div><div>' + formatOptionalText(person.generation) + '</div></div>'
-                + '  <div class="col-md-6"><div class="form-label fw-semibold">Chi</div><div>' + formatOptionalText(person.branchName) + '</div></div>'
-                + '  <div class="col-md-6"><div class="form-label fw-semibold">Quê quán</div><div>' + formatOptionalText(person.hometown) + '</div></div>'
-                + '  <div class="col-md-6"><div class="form-label fw-semibold">Nơi ở hiện tại (mộ phần)</div><div>' + formatOptionalText(person.currentResidence) + '</div></div>'
-                + '  <div class="col-md-6"><div class="form-label fw-semibold">Nghề nghiệp</div><div>' + formatOptionalText(person.occupation) + '</div></div>'
-                + '  <div class="col-12"><div class="form-label fw-semibold">Ghi chú khác</div><div>' + formatOptionalText(person.otherNote) + '</div></div>'
-                + '  <div class="col-12"><div class="form-label fw-semibold">Con</div><div>' + childrenText + '</div></div>'
+                + '<div class="ft-detail-shell">'
+                + '  <div class="ft-detail-hero">'
+                + '      <div class="ft-detail-avatar-wrap"><img class="ft-detail-avatar" src="' + escapeHtml(avatar) + '" alt="' + escapeHtml(person.fullName || 'Thành viên') + '"></div>'
+                + '      <div class="ft-detail-hero-copy">'
+                + '          <div class="ft-detail-role">' + escapeHtml(roleLabel) + '</div>'
+                + '          <h3 class="ft-detail-name">' + formatOptionalText(person.fullName) + '</h3>'
+                + '          <div class="ft-detail-subline">' + formatOptionalText(formatDate(person.dob || '')) + ' - ' + formatOptionalText(formatDate(person.dod || '')) + '</div>'
+                + '          <div class="ft-detail-tags">'
+                + '              <span class="ft-detail-pill">Giới tính: ' + getGenderLabel(person.gender) + '</span>'
+                + '              <span class="ft-detail-pill">Đời: ' + formatOptionalText(person.generation) + '</span>'
+                + '              <span class="ft-detail-pill">Chi họ: ' + formatOptionalText(person.branchName) + '</span>'
+                + '          </div>'
+                + '      </div>'
+                + '  </div>'
+                + '  <div class="row g-3">'
+                + '    <div class="col-md-6"><div class="form-label fw-semibold">Cha</div><div>' + formatOptionalText(person.fatherFullName) + '</div></div>'
+                + '    <div class="col-md-6"><div class="form-label fw-semibold">Mẹ</div><div>' + formatOptionalText(person.motherFullName) + '</div></div>'
+                + '    <div class="col-md-6"><div class="form-label fw-semibold">Quê quán</div><div>' + formatOptionalText(person.hometown) + '</div></div>'
+                + '    <div class="col-md-6"><div class="form-label fw-semibold">Nơi ở hiện tại</div><div>' + formatOptionalText(person.currentResidence) + '</div></div>'
+                + '    <div class="col-md-6"><div class="form-label fw-semibold">Nghề nghiệp</div><div>' + formatOptionalText(person.occupation) + '</div></div>'
+                + '    <div class="col-md-6"><div class="form-label fw-semibold">Phối ngẫu</div><div>' + spousesText + '</div></div>'
+                + '    <div class="col-12"><div class="form-label fw-semibold">Con</div><div>' + childrenText + '</div></div>'
+                + '    <div class="col-12"><div class="form-label fw-semibold">Ghi chú</div><div>' + formatOptionalText(person.otherNote) + '</div></div>'
+                + '    <div class="col-12"><div class="form-label fw-semibold">Tư liệu đính kèm</div>' + mediaHtml + '</div>'
                 + '</div>';
 
             if (!canManageMember) {
-                actions.innerHTML = '<button type="button" class="btn btn-link text-secondary" data-close="detailMemberModal">Đóng</button>';
+                actions.innerHTML = ''
+                    + '<button type="button" class="btn btn-link text-secondary" data-close="detailMemberModal">Đóng</button>';
                 return;
             }
 
@@ -2018,7 +3109,6 @@
                     ? '<button type="button" class="btn btn-outline-secondary" id="detailAddSpouseBtn"><i class="bi bi-heart"></i> Thêm vợ</button>'
                     : '')
                 + '<button type="button" class="btn btn-dark" id="detailDeleteMemberBtn"><i class="bi bi-trash"></i> Xóa</button>';
-
             document.getElementById('detailEditMemberBtn')?.addEventListener('click', function () {
                 window.ftUi.closeModal('detailMemberModal');
                 openActionMemberModal('edit-member', person);
@@ -2078,6 +3168,54 @@
             }
         }
 
+        function getNodeRoleKey(person, options) {
+            const opts = options || {};
+            const note = normalizeSearchText(person && person.otherNote ? person.otherNote : '');
+            const isFounder = !!opts.isRoot || (!person.fatherId && !person.motherId && getEffectiveGeneration(person) <= 1);
+            if (isFounder) return 'founder';
+            if (note.indexOf('truong ho') >= 0 || note.indexOf('truong chi') >= 0 || note.indexOf('truong toc') >= 0) {
+                return 'lineage-head';
+            }
+            if (note.indexOf('co cong') >= 0 || note.indexOf('tieu bieu') >= 0 || note.indexOf('nhan vat') >= 0) {
+                return 'notable';
+            }
+            if (person.dod) {
+                return 'deceased';
+            }
+            return 'standard';
+        }
+
+        function getNodeRoleLabel(person, options) {
+            const roleKey = getNodeRoleKey(person, options);
+            if (roleKey === 'founder') return 'Thủy tổ';
+            if (roleKey === 'lineage-head') return 'Trưởng chi';
+            if (roleKey === 'notable') return 'Nhân vật tiêu biểu';
+            if (roleKey === 'deceased') return 'Tiên tổ đã khuất';
+            return 'Thành viên gia phả';
+        }
+
+        function centerTreeOnPerson(personId) {
+            const contentArea = document.getElementById('contentArea');
+            const treeRoot = document.getElementById('treeRoot');
+            if (!contentArea || !treeRoot || !FT_VIEWPORT.initialized || !personId) return;
+            const targetNode = treeRoot.querySelector('.person-node[data-id="' + String(personId) + '"]');
+            if (!targetNode) return;
+            const areaRect = contentArea.getBoundingClientRect();
+            const nodeRect = targetNode.getBoundingClientRect();
+            FT_VIEWPORT.panX += (areaRect.left + areaRect.width / 2) - (nodeRect.left + nodeRect.width / 2);
+            FT_VIEWPORT.panY += (areaRect.top + areaRect.height / 2) - (nodeRect.top + nodeRect.height / 2);
+            if (typeof FT_VIEWPORT.apply === 'function') {
+                FT_VIEWPORT.apply();
+            }
+            treeRoot.querySelectorAll('.ft-focus-hit').forEach(function (node) {
+                node.classList.remove('ft-focus-hit');
+            });
+            targetNode.classList.add('ft-focus-hit');
+            setTimeout(function () {
+                targetNode.classList.remove('ft-focus-hit');
+            }, 2600);
+        }
+
         function buildTreeMenu(person, opts) {
             const isSpouse = !!(opts && opts.isSpouse);
             const isRoot = !!(opts && opts.isRoot);
@@ -2088,6 +3226,8 @@
             const personId = Number(person.id || 0);
 
             let items = '';
+            items += '<li><a class="dropdown-item cursor-pointer" data-tree-action="center-person" data-person-id="' + personId + '"><i class="fa fa-bullseye"></i> Đưa ra giữa cây</a></li>';
+            items += '<li><a class="dropdown-item cursor-pointer" data-tree-action="view-descendants" data-person-id="' + personId + '"><i class="fa fa-sitemap"></i> Xem hậu duệ</a></li>';
             items += '<li><a class="dropdown-item cursor-pointer" data-tree-action="back-root" data-person-id="' + personId + '"><i class="fas fa-long-arrow-alt-left"></i> Trở về gốc</a></li>';
             items += '<li><a class="dropdown-item cursor-pointer" data-tree-action="copy-data" data-person-id="' + personId + '"><i class="fas fa-clone"></i> Sao chép dữ liệu</a></li>';
 
@@ -2138,20 +3278,29 @@
             const showManageMenu = canManageMember;
             const showGenerationBadge = false;
             const spouseIdAttr = isSpouse ? (' data-spouse-id="' + personId + '"') : '';
+            const roleKey = getNodeRoleKey(person, { isRoot: isRoot });
+            const roleLabel = getNodeRoleLabel(person, { isRoot: isRoot });
+            const statusBadge = person.dod ? '<span class="ft-node-status">Đã mất</span>' : '';
+            const genderBadge = gender === 'female' ? 'Nữ' : (gender === 'male' ? 'Nam' : 'Khác');
 
             return '' +
-                '<div class="' + cssGender + ' person-node ' + className + '"' + spouseIdAttr + ' data-id="' + personId + '" data-branch-id="' + escapeHtml(branchId) + '">' +
+                '<div class="' + cssGender + ' person-node person-role-' + roleKey + ' ' + className + '"' + spouseIdAttr + ' data-id="' + personId + '" data-branch-id="' + escapeHtml(branchId) + '" data-role-key="' + roleKey + '">' +
                     (showGenerationBadge ? ('<span class="rounded bg-white fw-bold generation-number">' + generation + '</span>') : '') +
                     (showManageMenu
                         ? '<div class="dropdown btn-setting-custom">' +
-                            '<button class="btn btn-sm btn-dark btn-setting-custom tree-menu-toggle" type="button" data-menu-id="' + menuId + '"><i class="fa-solid fa-gear"></i></button>' +
+                            '<button class="btn btn-sm btn-dark btn-setting-custom tree-menu-toggle" type="button" data-menu-id="' + menuId + '"><i class="fa fa-ellipsis-h"></i></button>' +
                             '<ul class="dropdown-menu fs-13 transform-none tree-action-menu" id="' + menuId + '">' + buildTreeMenu(person, { isSpouse: isSpouse, isRoot: isRoot }) + '</ul>' +
                           '</div>'
                         : '') +
+                    '<div class="ft-node-headline">' +
+                        '<span class="ft-node-role">' + escapeHtml(roleLabel) + '</span>' +
+                        '<span class="ft-node-gender">' + escapeHtml(genderBadge) + '</span>' +
+                    '</div>' +
                     '<img src="' + escapeHtml(avatar) + '" class="rounded mb-2 mt-3 avatar-tree" alt="' + escapeHtml(fullName) + '" onerror="this.src=\'' + fallbackAvatar + '\'">' +
                     '<div class="person-text">' +
                         '<div data-id="' + personId + '" class="name-phado">' + escapeHtml(fullName) + '</div>' +
                         datesHtml +
+                        statusBadge +
                     '</div>' +
                     embeddedHtml +
                 '</div>';
@@ -2205,6 +3354,8 @@
             const depth = Number(options.depth || 1);
             const maxDepth = Number(options.maxDepth || Number.MAX_SAFE_INTEGER);
             const children = Array.isArray(person.children) ? person.children : [];
+            const personId = Number(person && person.id || 0);
+            const isCollapsed = personId > 0 && COLLAPSED_NODE_IDS.has(personId);
             let childrenHtml = '';
             let overflowHtml = '';
             if (children.length > 0) {
@@ -2226,17 +3377,24 @@
                 }
             }
 
+            const branchContentHtml = overflowHtml + childrenHtml;
+            const branchSubtreeHtml = children.length > 0
+                ? ('<div class="ft-branch-subtree' + (isCollapsed ? ' is-collapsed' : '') + '" data-branch-owner-id="' + personId + '"' + (isCollapsed ? ' aria-hidden="true" style="max-height:0px;"' : ' aria-hidden="false"') + '>' + branchContentHtml + '</div>')
+                : '';
+
             return '' +
-                '<li class="li-person' + (overflowHtml ? ' ft-depth-capped' : '') + '">' +
+                '<li class="li-person' + (overflowHtml ? ' ft-depth-capped' : '') + '" data-tree-node-id="' + personId + '">' +
                     '<div class="' + (overflowHtml ? 'ft-depth-cap-row' : '') + '">' +
                         '<div class="box-person ' + (hasAnySpouse(person) ? 'has-spouse' : 'no-spouse') + '">' +
                             buildMemberPairHtml(person, {
                                 isRoot: !!options.isRoot
                             }) +
                         '</div>' +
-                        overflowHtml +
                     '</div>' +
-                    childrenHtml +
+                    (children.length > 0
+                        ? '<div class="ft-branch-toggle-wrap"><button type="button" class="ft-branch-toggle" data-tree-toggle-id="' + personId + '" aria-expanded="' + (!isCollapsed) + '">' + (isCollapsed ? 'Mở nhánh con' : 'Thu gọn nhánh') + '</button></div>'
+                        : '') +
+                    branchSubtreeHtml +
                 '</li>';
         }
 
@@ -2284,11 +3442,17 @@
             if (!FT_VIEWPORT.initialized) return;
             const areaRect = contentArea.getBoundingClientRect();
             const nodeRect = targetNode.getBoundingClientRect();
-            FT_VIEWPORT.panX += (areaRect.left + areaRect.width / 2) - (nodeRect.left + nodeRect.width / 2);
-            FT_VIEWPORT.panY += (areaRect.top + areaRect.height / 2) - (nodeRect.top + nodeRect.height / 2);
+            const deltaX = (areaRect.left + areaRect.width / 2) - (nodeRect.left + nodeRect.width / 2);
+            const deltaY = (areaRect.top + areaRect.height / 2) - (nodeRect.top + nodeRect.height / 2);
+            if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) {
+                return false;
+            }
+            FT_VIEWPORT.panX += deltaX;
+            FT_VIEWPORT.panY += deltaY;
             if (typeof FT_VIEWPORT.apply === 'function') {
                 FT_VIEWPORT.apply();
             }
+            return true;
         }
 
         function resetTreeViewport() {
@@ -2296,30 +3460,201 @@
             FT_VIEWPORT.scale = 1;
             FT_VIEWPORT.panX = 0;
             FT_VIEWPORT.panY = 0;
+            if (typeof FT_VIEWPORT.applyNow === 'function') {
+                FT_VIEWPORT.applyNow();
+            } else if (typeof FT_VIEWPORT.apply === 'function') {
+                FT_VIEWPORT.apply();
+            }
+        }
+
+        function getTreeNodeElement(personId) {
+            const treeRoot = document.getElementById('treeRoot');
+            if (!treeRoot || !personId) return null;
+            return treeRoot.querySelector('.person-node[data-id="' + String(personId) + '"]');
+        }
+
+        function getBranchToggleElement(personId) {
+            const treeRoot = document.getElementById('treeRoot');
+            if (!treeRoot || !personId) return null;
+            return treeRoot.querySelector('.ft-branch-toggle[data-tree-toggle-id="' + String(personId) + '"]');
+        }
+
+        function getBranchSubtreeElement(personId) {
+            const treeRoot = document.getElementById('treeRoot');
+            if (!treeRoot || !personId) return null;
+            return treeRoot.querySelector('.ft-branch-subtree[data-branch-owner-id="' + String(personId) + '"]');
+        }
+
+        function updateBranchToggleLabel(button, isCollapsed) {
+            if (!button) return;
+            button.textContent = isCollapsed ? 'Mở nhánh con' : 'Thu gọn nhánh';
+            button.setAttribute('aria-expanded', String(!isCollapsed));
+        }
+
+        function keepAnchorNodeVisible(anchorNode) {
+            const contentArea = document.getElementById('contentArea');
+            if (!contentArea || !anchorNode || !FT_VIEWPORT.initialized) return;
+            const areaRect = contentArea.getBoundingClientRect();
+            const nodeRect = anchorNode.getBoundingClientRect();
+            const marginX = Math.max(24, Math.min(72, areaRect.width * 0.08));
+            const marginY = Math.max(24, Math.min(72, areaRect.height * 0.1));
+            let deltaX = 0;
+            let deltaY = 0;
+
+            if (nodeRect.left < areaRect.left + marginX) {
+                deltaX = (areaRect.left + marginX) - nodeRect.left;
+            } else if (nodeRect.right > areaRect.right - marginX) {
+                deltaX = (areaRect.right - marginX) - nodeRect.right;
+            }
+
+            if (nodeRect.top < areaRect.top + marginY) {
+                deltaY = (areaRect.top + marginY) - nodeRect.top;
+            } else if (nodeRect.bottom > areaRect.bottom - marginY) {
+                deltaY = (areaRect.bottom - marginY) - nodeRect.bottom;
+            }
+
+            if (!deltaX && !deltaY) return;
+            FT_VIEWPORT.panX += deltaX;
+            FT_VIEWPORT.panY += deltaY;
+            FT_VIEWPORT.skipPanClampOnce = true;
             if (typeof FT_VIEWPORT.apply === 'function') {
                 FT_VIEWPORT.apply();
             }
         }
 
+        function preserveAnchorAfterLayout(anchorPersonId, beforeRect) {
+            if (!anchorPersonId || !beforeRect || !FT_VIEWPORT.initialized) return;
+            requestAnimationFrame(function () {
+                const anchorNode = getTreeNodeElement(anchorPersonId);
+                if (!anchorNode) return;
+                const afterRect = anchorNode.getBoundingClientRect();
+                FT_VIEWPORT.panX += beforeRect.left - afterRect.left;
+                FT_VIEWPORT.panY += beforeRect.top - afterRect.top;
+                FT_VIEWPORT.skipPanClampOnce = true;
+                if (typeof FT_VIEWPORT.apply === 'function') {
+                    FT_VIEWPORT.apply();
+                }
+                requestAnimationFrame(function () {
+                    keepAnchorNodeVisible(anchorNode);
+                });
+            });
+        }
+
+        function setDomBranchCollapsedState(personId, shouldCollapse, options) {
+            const opts = options || {};
+            const subtree = getBranchSubtreeElement(personId);
+            const toggle = getBranchToggleElement(personId);
+            if (!subtree || !toggle) return;
+
+            const anchorNode = getTreeNodeElement(opts.anchorPersonId || personId);
+            const beforeRect = anchorNode ? anchorNode.getBoundingClientRect() : null;
+            const durationMs = 190;
+            subtree.style.transitionDuration = durationMs + 'ms';
+            updateBranchToggleLabel(toggle, shouldCollapse);
+
+            if (shouldCollapse) {
+                COLLAPSED_NODE_IDS.add(Number(personId));
+                const currentHeight = subtree.scrollHeight;
+                subtree.style.maxHeight = currentHeight + 'px';
+                subtree.setAttribute('aria-hidden', 'true');
+                subtree.offsetHeight;
+                subtree.classList.add('is-collapsed');
+                subtree.style.maxHeight = '0px';
+                preserveAnchorAfterLayout(opts.anchorPersonId || personId, beforeRect);
+                return;
+            }
+
+            COLLAPSED_NODE_IDS.delete(Number(personId));
+            subtree.classList.remove('is-collapsed');
+            subtree.setAttribute('aria-hidden', 'false');
+            subtree.style.maxHeight = '0px';
+            subtree.offsetHeight;
+            const expandedHeight = subtree.scrollHeight;
+            subtree.style.maxHeight = expandedHeight + 'px';
+            preserveAnchorAfterLayout(opts.anchorPersonId || personId, beforeRect);
+            window.setTimeout(function () {
+                if (!subtree.classList.contains('is-collapsed')) {
+                    subtree.style.maxHeight = 'none';
+                }
+            }, durationMs + 30);
+        }
+
+        function setMultipleBranchesCollapsedState(personIds, shouldCollapse, anchorPersonId) {
+            const ids = Array.isArray(personIds) ? personIds : [];
+            if (ids.length === 0) return;
+            const anchorNode = getTreeNodeElement(anchorPersonId || ids[0]);
+            const beforeRect = anchorNode ? anchorNode.getBoundingClientRect() : null;
+
+            ids.forEach(function (personId) {
+                const subtree = getBranchSubtreeElement(personId);
+                const toggle = getBranchToggleElement(personId);
+                if (!subtree || !toggle) return;
+                updateBranchToggleLabel(toggle, shouldCollapse);
+                subtree.style.transitionDuration = '190ms';
+                if (shouldCollapse) {
+                    COLLAPSED_NODE_IDS.add(Number(personId));
+                    const currentHeight = subtree.scrollHeight;
+                    subtree.style.maxHeight = currentHeight + 'px';
+                    subtree.setAttribute('aria-hidden', 'true');
+                    subtree.offsetHeight;
+                    subtree.classList.add('is-collapsed');
+                    subtree.style.maxHeight = '0px';
+                } else {
+                    COLLAPSED_NODE_IDS.delete(Number(personId));
+                    subtree.classList.remove('is-collapsed');
+                    subtree.setAttribute('aria-hidden', 'false');
+                    subtree.style.maxHeight = '0px';
+                    subtree.offsetHeight;
+                    subtree.style.maxHeight = subtree.scrollHeight + 'px';
+                    window.setTimeout(function () {
+                        if (!subtree.classList.contains('is-collapsed')) {
+                            subtree.style.maxHeight = 'none';
+                        }
+                    }, 220);
+                }
+            });
+
+            preserveAnchorAfterLayout(anchorPersonId || ids[0], beforeRect);
+        }
+
         async function resetFiltersAndBackToRoot() {
             const nameInput = document.getElementById('ftFilterName');
             const dobInput = document.getElementById('ftFilterDob');
+            const generationInput = document.getElementById('ftFilterGeneration');
+            const genderInput = document.getElementById('ftFilterGender');
+            const lifeStatusInput = document.getElementById('ftFilterLifeStatus');
+            const birthYearInput = document.getElementById('ftFilterBirthYear');
+            const deathYearInput = document.getElementById('ftFilterDeathYear');
+            const viewModeInput = document.getElementById('ftViewMode');
             if (nameInput) nameInput.value = '';
             if (dobInput) dobInput.value = '';
+            if (generationInput) generationInput.value = '';
+            if (genderInput) genderInput.value = '';
+            if (lifeStatusInput) lifeStatusInput.value = '';
+            if (birthYearInput) birthYearInput.value = '';
+            if (deathYearInput) deathYearInput.value = '';
+            if (viewModeInput) viewModeInput.value = 'full';
 
+            CURRENT_TREE_MODE = 'default';
             CURRENT_FOCUS_PERSON_ID = null;
+            CURRENT_DESCENDANT_ROOT_ID = null;
             CURRENT_NAME_FILTER = '';
             CURRENT_DOB_FILTER = '';
+            CURRENT_GENERATION_FILTER = null;
             CURRENT_GENDER_FILTER = '';
             CURRENT_LIFE_STATUS_FILTER = '';
             CURRENT_BIRTH_YEAR_FROM = null;
             CURRENT_BIRTH_YEAR_TO = null;
+            CURRENT_DEATH_YEAR = null;
+            CURRENT_VIEW_MODE = 'full';
+            COLLAPSED_NODE_IDS.clear();
 
             if (FT_FILTER_DEBOUNCE) {
                 clearTimeout(FT_FILTER_DEBOUNCE);
                 FT_FILTER_DEBOUNCE = null;
             }
 
+            applyTreeViewMode();
             resetTreeViewport();
             await loadRootPersons({ forceReload: false, center: true, centerBranchId: BRANCH_ID });
         }
@@ -2356,13 +3691,7 @@
                 return;
             }
 
-            let renderRoots = CURRENT_TREE_ROOTS;
-            if (CURRENT_FOCUS_PERSON_ID != null) {
-                const focused = findAnchorNodeByMemberIdInRoots(CURRENT_FOCUS_PERSON_ID);
-                if (focused) {
-                    renderRoots = [focused];
-                }
-            }
+            const renderRoots = getCurrentRenderRoots();
 
             const scopedMembers = collectScopedMembers(renderRoots);
             let visibleMembers = scopedMembers;
@@ -2384,8 +3713,19 @@
                 const nodes = treeRoot.querySelectorAll('.person-node').length;
                 app.classList.toggle('ft-heavy', nodes > 140);
             }
-            const baseStats = computeVisibleStatsFromMembers(scopedMembers);
+            const baseStats = computeVisibleStatsFromMembers(hasAnyActiveFilter() ? visibleMembers : scopedMembers);
+            syncGenerationFilterOptions(baseStats.generations);
             updateTopStats(baseStats.generations, baseStats.members);
+            if ((hasAnyActiveFilter() || CURRENT_FOCUS_PERSON_ID != null || CURRENT_DESCENDANT_ROOT_ID != null) && visibleMembers.length > 0) {
+                const targetId = hasAnyActiveFilter()
+                    ? Number(visibleMembers[0] && visibleMembers[0].id || 0)
+                    : Number((CURRENT_DESCENDANT_ROOT_ID != null ? CURRENT_DESCENDANT_ROOT_ID : CURRENT_FOCUS_PERSON_ID) || 0);
+                if (targetId > 0) {
+                    requestAnimationFrame(function () {
+                        centerTreeOnPerson(targetId);
+                    });
+                }
+            }
         }
 
         async function loadRootPersons(options) {
@@ -2426,6 +3766,7 @@
                 if (validRoots.length === 0) {
                     CURRENT_TREE_ROOTS = [];
                     CURRENT_FOCUS_PERSON_ID = null;
+                    CURRENT_DESCENDANT_ROOT_ID = null;
                     treeRoot.innerHTML = '';
                     updateTopStats(0, 0);
                     if (typeof window.ftRefreshCreateFirstVisibility === 'function') {
@@ -2434,8 +3775,13 @@
                     return;
                 }
                 CURRENT_TREE_ROOTS = validRoots;
+                syncGenerationFilterOptions(getMaxGenerationFromRoots(validRoots));
+                if (CURRENT_DESCENDANT_ROOT_ID != null && !findAnchorNodeByMemberIdInRoots(CURRENT_DESCENDANT_ROOT_ID)) {
+                    CURRENT_DESCENDANT_ROOT_ID = null;
+                }
                 if (CURRENT_FOCUS_PERSON_ID != null && !findAnchorNodeByMemberIdInRoots(CURRENT_FOCUS_PERSON_ID)) {
                     CURRENT_FOCUS_PERSON_ID = null;
+                    CURRENT_DESCENDANT_ROOT_ID = null;
                 }
                 if (typeof window.ftRefreshCreateFirstVisibility === 'function') {
                     await window.ftRefreshCreateFirstVisibility(false, validRoots);
@@ -2457,6 +3803,7 @@
             } catch (err) {
                 console.error('Load root person failed:', err);
                 CURRENT_TREE_ROOTS = [];
+                CURRENT_DESCENDANT_ROOT_ID = null;
                 treeRoot.innerHTML = '';
                 updateTopStats(0, 0);
                 if (typeof window.ftRefreshCreateFirstVisibility === 'function') {
@@ -2481,6 +3828,18 @@
 
             treeRoot.addEventListener('click', async function (e) {
                 if (Date.now() < FT_SUPPRESS_CLICK_UNTIL) {
+                    return;
+                }
+                const branchToggle = e.target.closest('[data-tree-toggle-id]');
+                if (branchToggle) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const togglePersonId = Number(branchToggle.getAttribute('data-tree-toggle-id') || 0);
+                    if (togglePersonId > 0) {
+                        setDomBranchCollapsedState(togglePersonId, !COLLAPSED_NODE_IDS.has(togglePersonId), {
+                            anchorPersonId: togglePersonId
+                        });
+                    }
                     return;
                 }
                 const toggle = e.target.closest('.tree-menu-toggle');
@@ -2524,9 +3883,12 @@
                         if (createBtn) createBtn.click();
                         return;
                     }
+                    if (action === 'center-person') {
+                        centerTreeOnPerson(personId);
+                        return;
+                    }
                     if (action === 'view-descendants') {
-                        CURRENT_FOCUS_PERSON_ID = personId;
-                        requestTreeRender();
+                        openDescendantSubtree(person);
                         return;
                     }
                     if (action === 'back-root') {
@@ -2594,40 +3956,91 @@
             const app = document.getElementById('ftApp');
             if (!contentArea || !scaleWrap) return;
             scaleWrap.style.transformOrigin = '0 0';
-            scaleWrap.style.willChange = 'transform';
+            scaleWrap.style.willChange = 'auto';
 
             FT_VIEWPORT.scale = FT_VIEWPORT.initialized ? FT_VIEWPORT.scale : 1;
             FT_VIEWPORT.panX = FT_VIEWPORT.initialized ? FT_VIEWPORT.panX : 0;
             FT_VIEWPORT.panY = FT_VIEWPORT.initialized ? FT_VIEWPORT.panY : 0;
 
-            const minScale = 0.005;
-            const maxScale = 2.2;
+            const minScale = window.innerWidth <= 767 ? 0.36 : 0.22;
+            const maxScale = window.innerWidth <= 767 ? 1.04 : 1.12;
             let viewportRaf = 0;
             let interactionTimer = 0;
+            const getPanBounds = function (scaleValue) {
+                const treeRoot = document.getElementById('treeRoot');
+                const scale = Number.isFinite(scaleValue) ? scaleValue : FT_VIEWPORT.scale || 1;
+                const viewportWidth = contentArea.clientWidth || 0;
+                const viewportHeight = contentArea.clientHeight || 0;
+                const treeWidth = treeRoot ? Math.max(treeRoot.scrollWidth || 0, treeRoot.offsetWidth || 0) : 0;
+                const treeHeight = treeRoot ? Math.max(treeRoot.scrollHeight || 0, treeRoot.offsetHeight || 0) : 0;
+                const scaledWidth = Math.max(treeWidth * scale, 0);
+                const scaledHeight = Math.max(treeHeight * scale, 0);
+                const bufferX = Math.max(120, viewportWidth * 0.28);
+                const bufferTop = Math.max(40, viewportHeight * 0.08);
+                const bufferBottom = Math.max(120, viewportHeight * 0.22);
+                let minX;
+                let maxX;
+                let minY;
+                let maxY;
+
+                if (scaledWidth <= viewportWidth) {
+                    const centeredX = (viewportWidth - scaledWidth) / 2;
+                    minX = centeredX - bufferX;
+                    maxX = centeredX + bufferX;
+                } else {
+                    minX = viewportWidth - scaledWidth - bufferX;
+                    maxX = bufferX;
+                }
+
+                if (scaledHeight <= viewportHeight) {
+                    const centeredY = Math.max(bufferTop, (viewportHeight - scaledHeight) / 2);
+                    minY = centeredY - bufferBottom;
+                    maxY = centeredY + bufferTop;
+                } else {
+                    minY = viewportHeight - scaledHeight - bufferBottom;
+                    maxY = bufferTop;
+                }
+
+                return {
+                    minX: Number.isFinite(minX) ? minX : -bufferX,
+                    maxX: Number.isFinite(maxX) ? maxX : bufferX,
+                    minY: Number.isFinite(minY) ? minY : -bufferBottom,
+                    maxY: Number.isFinite(maxY) ? maxY : bufferTop
+                };
+            };
             const clampScale = function (value) {
                 if (!Number.isFinite(value)) return FT_VIEWPORT.scale || 1;
                 return Math.min(maxScale, Math.max(minScale, value));
             };
-            const clampPan = function (value) {
+            const clampPan = function (value, axis, scaleValue) {
                 if (!Number.isFinite(value)) return 0;
-                const PAN_LIMIT = 10000000;
-                return Math.min(PAN_LIMIT, Math.max(-PAN_LIMIT, value));
+                const bounds = getPanBounds(scaleValue);
+                if (axis === 'y') {
+                    return Math.min(bounds.maxY, Math.max(bounds.minY, value));
+                }
+                return Math.min(bounds.maxX, Math.max(bounds.minX, value));
             };
 
             const setInteractingState = function () {
                 if (!app) return;
                 app.classList.add('ft-interacting');
+                scaleWrap.style.willChange = 'transform';
                 if (interactionTimer) clearTimeout(interactionTimer);
                 interactionTimer = setTimeout(function () {
                     app.classList.remove('ft-interacting');
+                    scaleWrap.style.willChange = 'auto';
                 }, 160);
             };
 
             const applyViewportNow = function () {
                 viewportRaf = 0;
                 FT_VIEWPORT.scale = clampScale(FT_VIEWPORT.scale);
-                FT_VIEWPORT.panX = clampPan(FT_VIEWPORT.panX);
-                FT_VIEWPORT.panY = clampPan(FT_VIEWPORT.panY);
+                const skipPanClampOnce = FT_VIEWPORT.skipPanClampOnce === true;
+                FT_VIEWPORT.skipPanClampOnce = false;
+                if (!skipPanClampOnce) {
+                    FT_VIEWPORT.panX = clampPan(FT_VIEWPORT.panX, 'x', FT_VIEWPORT.scale);
+                    FT_VIEWPORT.panY = clampPan(FT_VIEWPORT.panY, 'y', FT_VIEWPORT.scale);
+                }
                 scaleWrap.style.transform = 'translate(' + FT_VIEWPORT.panX + 'px,' + FT_VIEWPORT.panY + 'px) scale(' + FT_VIEWPORT.scale + ')';
             };
 
@@ -2635,6 +4048,7 @@
                 if (viewportRaf) return;
                 viewportRaf = requestAnimationFrame(applyViewportNow);
             };
+            FT_VIEWPORT.applyNow = applyViewportNow;
 
             const zoomAtPoint = function (nextScale, clientX, clientY) {
                 const clamped = clampScale(nextScale);
@@ -2644,8 +4058,8 @@
                 const worldX = (localX - FT_VIEWPORT.panX) / FT_VIEWPORT.scale;
                 const worldY = (localY - FT_VIEWPORT.panY) / FT_VIEWPORT.scale;
                 FT_VIEWPORT.scale = clamped;
-                FT_VIEWPORT.panX = clampPan(localX - worldX * FT_VIEWPORT.scale);
-                FT_VIEWPORT.panY = clampPan(localY - worldY * FT_VIEWPORT.scale);
+                FT_VIEWPORT.panX = clampPan(localX - worldX * FT_VIEWPORT.scale, 'x', FT_VIEWPORT.scale);
+                FT_VIEWPORT.panY = clampPan(localY - worldY * FT_VIEWPORT.scale, 'y', FT_VIEWPORT.scale);
                 setInteractingState();
                 FT_VIEWPORT.apply();
             };
@@ -2685,7 +4099,7 @@
                 const wheelSensitivity = e.ctrlKey ? 0.0032 : 0.0024;
                 let factor = Math.exp(-e.deltaY * wheelSensitivity);
                 factor = Math.min(1.22, Math.max(0.82, factor));
-                if (FT_VIEWPORT.scale < 0.03 && factor > 1) {
+                if (FT_VIEWPORT.scale < 0.18 && factor > 1) {
                     factor = Math.pow(factor, 1.25);
                 }
                 zoomAtPoint(FT_VIEWPORT.scale * factor, e.clientX, e.clientY);
@@ -2825,6 +4239,89 @@
                     FT_SUPPRESS_CLICK_UNTIL = Date.now() + 180;
                 }
             });
+
+            function fitTreeToViewport() {
+                const treeRoot = document.getElementById('treeRoot');
+                if (!treeRoot) return;
+                const firstNode = treeRoot.querySelector('.person-node');
+                if (!firstNode) return;
+                FT_VIEWPORT.scale = 1;
+                FT_VIEWPORT.panX = 0;
+                FT_VIEWPORT.panY = 0;
+                applyViewportNow();
+
+                const areaRect = contentArea.getBoundingClientRect();
+                const treeRect = treeRoot.getBoundingClientRect();
+                if (!treeRect.width || !treeRect.height || !areaRect.width || !areaRect.height) return;
+
+                const widthScale = (areaRect.width - 40) / treeRect.width;
+                const heightScale = (areaRect.height - 40) / treeRect.height;
+                FT_VIEWPORT.scale = clampScale(Math.min(widthScale, heightScale, 1));
+                FT_VIEWPORT.panX = clampPan((areaRect.width - (treeRect.width * FT_VIEWPORT.scale)) / 2, 'x', FT_VIEWPORT.scale);
+                FT_VIEWPORT.panY = clampPan(24, 'y', FT_VIEWPORT.scale);
+                FT_VIEWPORT.apply();
+            }
+
+            document.getElementById('ftZoomIn')?.addEventListener('click', function () {
+                const rect = contentArea.getBoundingClientRect();
+                zoomAtPoint(FT_VIEWPORT.scale * 1.14, rect.left + rect.width / 2, rect.top + rect.height / 2);
+            });
+            document.getElementById('ftZoomOut')?.addEventListener('click', function () {
+                const rect = contentArea.getBoundingClientRect();
+                zoomAtPoint(FT_VIEWPORT.scale / 1.14, rect.left + rect.width / 2, rect.top + rect.height / 2);
+            });
+            document.getElementById('ftFitScreen')?.addEventListener('click', function () {
+                fitTreeToViewport();
+            });
+            document.getElementById('ftCenterRoot')?.addEventListener('click', function () {
+                const alreadyAtDefaultScale = Math.abs((FT_VIEWPORT.scale || 1) - 1) < 0.001;
+                if (alreadyAtDefaultScale) {
+                    centerTreeView(BRANCH_ID);
+                    return;
+                }
+                resetTreeViewport();
+                centerTreeView(BRANCH_ID);
+            });
+            document.getElementById('ftPrintView')?.addEventListener('click', function () {
+                const viewModeInput = document.getElementById('ftViewMode');
+                if (viewModeInput) {
+                    viewModeInput.value = 'print';
+                }
+                CURRENT_VIEW_MODE = 'print';
+                applyTreeViewMode();
+                window.print();
+            });
+            document.getElementById('ftCollapseAll')?.addEventListener('click', function () {
+                const renderRoots = getCurrentRenderRoots();
+                const protectedIds = new Set(renderRoots.map(function (member) {
+                    return Number(member && member.id || 0);
+                }).filter(function (id) {
+                    return id > 0;
+                }));
+                const targetIds = [];
+                collectScopedMembers(renderRoots).forEach(function (member) {
+                    const memberId = Number(member && member.id || 0);
+                    if (protectedIds.has(memberId)) return;
+                    if (Array.isArray(member.children) && member.children.length > 0 && memberId > 0) {
+                        targetIds.push(memberId);
+                    }
+                });
+                setMultipleBranchesCollapsedState(targetIds, true, CURRENT_FOCUS_PERSON_ID || Number(renderRoots[0] && renderRoots[0].id || 0));
+            });
+            document.getElementById('ftExpandAll')?.addEventListener('click', function () {
+                const targetIds = Array.from(document.querySelectorAll('#treeRoot .ft-branch-toggle[data-tree-toggle-id]'))
+                    .map(function (button) {
+                        return Number(button.getAttribute('data-tree-toggle-id') || 0);
+                    })
+                    .filter(function (id) {
+                        return id > 0;
+                    });
+                setMultipleBranchesCollapsedState(targetIds, false, CURRENT_FOCUS_PERSON_ID || targetIds[0] || 0);
+            });
+
+            window.addEventListener('resize', function () {
+                FT_VIEWPORT.apply();
+            });
         }
 
         function bindAvatarPicker(fileInputId, targetInputId) {
@@ -2866,17 +4363,41 @@
             });
         }
 
+        function normalizeYearInputValue(value) {
+            const raw = String(value || '').trim();
+            if (!raw) return null;
+            const parsed = Number(raw);
+            if (!Number.isFinite(parsed) || parsed <= 0) return null;
+            return Math.floor(parsed);
+        }
+
+        function applyTreeViewMode() {
+            const app = document.getElementById('ftApp');
+            if (!app) return;
+            app.classList.toggle('ft-view-minimal', CURRENT_VIEW_MODE === 'minimal');
+            app.classList.toggle('ft-view-print', CURRENT_VIEW_MODE === 'print');
+        }
+
         function bindAdvancedFilters() {
             CURRENT_NAME_FILTER = '';
             CURRENT_DOB_FILTER = '';
+            CURRENT_GENERATION_FILTER = null;
             CURRENT_GENDER_FILTER = '';
             CURRENT_LIFE_STATUS_FILTER = '';
             CURRENT_BIRTH_YEAR_FROM = null;
             CURRENT_BIRTH_YEAR_TO = null;
+            CURRENT_DEATH_YEAR = null;
+            CURRENT_VIEW_MODE = 'full';
             const nameInput = document.getElementById('ftFilterName');
             const dobInput = document.getElementById('ftFilterDob');
+            const generationInput = document.getElementById('ftFilterGeneration');
+            const genderInput = document.getElementById('ftFilterGender');
+            const lifeStatusInput = document.getElementById('ftFilterLifeStatus');
+            const birthYearInput = document.getElementById('ftFilterBirthYear');
+            const deathYearInput = document.getElementById('ftFilterDeathYear');
+            const viewModeInput = document.getElementById('ftViewMode');
             const resetBtn = document.getElementById('ftFilterReset');
-            if (!nameInput || !dobInput || !resetBtn) {
+            if (!nameInput || !dobInput || !generationInput || !genderInput || !lifeStatusInput || !birthYearInput || !deathYearInput || !viewModeInput || !resetBtn) {
                 return;
             }
             const todayIso = new Date().toISOString().slice(0, 10);
@@ -2886,6 +4407,31 @@
                 CURRENT_NAME_FILTER = String(nameInput.value || '').trim();
                 const normalizedDob = normalizeDateFilterValue(dobInput.value);
                 CURRENT_DOB_FILTER = normalizedDob;
+                CURRENT_GENERATION_FILTER = normalizeYearInputValue(generationInput.value);
+                CURRENT_GENDER_FILTER = String(genderInput.value || '').trim().toLowerCase();
+                CURRENT_LIFE_STATUS_FILTER = String(lifeStatusInput.value || '').trim().toLowerCase();
+                const birthYear = normalizeYearInputValue(birthYearInput.value);
+                CURRENT_BIRTH_YEAR_FROM = birthYear;
+                CURRENT_BIRTH_YEAR_TO = birthYear;
+                CURRENT_DEATH_YEAR = normalizeYearInputValue(deathYearInput.value);
+                CURRENT_VIEW_MODE = String(viewModeInput.value || 'full').trim().toLowerCase() || 'full';
+                const hasSearchState = !!(CURRENT_NAME_FILTER
+                    || CURRENT_DOB_FILTER
+                    || CURRENT_GENERATION_FILTER != null
+                    || CURRENT_GENDER_FILTER
+                    || CURRENT_LIFE_STATUS_FILTER
+                    || CURRENT_BIRTH_YEAR_FROM != null
+                    || CURRENT_BIRTH_YEAR_TO != null
+                    || CURRENT_DEATH_YEAR != null);
+                if (hasSearchState) {
+                    CURRENT_TREE_MODE = 'search';
+                    CURRENT_DESCENDANT_ROOT_ID = null;
+                } else if (CURRENT_DESCENDANT_ROOT_ID != null) {
+                    CURRENT_TREE_MODE = 'descendants';
+                } else {
+                    CURRENT_TREE_MODE = 'default';
+                }
+                applyTreeViewMode();
                 if (String(dobInput.value || '').trim() && !normalizedDob) {
                     dobInput.value = '';
                 }
@@ -2904,6 +4450,17 @@
 
             nameInput.addEventListener('input', applyDebounced);
             dobInput.addEventListener('input', applyDebounced);
+            generationInput.addEventListener('change', applyDebounced);
+            genderInput.addEventListener('change', applyDebounced);
+            lifeStatusInput.addEventListener('change', applyDebounced);
+            birthYearInput.addEventListener('input', applyDebounced);
+            deathYearInput.addEventListener('input', applyDebounced);
+            viewModeInput.addEventListener('change', function () {
+                applyAllFilters();
+                if (CURRENT_VIEW_MODE === 'print') {
+                    window.print();
+                }
+            });
             dobInput.addEventListener('blur', function () {
                 const normalized = normalizeDateFilterValue(dobInput.value);
                 dobInput.value = normalized || '';
@@ -2916,6 +4473,15 @@
                     requestTreeRender();
                 }
             });
+
+            applyTreeViewMode();
+            window.addEventListener('afterprint', function () {
+                if (CURRENT_VIEW_MODE === 'print') {
+                    CURRENT_VIEW_MODE = 'full';
+                    viewModeInput.value = 'full';
+                    applyTreeViewMode();
+                }
+            });
         }
 
         bindAvatarPicker('mAvatarFile', 'mAvatar');
@@ -2926,6 +4492,7 @@
         setupPersonCardActions();
 
         async function bootstrapFamilyTree() {
+            syncGenerationFilterOptions(SERVER_TOTAL_GENERATIONS);
             await loadBranches();
             await loadRootPersons({ center: true, centerBranchId: BRANCH_ID });
         }

@@ -436,6 +436,41 @@
     el.style.color = isError ? "#dc2626" : "#475569";
   }
 
+  function showToast(message, type, title) {
+    var stack = $("lsToastStack");
+    if (!stack || !message) return;
+    var tone = type || "info";
+    var icon = tone === "error" ? "fa-exclamation-circle" : (tone === "success" ? "fa-check-circle" : "fa-info-circle");
+    var heading = title || (tone === "error" ? "Thông báo lỗi" : (tone === "success" ? "Thao tác thành công" : "Thông báo"));
+    var toast = document.createElement("div");
+    toast.className = "ls-toast ls-toast-" + tone;
+    toast.innerHTML =
+      '<span class="ls-toast-icon"><i class="fa ' + icon + '"></i></span>' +
+      '<div class="ls-toast-body">' +
+      '  <div class="ls-toast-title">' + escapeHtml(heading) + '</div>' +
+      '  <div class="ls-toast-message">' + escapeHtml(message) + '</div>' +
+      '</div>' +
+      '<button type="button" class="ls-toast-close" aria-label="Đóng">&times;</button>';
+    stack.appendChild(toast);
+
+    var removeToast = function () {
+      if (!toast.parentNode) return;
+      toast.classList.remove("is-visible");
+      window.setTimeout(function () {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 180);
+    };
+
+    var closeBtn = toast.querySelector(".ls-toast-close");
+    if (closeBtn) closeBtn.addEventListener("click", removeToast);
+
+    window.requestAnimationFrame(function () {
+      toast.classList.add("is-visible");
+    });
+
+    window.setTimeout(removeToast, tone === "error" ? 5000 : 3600);
+  }
+
   function setStatusBadge(status) {
     var badge = $("lsStatusBadge");
     if (!badge) return;
@@ -596,7 +631,7 @@
   async function joinByUrlInput(rawUrl) {
     function showJoinError(message) {
       setStatusText(message, true);
-      window.alert(message);
+      showToast(message, "error", "Không thể vào phòng");
     }
     var id = parseLivestreamIdFromUrl((rawUrl || "").trim());
     if (!id) { showJoinError("URL livestream không hợp lệ."); return; }
@@ -924,7 +959,7 @@
         refreshParticipantCount();
         renderParticipants();
         if (!CAN_HOST) {
-          window.alert("Livestream đã kết thúc. Chủ phòng đã rời khỏi phòng.");
+          showToast("Livestream đã kết thúc. Chủ phòng đã rời khỏi phòng.", "info", "Phòng đã kết thúc");
           setStatusText("Livestream đã kết thúc.", false);
           await leaveRoom({ forceEnded: true, skipEndRequest: true });
           return;

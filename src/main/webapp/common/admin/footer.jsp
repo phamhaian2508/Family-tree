@@ -1,14 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
-<%@ taglib prefix="display" uri="http://displaytag.sf.net"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<div class="footer">
-	<div class="footer-inner">
-		<div class="footer-content">
-						<span class="bigger-120">
-							<b>Nhóm 1
-							</b>
-						</span>
-		</div>
-	</div>
-</div>
+
+<footer class="app-footer">
+    <div class="app-footer-inner">
+        <div class="app-footer-copy">
+            &copy; 2026 Gia phả Họ Trần Đức. Hệ thống lưu giữ tộc hệ, tư liệu và thông tin hậu duệ.
+        </div>
+    </div>
+</footer>

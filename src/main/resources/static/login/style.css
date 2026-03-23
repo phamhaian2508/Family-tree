@@ -1,94 +1,532 @@
-body#LoginForm {
-	background-image:
-		url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg");
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: cover;
-	padding: 10px;
+:root {
+    --gpo-bg: #f2e3bf;
+    --gpo-paper: #f6e8c6;
+    --gpo-paper-soft: #fbf2de;
+    --gpo-paper-deep: #ecd8aa;
+    --gpo-line: rgba(104, 61, 33, 0.24);
+    --gpo-ink: #2d1f16;
+    --gpo-ink-soft: #4d3a2d;
+    --gpo-accent: #8f2020;
+    --gpo-accent-deep: #661515;
+    --gpo-gold: #b4882f;
+    --gpo-success: #355c3b;
+    --gpo-warning: #8a5a14;
+    --gpo-danger: #8a2323;
+    --gpo-info: #645135;
+    --gpo-shadow: 0 20px 50px rgba(76, 42, 18, 0.12);
+    --gpo-font-title: "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    --gpo-font-body: "Noto Serif", Georgia, "Times New Roman", serif;
+    --gpo-font-script: "Segoe Script", "Brush Script MT", cursive;
 }
 
-.form-heading {
-	color: #fff;
-	font-size: 23px;
+html {
+    scroll-behavior: smooth;
 }
 
-.panel h2 {
-	color: #444444;
-	font-size: 18px;
-	margin: 0 0 8px 0;
+body.gpo-auth-page {
+    min-height: 100vh;
+    margin: 0;
+    color: var(--gpo-ink);
+    font-family: var(--gpo-font-body);
+    background:
+        radial-gradient(circle at top, rgba(180, 136, 47, 0.12), transparent 24%),
+        linear-gradient(180deg, rgba(255, 248, 227, 0.92), rgba(238, 219, 177, 0.92)),
+        url("/web/images/paper-texture.png");
+    background-size: auto, auto, 320px;
 }
 
-.panel p {
-	color: #777777;
-	font-size: 14px;
-	margin-bottom: 30px;
-	line-height: 24px;
+body.gpo-auth-page * {
+    box-sizing: border-box;
 }
 
-.login-form .form-control {
-	background: #f7f7f7 none repeat scroll 0 0;
-	border: 1px solid #d4d4d4;
-	border-radius: 4px;
-	font-size: 14px;
-	height: 50px;
-	line-height: 50px;
+body.gpo-auth-page a {
+    text-decoration: none;
 }
 
-.main-div {
-	background: #ffffff none repeat scroll 0 0;
-	border-radius: 2px;
-	margin: 10px auto 30px;
-	max-width: 38%;
-	padding: 50px 70px 70px 71px;
+.gpo-auth-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: linear-gradient(180deg, rgba(79, 28, 19, 0.94), rgba(55, 17, 13, 0.94));
+    box-shadow: 0 8px 28px rgba(32, 12, 8, 0.16);
 }
 
-.login-form .form-group {
-	margin-bottom: 10px;
+.gpo-auth-header::before {
+    content: "";
+    display: block;
+    height: 8px;
+    background:
+        linear-gradient(90deg, rgba(180, 136, 47, 0.2), rgba(180, 136, 47, 0.85), rgba(180, 136, 47, 0.2)),
+        repeating-linear-gradient(
+            90deg,
+            transparent 0 18px,
+            rgba(245, 231, 193, 0.18) 18px 22px,
+            transparent 22px 40px
+        );
 }
 
-.login-form {
-	text-align: center;
+.gpo-auth-header-inner {
+    min-height: 92px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
 }
 
-.forgot a {
-	color: #777777;
-	font-size: 14px;
-	text-decoration: underline;
+.gpo-auth-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
 }
 
-.login-form  .btn.btn-primary {
-	background: #f0ad4e none repeat scroll 0 0;
-	border-color: #f0ad4e;
-	color: #ffffff;
-	font-size: 14px;
-	width: 100%;
-	height: 50px;
-	line-height: 50px;
-	padding: 0;
+.gpo-auth-brand-mark {
+    width: 62px;
+    height: 62px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: url("/favicon.svg") center/contain no-repeat;
+    color: transparent;
+    overflow: hidden;
+    text-indent: -9999px;
 }
 
-.forgot {
-	text-align: left;
-	margin-bottom: 30px;
+.gpo-auth-brand-text {
+    display: flex;
+    flex-direction: column;
 }
 
-.botto-text {
-	color: #ffffff;
-	font-size: 14px;
-	margin: auto;
+.gpo-auth-brand-text strong {
+    color: #f7e9c1;
+    font-family: var(--gpo-font-title);
+    font-size: 1.35rem;
+    line-height: 1.1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 
-.login-form .btn.btn-primary.reset {
-	background: #ff9900 none repeat scroll 0 0;
+.gpo-auth-brand-text small {
+    color: rgba(243, 226, 185, 0.82);
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
 }
 
-.back {
-	text-align: left;
-	margin-top: 10px;
+.gpo-auth-home-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0.8rem 1.3rem;
+    border-radius: 999px;
+    color: #f6e7bc;
+    border: 1px solid rgba(238, 210, 150, 0.42);
+    background: rgba(255, 247, 223, 0.08);
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    transition: background-color 0.28s ease, border-color 0.28s ease, transform 0.28s ease;
 }
 
-.back a {
-	color: #444444;
-	font-size: 13px;
-	text-decoration: none;
+.gpo-auth-home-link:hover,
+.gpo-auth-home-link:focus {
+    color: #fff3d5;
+    border-color: rgba(255, 230, 180, 0.7);
+    background: rgba(255, 247, 223, 0.16);
+    transform: translateY(-1px);
+}
+
+.gpo-auth-main {
+    padding: 42px 0 56px;
+}
+
+.gpo-auth-shell {
+    position: relative;
+    overflow: hidden;
+    border-radius: 30px;
+    border: 1px solid var(--gpo-line);
+    background:
+        linear-gradient(180deg, rgba(255, 248, 229, 0.92), rgba(239, 220, 176, 0.92)),
+        url("/web/images/hero-paper-bg.png");
+    background-size: auto, 340px;
+    box-shadow: var(--gpo-shadow);
+}
+
+.gpo-auth-shell::before {
+    content: "";
+    position: absolute;
+    inset: 14px;
+    border: 1px solid rgba(143, 32, 32, 0.16);
+    border-radius: 22px;
+    pointer-events: none;
+}
+
+.gpo-auth-ornament {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 12% 16%, rgba(180, 136, 47, 0.12), transparent 16%),
+        radial-gradient(circle at 90% 82%, rgba(143, 32, 32, 0.12), transparent 18%);
+    pointer-events: none;
+}
+
+.gpo-auth-shell > .row,
+.gpo-auth-ceremony > *,
+.gpo-auth-form-panel > * {
+    position: relative;
+    z-index: 1;
+}
+
+.gpo-auth-ceremony {
+    height: 100%;
+    padding: 42px 34px;
+    color: #faecc7;
+    background:
+        linear-gradient(180deg, rgba(132, 31, 31, 0.94), rgba(90, 21, 21, 0.94)),
+        url("/web/images/paper-texture.png");
+    background-size: auto, 320px;
+}
+
+.gpo-auth-kicker,
+.gpo-auth-card-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.gpo-auth-kicker {
+    color: #f3d9a3;
+}
+
+.gpo-auth-kicker::before,
+.gpo-auth-card-kicker::before {
+    content: "";
+    width: 34px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255, 232, 174, 0.2), rgba(255, 232, 174, 0.8));
+}
+
+.gpo-auth-title,
+.gpo-auth-card h2 {
+    margin: 18px 0 0;
+    font-family: var(--gpo-font-title);
+    line-height: 1.16;
+}
+
+.gpo-auth-title {
+    font-size: clamp(2rem, 3vw, 3.2rem);
+}
+
+.gpo-auth-desc,
+.gpo-auth-card-subtitle {
+    margin: 20px 0 0;
+    line-height: 1.85;
+    font-size: 1.02rem;
+}
+
+.gpo-auth-desc {
+    color: rgba(251, 239, 209, 0.88);
+}
+
+.gpo-auth-notes {
+    display: grid;
+    gap: 16px;
+    margin-top: 28px;
+}
+
+.gpo-auth-note {
+    padding: 18px 18px 16px;
+    border-radius: 18px;
+    border: 1px solid rgba(250, 231, 189, 0.12);
+    background: rgba(255, 248, 229, 0.07);
+}
+
+.gpo-auth-note h2 {
+    margin: 0;
+    color: #f4d488;
+    font-family: var(--gpo-font-title);
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.gpo-auth-note p {
+    margin: 10px 0 0;
+    color: rgba(255, 244, 219, 0.92);
+    font-size: 0.96rem;
+    line-height: 1.75;
+}
+
+.gpo-auth-form-panel {
+    height: 100%;
+    padding: 34px;
+}
+
+.gpo-auth-card {
+    position: relative;
+    padding: 32px;
+    border-radius: 24px;
+    border: 1px solid rgba(104, 61, 33, 0.18);
+    background:
+        linear-gradient(180deg, rgba(255, 250, 238, 0.92), rgba(244, 229, 193, 0.96)),
+        url("/web/images/paper-texture.png");
+    background-size: auto, 320px;
+    box-shadow: 0 14px 34px rgba(72, 38, 18, 0.08);
+}
+
+.gpo-auth-card::before {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(143, 32, 32, 0.14);
+    border-radius: 18px;
+    pointer-events: none;
+}
+
+.gpo-auth-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.gpo-auth-card-kicker {
+    color: var(--gpo-accent);
+}
+
+.gpo-auth-card-subtitle {
+    color: var(--gpo-ink-soft);
+}
+
+.gpo-auth-form {
+    margin-top: 24px;
+}
+
+.gpo-field + .gpo-field {
+    margin-top: 18px;
+}
+
+.gpo-form-label {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: var(--gpo-ink);
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+.gpo-form-control {
+    min-height: 54px;
+    border-radius: 16px;
+    border: 1px solid rgba(104, 61, 33, 0.2);
+    background: rgba(255, 251, 241, 0.9);
+    color: var(--gpo-ink);
+    font-size: 0.98rem;
+    padding: 0.8rem 0.95rem;
+    box-shadow: none;
+}
+
+.gpo-form-control::placeholder {
+    color: #8b7964;
+}
+
+.gpo-form-control:focus {
+    border-color: rgba(143, 32, 32, 0.52);
+    background: #fffdfa;
+    box-shadow: 0 0 0 4px rgba(143, 32, 32, 0.08);
+}
+
+.gpo-auth-row {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.gpo-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--gpo-ink-soft);
+    font-size: 0.92rem;
+}
+
+.gpo-check input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--gpo-accent);
+}
+
+.gpo-check-block {
+    margin-top: 20px;
+    align-items: flex-start;
+}
+
+.gpo-link {
+    color: var(--gpo-accent);
+    font-weight: 700;
+}
+
+.gpo-link:hover,
+.gpo-link:focus {
+    color: var(--gpo-accent-deep);
+    text-decoration: underline;
+}
+
+.gpo-link-strong {
+    font-size: 1rem;
+}
+
+.gpo-auth-button {
+    width: 100%;
+    min-height: 56px;
+    margin-top: 24px;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #a52d24, #7b1e1e);
+    color: #fff3d6;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    box-shadow: 0 14px 26px rgba(66, 14, 14, 0.22);
+    transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+.gpo-auth-button:hover,
+.gpo-auth-button:focus {
+    color: #fff8ea;
+    transform: translateY(-2px);
+    box-shadow: 0 18px 32px rgba(66, 14, 14, 0.28);
+}
+
+.gpo-auth-bottom {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(104, 61, 33, 0.12);
+    text-align: center;
+}
+
+.gpo-auth-bottom p {
+    margin: 0;
+    color: var(--gpo-ink-soft);
+    font-size: 0.96rem;
+}
+
+.gpo-auth-bottom a {
+    display: inline-block;
+    margin-top: 8px;
+}
+
+.gpo-alert {
+    margin-top: 18px;
+    padding: 0.9rem 1rem;
+    border-radius: 16px;
+    border: 1px solid transparent;
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.gpo-alert-danger,
+.gpo-alert-error {
+    color: #6f1616;
+    background: rgba(143, 32, 32, 0.08);
+    border-color: rgba(143, 32, 32, 0.18);
+}
+
+.gpo-alert-warning {
+    color: #7b5317;
+    background: rgba(180, 136, 47, 0.12);
+    border-color: rgba(180, 136, 47, 0.22);
+}
+
+.gpo-alert-info {
+    color: #5f4a2d;
+    background: rgba(135, 101, 53, 0.1);
+    border-color: rgba(135, 101, 53, 0.2);
+}
+
+.gpo-alert-success {
+    color: #2f5635;
+    background: rgba(53, 92, 59, 0.1);
+    border-color: rgba(53, 92, 59, 0.2);
+}
+
+.gpo-auth-footer {
+    padding: 0 0 28px;
+}
+
+.gpo-auth-footer p {
+    margin: 0;
+    text-align: center;
+    color: #6b573f;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 991.98px) {
+    .gpo-auth-main {
+        padding-top: 28px;
+    }
+
+    .gpo-auth-ceremony,
+    .gpo-auth-form-panel {
+        padding: 24px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .gpo-auth-header-inner {
+        min-height: auto;
+        padding-top: 14px;
+        padding-bottom: 14px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .gpo-auth-brand-mark {
+        width: 50px;
+        height: 50px;
+        font-size: 0.88rem;
+    }
+
+    .gpo-auth-brand-text strong {
+        font-size: 1.08rem;
+    }
+
+    .gpo-auth-brand-text small {
+        font-size: 0.67rem;
+        letter-spacing: 0.11em;
+    }
+
+    .gpo-auth-shell {
+        border-radius: 22px;
+    }
+
+    .gpo-auth-ceremony,
+    .gpo-auth-form-panel,
+    .gpo-auth-card {
+        padding: 20px;
+    }
+
+    .gpo-auth-title {
+        font-size: 2rem;
+    }
+
+    .gpo-auth-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    .gpo-auth-home-link,
+    .gpo-auth-button {
+        transition: none;
+    }
 }

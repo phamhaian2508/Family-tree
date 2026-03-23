@@ -4,9 +4,15 @@
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 
 <header class="app-topbar">
-    <button class="app-topbar-toggle" id="appSidebarToggle" type="button" aria-label="Mở menu">
-        <i class="fa fa-bars"></i>
-    </button>
+    <div class="app-topbar-left">
+        <button class="app-topbar-toggle" id="appSidebarToggle" type="button" aria-label="Mở menu">
+            <i class="fa fa-bars"></i>
+        </button>
+        <div class="app-topbar-intro">
+            <strong class="app-topbar-title">Gia phả họ Trần Đức</strong>
+            <span class="app-topbar-kicker">Uống nước nhớ nguồn</span>
+        </div>
+    </div>
 
     <div class="app-topbar-right">
         <a href="#" class="app-topbar-bell" aria-label="Thông báo">

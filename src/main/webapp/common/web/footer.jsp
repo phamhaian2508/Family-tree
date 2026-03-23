@@ -2,38 +2,39 @@
 
 <footer class="gpo-footer">
     <div class="container">
-        <div class="row mb-4">
-            <%-- Cột thương hiệu --%>
-            <div class="col-md-6 mb-4 mb-md-0">
-                <h5 class="gpo-footer-brand">Gia Phả Online</h5>
-                <p class="gpo-footer-desc">
-                    Lưu giữ lịch sử, kết nối thế hệ. Nền tảng số hóa gia phả
-                    an toàn và hiện đại cho mọi dòng họ Việt Nam.
-                </p>
+        <div class="gpo-footer-main">
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <h5 class="gpo-footer-brand">Họ Trần Đức</h5>
+                    <p class="gpo-footer-subbrand">Nhân Hữu - Nhân Thắng - Bắc Ninh</p>
+                    <p class="gpo-footer-desc">
+                        Một không gian lưu giữ cội nguồn, nơi con cháu cùng nhìn về tổ tiên,
+                        trân trọng nề nếp gia phong và giữ gìn những ký ức đẹp của dòng họ qua nhiều thế hệ.
+                    </p>
+                </div>
+
+                <div class="col-sm-6 col-lg-3">
+                    <h6 class="gpo-footer-heading">Mạch nội dung</h6>
+                    <ul class="gpo-footer-links">
+                        <li><a href="#coi-nguon">Cội nguồn</a></li>
+                        <li><a href="#gia-tri">Giá trị cốt lõi</a></li>
+                        <li><a href="#so-do">Sơ đồ dòng họ</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-6 col-lg-3">
+                    <h6 class="gpo-footer-heading">Thành viên</h6>
+                    <ul class="gpo-footer-links">
+                        <li><a href="/login">Đăng nhập</a></li>
+                        <li><a href="/dang-ky">Đăng ký</a></li>
+                        <li><a href="#coi-nguon">Về đầu trang</a></li>
+                    </ul>
+                </div>
             </div>
 
-            <%-- Cột nền tảng --%>
-            <div class="col-md-3 mb-4 mb-md-0">
-                <h6 class="gpo-footer-heading">Nền tảng</h6>
-                <ul class="gpo-footer-links">
-                    <li><a href="#features">Tính năng</a></li>
-                    <li><a href="#about">Giới thiệu</a></li>
-                    <li><a href="#contact">Liên hệ</a></li>
-                </ul>
+            <div class="gpo-footer-bottom">
+                <p>&copy; 2026 Họ Trần Đức. Uống nước nhớ nguồn, gìn giữ cội rễ cho các thế hệ mai sau.</p>
             </div>
-
-            <%-- Cột pháp lý --%>
-            <div class="col-md-3">
-                <h6 class="gpo-footer-heading">Pháp lý</h6>
-                <ul class="gpo-footer-links">
-                    <li><a href="#">Chính sách bảo mật</a></li>
-                    <li><a href="#">Điều khoản sử dụng</a></li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="gpo-footer-bottom">
-            <p>&copy; 2025 Gia Phả Online. Bài tập nhóm - ATTT.</p>
         </div>
     </div>
 </footer>

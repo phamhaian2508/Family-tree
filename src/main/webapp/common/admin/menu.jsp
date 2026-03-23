@@ -1,4 +1,4 @@
-﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/common/taglib.jsp" %>
 <%
     String uri = request.getRequestURI();
@@ -12,11 +12,16 @@
 
 <aside class="app-sidebar">
     <div class="app-sidebar-overlay" id="appSidebarOverlay"></div>
+
     <div class="app-brand">
-        <div class="brand-icon"><i class="fa fa-sitemap"></i></div>
-        <div class="brand-text">Gia phả họ Trần Đức</div>
+        <div class="brand-mark">Gia phả</div>
+        <div class="brand-copy">
+            <div class="brand-title">Họ Trần Đức</div>
+            <div class="brand-subtitle">Nội điện gia phả số</div>
+        </div>
     </div>
 
+    <div class="app-nav-section">Điều hướng chính</div>
     <nav class="app-nav">
         <a class="app-nav-item <%= homeActive ? "active" : "" %>" href="/admin/home">
             <i class="fa fa-dashboard"></i>
@@ -28,7 +33,7 @@
         </a>
         <a class="app-nav-item <%= mediaActive ? "active" : "" %>" href="/admin/media">
             <i class="fa fa-picture-o"></i>
-            <span>Thư viện</span>
+            <span>Thư viện tư liệu</span>
         </a>
         <a class="app-nav-item <%= liveActive ? "active" : "" %>" href="/admin/livestream">
             <i class="fa fa-video-camera"></i>
@@ -42,10 +47,12 @@
             </a>
             <a class="app-nav-item <%= auditActive ? "active" : "" %>" href="/admin/security-audit">
                 <i class="fa fa-shield"></i>
-                <span>Bảo mật &amp; Kiểm toán</span>
+                <span>Bảo mật và kiểm toán</span>
             </a>
         </security:authorize>
     </nav>
 
+    <div class="app-sidebar-footer">
+        <span>Tộc hệ - Tư liệu - Thành viên</span>
+    </div>
 </aside>
-
