@@ -1,16 +1,768 @@
-input:focus {
-    outline: none; /* Loại bỏ viền khi thẻ input được focus */
-    border: solid red 1px;
-}
-input::placeholder {
-    color: #e16767; !important
+:root {
+    --gpo-bg: #f2e3bf;
+    --gpo-paper: #f6e8c6;
+    --gpo-paper-soft: #fbf2de;
+    --gpo-paper-deep: #ecd8aa;
+    --gpo-line: rgba(104, 61, 33, 0.24);
+    --gpo-ink: #2d1f16;
+    --gpo-ink-soft: #4d3a2d;
+    --gpo-accent: #8f2020;
+    --gpo-accent-deep: #661515;
+    --gpo-gold: #b4882f;
+    --gpo-gold-soft: rgba(180, 136, 47, 0.18);
+    --gpo-shadow: 0 20px 50px rgba(76, 42, 18, 0.12);
+    --gpo-font-title: "Noto Serif", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    --gpo-font-body: "Noto Serif", Georgia, "Times New Roman", serif;
 }
 
-.no-select {
-    -webkit-touch-callout: none; /* Safari */
-    -webkit-user-select: none; /* Safari 3.1+ */
-    -khtml-user-select: none; /* Konqueror 4.0+ */
-    -moz-user-select: none; /* Firefox 2+ */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    color: var(--gpo-ink);
+    font-family: var(--gpo-font-body);
+    background:
+        radial-gradient(circle at top, rgba(180, 136, 47, 0.12), transparent 24%),
+        linear-gradient(180deg, rgba(255, 248, 227, 0.92), rgba(238, 219, 177, 0.92)),
+        url("/web/images/paper-texture.png");
+    background-size: auto, auto, 320px;
+}
+
+body * {
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+}
+
+.gpo-header {
+    position: sticky;
+    top: 0;
+    z-index: 1050;
+    background: linear-gradient(180deg, rgba(79, 28, 19, 0.94), rgba(55, 17, 13, 0.94));
+    box-shadow: 0 8px 28px rgba(32, 12, 8, 0.16);
+}
+
+.gpo-header::before {
+    content: "";
+    display: block;
+    height: 8px;
+    background:
+        linear-gradient(90deg, rgba(180, 136, 47, 0.2), rgba(180, 136, 47, 0.85), rgba(180, 136, 47, 0.2)),
+        repeating-linear-gradient(90deg, transparent 0 18px, rgba(245, 231, 193, 0.18) 18px 22px, transparent 22px 40px);
+}
+
+.gpo-header .navbar {
+    padding: 0.85rem 0;
+}
+
+.gpo-brand-badge {
+    width: 62px;
+    height: 62px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: url("/favicon.svg") center/contain no-repeat;
+    color: transparent;
+    overflow: hidden;
+    text-indent: -9999px;
+    flex: 0 0 auto;
+}
+
+.gpo-logo-text {
+    display: flex;
+    flex-direction: column;
+    color: #f7e9c1;
+    font-family: var(--gpo-font-title);
+}
+
+.gpo-logo-text strong {
+    font-size: 1.48rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    line-height: 1.05;
+    text-transform: uppercase;
+}
+
+.gpo-logo-text small {
+    margin-top: 2px;
+    color: rgba(243, 226, 185, 0.92);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.gpo-header .navbar-toggler {
+    border-color: rgba(241, 212, 151, 0.35);
+    background: rgba(255, 247, 223, 0.08);
+}
+
+.gpo-header .navbar-toggler:focus {
+    box-shadow: none;
+}
+
+.gpo-header .navbar-toggler-icon {
+    filter: invert(93%) sepia(12%) saturate(434%) hue-rotate(341deg) brightness(103%) contrast(92%);
+}
+
+.gpo-header .nav-link {
+    color: rgba(246, 231, 188, 0.9);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 0.6rem 1rem;
+}
+
+.gpo-header .nav-link:hover,
+.gpo-header .nav-link:focus {
+    color: #fff3d5;
+}
+
+.btn-gpo,
+.btn-outline-gpo,
+.btn-gpo-primary,
+.btn-gpo-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0.8rem 1.3rem;
+    border-radius: 999px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    transition: background-color 0.28s ease, border-color 0.28s ease, transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+.btn-gpo,
+.btn-gpo-primary {
+    border: 1px solid rgba(238, 210, 150, 0.42);
+    background: linear-gradient(180deg, #a52d24, #7b1e1e);
+    color: #fff3d6;
+    box-shadow: 0 14px 26px rgba(66, 14, 14, 0.16);
+}
+
+.btn-gpo:hover,
+.btn-gpo:focus,
+.btn-gpo-primary:hover,
+.btn-gpo-primary:focus {
+    color: #fff8ea;
+    transform: translateY(-1px);
+    box-shadow: 0 18px 32px rgba(66, 14, 14, 0.22);
+}
+
+.btn-outline-gpo,
+.btn-gpo-outline {
+    color: #f6e7bc;
+    border: 1px solid rgba(238, 210, 150, 0.42);
+    background: rgba(255, 247, 223, 0.08);
+}
+
+.btn-outline-gpo:hover,
+.btn-outline-gpo:focus,
+.btn-gpo-outline:hover,
+.btn-gpo-outline:focus {
+    color: #fff3d5;
+    border-color: rgba(255, 230, 180, 0.7);
+    background: rgba(255, 247, 223, 0.16);
+    transform: translateY(-1px);
+}
+
+.btn-gpo-outline {
+    color: var(--gpo-accent-deep);
+    border-color: rgba(143, 32, 32, 0.32);
+    background: rgba(255, 249, 235, 0.96);
+    box-shadow: 0 10px 22px rgba(76, 42, 18, 0.08);
+}
+
+.btn-gpo-outline:hover,
+.btn-gpo-outline:focus {
+    color: var(--gpo-accent-deep);
+    border-color: rgba(143, 32, 32, 0.46);
+    background: #fff6e4;
+}
+
+.btn-gpo-lg {
+    min-height: 54px;
+    padding: 0.95rem 1.6rem;
+    font-size: 1rem;
+}
+
+.gpo-hero-shell,
+.gpo-section,
+.gpo-footer {
+    position: relative;
+}
+
+.gpo-hero-shell {
+    padding: 54px 0 28px;
+}
+
+.gpo-hero-frame,
+.gpo-panel,
+.gpo-motif-card,
+.gpo-tree-panel,
+.gpo-frame-panel,
+.gpo-footer-main {
+    position: relative;
+    border: 1px solid rgba(123, 74, 42, 0.16);
+    border-radius: 30px;
+    background:
+        linear-gradient(180deg, rgba(255, 249, 235, 0.98), rgba(244, 230, 199, 0.98)),
+        url("/web/images/paper-texture.png");
+    background-size: auto, 280px;
+    box-shadow: var(--gpo-shadow);
+    overflow: hidden;
+}
+
+.gpo-hero-frame::before,
+.gpo-panel::before,
+.gpo-motif-card::before,
+.gpo-tree-panel::before,
+.gpo-frame-panel::before,
+.gpo-footer-main::before {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(143, 32, 32, 0.14);
+    border-radius: 22px;
+    pointer-events: none;
+}
+
+.gpo-hero-frame {
+    padding: 42px 38px;
+}
+
+.gpo-kicker,
+.gpo-section-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    color: var(--gpo-accent);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.gpo-kicker::before,
+.gpo-section-eyebrow::before {
+    content: "";
+    width: 34px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(143, 32, 32, 0.2), rgba(143, 32, 32, 0.8));
+}
+
+.gpo-hero-title,
+.gpo-section-title,
+.gpo-board-top strong,
+.gpo-footer-brand {
+    font-family: var(--gpo-font-title);
+}
+
+.gpo-hero-title {
+    margin: 18px 0 0;
+    color: var(--gpo-ink);
+    font-size: clamp(2.6rem, 3.2vw, 3rem);
+    line-height: 1.32;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.gpo-hero-title span {
+    display: block;
+    color: var(--gpo-accent);
+    font-size: clamp(1.25rem, 1.9vw, 1.5rem);
+    line-height: 1.45;
+    margin-top: 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.gpo-hero-subtitle,
+.gpo-section-desc,
+.gpo-board-cell p,
+.gpo-feature-list li,
+.gpo-motif-card p,
+.gpo-footer-desc,
+.gpo-footer-bottom p {
+    color: var(--gpo-ink-soft);
+    font-size: 1rem;
+    line-height: 1.9;
+}
+
+.gpo-hero-subtitle {
+    max-width: 680px;
+    margin: 14px 0 0;
+    font-size: 1.04rem;
+    line-height: 1.78;
+}
+
+.gpo-hero-lead {
+    margin: 12px 0 0;
+    color: var(--gpo-accent-deep);
+    font-size: 1.06rem;
+    line-height: 1.65;
+    font-weight: 600;
+}
+
+.gpo-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 22px;
+}
+
+.gpo-hero-board {
+    padding: 18px;
+    border-radius: 24px;
+    background: linear-gradient(180deg, rgba(132, 31, 31, 0.94), rgba(90, 21, 21, 0.94)), url("/web/images/paper-texture.png");
+    background-size: auto, 320px;
+    color: #faecc7;
+    height: 100%;
+    box-shadow: 0 16px 28px rgba(66, 14, 14, 0.14);
+}
+
+.gpo-board-top {
+    display: grid;
+    gap: 8px;
+    padding: 6px 6px 18px;
+}
+
+.gpo-board-top span {
+    color: #f3d9a3;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.gpo-board-top strong {
+    color: #f7ead0;
+    font-size: 1.1rem;
+    line-height: 1.45;
+}
+
+.gpo-board-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.gpo-board-cell {
+    padding: 18px 16px;
+    border-radius: 18px;
+    border: 1px solid rgba(250, 231, 189, 0.12);
+    background: rgba(255, 248, 229, 0.07);
+}
+
+.gpo-board-cell h2 {
+    margin: 0;
+    color: #f4d488;
+    font-family: var(--gpo-font-title);
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    line-height: 1.3;
+}
+
+.gpo-board-cell strong {
+    display: block;
+    margin-top: 8px;
+    color: #fff2d0;
+    font-family: var(--gpo-font-title);
+    font-size: 1.02rem;
+    line-height: 1.45;
+    font-weight: 700;
+}
+
+.gpo-board-cell p {
+    margin: 8px 0 0;
+    color: rgba(255, 244, 219, 0.92);
+    font-size: 0.92rem;
+    line-height: 1.68;
+}
+
+.gpo-section {
+    padding: 30px 0;
+}
+
+.gpo-section-alt {
+    padding-top: 6px;
+}
+
+.gpo-section-heading {
+    max-width: 760px;
+    margin: 0 auto 26px;
+    text-align: center;
+}
+
+.gpo-section-title {
+    margin: 16px 0 0;
+    color: var(--gpo-ink);
+    font-size: clamp(2rem, 2.6vw, 2.2rem);
+    line-height: 1.38;
+    font-weight: 700;
+}
+
+.gpo-title-left,
+.gpo-desc-left {
+    text-align: left;
+}
+
+.gpo-section-desc {
+    margin: 16px auto 0;
+    max-width: 700px;
+    font-size: 0.98rem;
+    line-height: 1.78;
+}
+
+.gpo-frame-panel,
+.gpo-tree-panel {
+    padding: 30px 28px;
+    height: 100%;
+}
+
+.gpo-feature-list {
+    list-style: none;
+    margin: 20px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+}
+
+.gpo-feature-list li {
+    padding: 12px 14px;
+    border-radius: 16px;
+    border: 1px solid rgba(104, 61, 33, 0.12);
+    background: rgba(255, 251, 241, 0.75);
+    font-size: 0.95rem;
+    line-height: 1.72;
+}
+
+.gpo-feature-list strong {
+    color: var(--gpo-accent);
+    letter-spacing: 0.06em;
+}
+
+.gpo-motif-card {
+    padding: 24px 22px;
+    height: 100%;
+}
+
+.gpo-card-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(143, 32, 32, 0.18);
+    background: rgba(143, 32, 32, 0.08);
+    color: var(--gpo-accent);
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.gpo-motif-card h3 {
+    margin: 16px 0 10px;
+    color: var(--gpo-accent-deep);
+    font-family: var(--gpo-font-title);
+    font-size: 1.15rem;
+    line-height: 1.48;
+}
+
+.gpo-motif-card p {
+    margin: 0;
+    font-size: 0.94rem;
+    line-height: 1.72;
+}
+
+.gpo-tree-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(138, 59, 34, 0.2);
+    background: rgba(255, 248, 231, 0.9);
+    color: #7b2a1f;
+    font-size: 0.83rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.gpo-tree-level {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+}
+
+.gpo-tree-level-top {
+    margin-top: 26px;
+}
+
+.gpo-tree-node {
+    position: relative;
+    min-width: 180px;
+    max-width: 220px;
+    padding: 16px 16px 18px;
+    border-radius: 18px;
+    border: 1px solid rgba(104, 61, 33, 0.14);
+    background: rgba(255, 251, 241, 0.92);
+    text-align: center;
+    box-shadow: 0 10px 24px rgba(76, 42, 18, 0.08);
+}
+
+.gpo-tree-node::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border: 1px solid rgba(180, 136, 47, 0.14);
+    border-radius: 12px;
+    pointer-events: none;
+}
+
+.gpo-tree-node-featured {
+    min-width: 250px;
+    background: linear-gradient(180deg, rgba(255, 249, 230, 0.95), rgba(244, 226, 179, 0.92));
+}
+
+.gpo-tree-node-small {
+    min-width: 140px;
+}
+
+.gpo-tree-label {
+    display: block;
+    color: var(--gpo-accent);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.gpo-tree-node strong {
+    display: block;
+    color: var(--gpo-ink);
+    font-family: var(--gpo-font-title);
+    font-size: 1.02rem;
+    line-height: 1.52;
+}
+
+.gpo-tree-node small {
+    display: block;
+    margin-top: 8px;
+    color: var(--gpo-ink-soft);
+    font-size: 0.94rem;
+    line-height: 1.68;
+}
+
+.gpo-frame-panel .gpo-section-title {
+    font-size: clamp(2.25rem, 3vw, 2.55rem);
+    line-height: 1.3;
+}
+
+.gpo-frame-panel .gpo-section-desc {
+    font-size: 1rem;
+    line-height: 1.8;
+}
+
+.gpo-footer {
+    padding: 34px 0 24px;
+}
+
+.gpo-footer-main {
+    padding: 26px 26px 18px;
+}
+
+.gpo-footer-brand {
+    color: var(--gpo-accent-deep);
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.gpo-footer-desc {
+    max-width: 520px;
+    margin-top: 10px;
+    font-size: 0.96rem;
+}
+
+.gpo-footer-subbrand {
+    margin: 6px 0 0;
+    color: var(--gpo-accent);
+    font-size: 0.86rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.gpo-footer-heading {
+    color: var(--gpo-accent);
+    font-family: var(--gpo-font-title);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.gpo-footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 10px;
+}
+
+.gpo-footer-links a {
+    color: var(--gpo-ink-soft);
+    font-size: 0.94rem;
+    font-weight: 600;
+}
+
+.gpo-footer-links a:hover,
+.gpo-footer-links a:focus {
+    color: var(--gpo-accent);
+}
+
+.gpo-footer-bottom {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(104, 61, 33, 0.12);
+}
+
+.gpo-footer-bottom p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.gpo-reveal {
+    animation: gpoFadeUp 0.55s ease both;
+}
+
+@keyframes gpoFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 991.98px) {
+    .gpo-header .navbar-collapse {
+        margin-top: 12px;
+    }
+
+    .gpo-hero-shell {
+        padding-top: 36px;
+    }
+
+    .gpo-hero-frame,
+    .gpo-frame-panel,
+    .gpo-tree-panel,
+    .gpo-footer-main {
+        padding: 24px 20px;
+    }
+
+    .gpo-board-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .gpo-brand-badge {
+        width: 54px;
+        height: 54px;
+        font-size: 0.82rem;
+    }
+
+    .gpo-logo-text strong {
+        font-size: 1.2rem;
+    }
+
+    .gpo-logo-text small {
+        font-size: 0.66rem;
+    }
+
+    .gpo-hero-title {
+        font-size: 2.3rem;
+    }
+
+    .gpo-hero-title span {
+        font-size: 1.12rem;
+    }
+
+    .gpo-hero-lead {
+        font-size: 1rem;
+    }
+
+    .gpo-hero-frame,
+    .gpo-panel,
+    .gpo-motif-card,
+    .gpo-tree-panel,
+    .gpo-frame-panel,
+    .gpo-footer-main {
+        border-radius: 22px;
+    }
+
+    .gpo-hero-frame::before,
+    .gpo-panel::before,
+    .gpo-motif-card::before,
+    .gpo-tree-panel::before,
+    .gpo-frame-panel::before,
+    .gpo-footer-main::before {
+        inset: 8px;
+        border-radius: 16px;
+    }
+
+    .gpo-hero-frame,
+    .gpo-frame-panel,
+    .gpo-tree-panel,
+    .gpo-footer-main {
+        padding: 18px 16px;
+    }
+
+    .gpo-board-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gpo-hero-actions {
+        flex-direction: column;
+    }
+
+    .btn-gpo-lg,
+    .btn-gpo-primary,
+    .btn-gpo-outline {
+        width: 100%;
+    }
+
+    .gpo-tree-node,
+    .gpo-tree-node-featured,
+    .gpo-tree-node-small {
+        min-width: 100%;
+        max-width: none;
+    }
+
+    .gpo-section {
+        padding: 22px 0;
+    }
+
+    .gpo-frame-panel .gpo-section-title,
+    .gpo-section-title {
+        font-size: 1.85rem;
+    }
 }

@@ -7,11 +7,11 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Livestream</title>
+    <title>Livestream dòng họ</title>
     <link rel="stylesheet" href="${livestreamCssUrl}">
 </head>
 <body class="livestream-page">
-<div class="main-content">
+<div class="main-content livestream-theme">
     <div class="main-content-inner">
         <div class="breadcrumbs" id="breadcrumbs">
             <script type="text/javascript">
@@ -29,8 +29,8 @@
         <div class="page-content">
             <div id="lsEntryScreen" class="ls-entry">
                 <div class="ls-entry-card">
-                    <h2 class="ls-entry-title">Bắt đầu livestream</h2>
-                    <p class="ls-entry-subtitle">Chọn cách bạn muốn sử dụng phòng livestream.</p>
+                    <h2 class="ls-entry-title">Phòng livestream dòng họ</h2>
+                    <p class="ls-entry-subtitle">Khởi tạo hoặc tham gia buổi truyền trực tuyến để kết nối con cháu theo cùng phong cách trang nghiêm của gia phả.</p>
                     <div class="ls-entry-actions">
                         <button id="btnEntryCreate" type="button" class="ls-btn ls-btn-success ls-entry-btn">
                             <i class="fa fa-plus-circle"></i> Tạo phòng
@@ -52,7 +52,7 @@
                         </div>
                         <div class="ls-entry-setup-actions">
                             <button id="btnEntryStartLive" type="button" class="ls-btn ls-btn-success">
-                                <i class="fa fa-play"></i> Bắt đầu
+                                <i class="fa fa-play"></i> Bắt đầu buổi phát
                             </button>
                         </div>
                     </div>
@@ -203,6 +203,8 @@
         </div>
     </div>
 </div>
+
+<div id="lsToastStack" class="ls-toast-stack" aria-live="polite" aria-atomic="true"></div>
 
 <script>
     window.LIVESTREAM_ICE_SERVERS = ${livestreamIceServersJson};

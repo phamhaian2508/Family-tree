@@ -3,7 +3,6 @@
 <c:url var="homeUrl" value="/admin/home"/>
 <c:url var="familyTreeUrl" value="/admin/familytree"/>
 <c:url var="mediaUrl" value="/admin/media"/>
-<c:url var="livestreamUrl" value="/admin/livestream"/>
 <c:url var="guideUrl" value="/admin/guide"/>
 
 <div class="main-content">
@@ -11,60 +10,56 @@
         <div class="breadcrumbs" id="breadcrumbs">
             <ul class="breadcrumb">
                 <li>
-                    <i class="ace-icon fa-solid fa-house-chimney home-icon"></i>
+                    <i class="ace-icon fa fa-home home-icon"></i>
                     <a href="${homeUrl}">Trang chủ</a>
                 </li>
             </ul>
         </div>
 
         <div class="page-content dashboard-home dashboard-home-v2">
+            <div class="family-heritage-banner">
+                <div class="family-heritage-banner__content">
+                    <div class="family-heritage-banner__title">Không gian quản lý gia phả</div>
+                    <div class="family-heritage-banner__subtitle">Theo dõi thành viên, tư liệu và những cập nhật quan trọng của dòng họ Trần Đức.</div>
+                </div>
+                <a class="family-heritage-banner__action" href="${guideUrl}">Xem hướng dẫn sử dụng</a>
+            </div>
+
             <div class="dashboard-head">
-                <h2 class="dashboard-title">Tổng quan</h2>
-                <div class="dashboard-inline-breadcrumb">Trang chủ <span>/</span> Tổng quan</div>
+                <h2 class="dashboard-title">Tổng quan dòng họ</h2>
             </div>
 
             <div class="row home-stats-row">
-                <div class="col-xs-12 col-sm-6 col-lg-3">
+                <div class="col-xs-12 col-md-4">
                     <div class="widget-box overview-card">
                         <div class="overview-card-body">
+                            <span class="overview-seal">Tộc</span>
+                            <div class="overview-number"><c:out value="${empty totalMembers ? 0 : totalMembers}"/></div>
+                            <div class="overview-label">Tổng số thành viên</div>
+                        </div>
+                        <a class="overview-more" href="${familyTreeUrl}">Xem cây gia phả</a>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-md-4">
+                    <div class="widget-box overview-card">
+                        <div class="overview-card-body">
+                            <span class="overview-seal">Chi</span>
                             <div class="overview-number"><c:out value="${empty totalBranches ? 0 : totalBranches}"/></div>
-                            <div class="overview-label">Gia phả</div>
-                            <span class="overview-icon"><i class="fa-solid fa-code-branch"></i></span>
+                            <div class="overview-label">Số nhánh gia tộc hiện có</div>
                         </div>
-                        <a class="overview-more" href="${familyTreeUrl}">Xem thêm <i class="fa-solid fa-circle-info"></i></a>
+                        <a class="overview-more" href="${familyTreeUrl}">Xem phân nhánh</a>
                     </div>
                 </div>
 
-                <div class="col-xs-12 col-sm-6 col-lg-3">
+                <div class="col-xs-12 col-md-4">
                     <div class="widget-box overview-card">
                         <div class="overview-card-body">
-                            <div class="overview-number overview-text">Hướng dẫn sử dụng</div>
-                            <div class="overview-label">Thiết lập nhanh</div>
-                            <span class="overview-icon"><i class="fa-solid fa-gear"></i></span>
-                        </div>
-                        <a class="overview-more" href="${guideUrl}">Xem thêm <i class="fa-solid fa-circle-info"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-xs-12 col-sm-6 col-lg-3">
-                    <div class="widget-box overview-card">
-                        <div class="overview-card-body">
+                            <span class="overview-seal">Tư liệu</span>
                             <div class="overview-number"><c:out value="${empty totalMediaFiles ? 0 : totalMediaFiles}"/></div>
-                            <div class="overview-label">Thư viện</div>
-                            <span class="overview-icon"><i class="fa-regular fa-newspaper"></i></span>
+                            <div class="overview-label">Thư viện tư liệu</div>
                         </div>
-                        <a class="overview-more" href="${mediaUrl}">Xem thêm <i class="fa-solid fa-circle-info"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-xs-12 col-sm-6 col-lg-3">
-                    <div class="widget-box overview-card">
-                        <div class="overview-card-body">
-                            <div class="overview-number"><c:out value="${empty activeUsers ? 0 : activeUsers}"/></div>
-                            <div class="overview-label">Thành viên hoạt động</div>
-                            <span class="overview-icon"><i class="fa-regular fa-calendar"></i></span>
-                        </div>
-                        <a class="overview-more" href="${livestreamUrl}">Xem thêm <i class="fa-solid fa-circle-info"></i></a>
+                        <a class="overview-more" href="${mediaUrl}">Xem tư liệu</a>
                     </div>
                 </div>
             </div>
@@ -72,21 +67,21 @@
             <div class="row home-panels-row">
                 <div class="col-xs-12 col-lg-8">
                     <div class="widget-box home-panel detail-panel">
-                        <div class="widget-header">
+                        <div class="widget-header family-section-header">
                             <h4 class="widget-title">Thông tin dòng họ Trần Đức</h4>
                         </div>
                         <div class="widget-body">
                             <div class="widget-main family-info-main">
                                 <p class="family-intro">
-                                    Gia phả Họ Trần Đức - Nhân Hữu, Nhân Thắng, Bắc Ninh là nơi lưu giữ thông tin các thế hệ,
-                                    kết nối con cháu và bảo tồn truyền thống dòng họ.
+                                    Gia phả họ Trần Đức tại Nhân Hữu, Nhân Thắng, Bắc Ninh là nơi lưu giữ thông tin nhiều thế hệ,
+                                    kết nối con cháu trong họ và bảo tồn nếp nhà qua từng đời.
                                 </p>
 
                                 <div class="family-tags">
-                                    <span class="family-tag"><i class="fa-solid fa-location-dot"></i> Quê quán: Nhân Hữu - Nhân Thắng, Bắc Ninh</span>
-                                    <span class="family-tag"><i class="fa-solid fa-users"></i> Dòng họ: Trần Đức</span>
-                                    <span class="family-tag"><i class="fa-solid fa-sitemap"></i> Chi họ hiện có: <c:out value="${empty totalBranches ? 0 : totalBranches}"/></span>
-                                    <span class="family-tag"><i class="fa-solid fa-image"></i> Tư liệu lưu trữ: <c:out value="${empty totalMediaFiles ? 0 : totalMediaFiles}"/> tệp</span>
+                                    <span class="family-tag">Quê quán: Nhân Hữu - Nhân Thắng, Bắc Ninh</span>
+                                    <span class="family-tag">Dòng họ: Trần Đức</span>
+                                    <span class="family-tag">Chi họ hiện có: <c:out value="${empty totalBranches ? 0 : totalBranches}"/></span>
+                                    <span class="family-tag">Tư liệu lưu trữ: <c:out value="${empty totalMediaFiles ? 0 : totalMediaFiles}"/> tệp</span>
                                 </div>
 
                                 <div class="row family-kpi-row">
@@ -110,18 +105,18 @@
                                     </div>
                                     <div class="col-xs-6 col-sm-3">
                                         <div class="family-kpi-card">
-                                            <div class="family-kpi-label">Người dùng hoạt động</div>
+                                            <div class="family-kpi-label">Người cập nhật</div>
                                             <div class="family-kpi-value"><c:out value="${empty activeUsers ? 0 : activeUsers}"/></div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="family-priority">
-                                    <h5>Ưu tiên cập nhật</h5>
+                                    <h5>Điều nên bổ sung trong gia phả</h5>
                                     <ul>
-                                        <li>Bổ sung ngày sinh, ngày mất và quê quán cho các thành viên còn thiếu.</li>
-                                        <li>Chuẩn hóa quan hệ cha - mẹ - con để cây gia phả hiển thị chính xác.</li>
-                                        <li>Tải thêm ảnh, tư liệu họ tộc để lưu giữ lâu dài.</li>
+                                        <li>Bổ sung ngày sinh, ngày mất và quê quán cho các thành viên còn thiếu thông tin.</li>
+                                        <li>Chuẩn hóa quan hệ cha, mẹ, con để cây gia phả hiển thị chính xác và dễ tra cứu.</li>
+                                        <li>Đưa thêm ảnh thờ, sắc phong, tư liệu họ tộc để lưu giữ lâu dài cho các thế hệ sau.</li>
                                     </ul>
                                 </div>
                             </div>
@@ -131,8 +126,8 @@
 
                 <div class="col-xs-12 col-lg-4">
                     <div class="widget-box home-panel event-panel">
-                        <div class="widget-header">
-                            <h4 class="widget-title">Sự kiện sắp diễn ra</h4>
+                        <div class="widget-header family-section-header">
+                            <h4 class="widget-title">Tin ghi chép gần đây</h4>
                         </div>
                         <div class="widget-body">
                             <div class="widget-main">
@@ -143,7 +138,7 @@
                                         </div>
                                     </c:when>
                                     <c:otherwise>
-                                        <div class="event-empty">Không có sự kiện nào sắp diễn ra.</div>
+                                        <div class="event-empty">Chưa có ghi chép mới. Có thể bắt đầu bằng việc cập nhật thông tin tổ tiên và con cháu trong họ.</div>
                                     </c:otherwise>
                                 </c:choose>
                             </div>
@@ -151,9 +146,9 @@
                     </div>
 
                     <div class="widget-box home-panel admin-panel">
-                        <div class="widget-header">
-                            <h4 class="widget-title">Ban quản trị</h4>
-                            <span class="admin-count">1 Thành viên</span>
+                        <div class="widget-header family-section-header">
+                            <h4 class="widget-title">Người gìn giữ gia phả</h4>
+                            <span class="admin-count">1 người phụ trách</span>
                         </div>
                         <div class="widget-body">
                             <div class="widget-main">
@@ -161,23 +156,23 @@
                                     <thead>
                                     <tr>
                                         <th>Họ và tên</th>
-                                        <th>Email</th>
-                                        <th>Chức vụ</th>
+                                        <th>Tài khoản</th>
+                                        <th>Vai trò</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr>
+                                        <td><%=org.apache.commons.lang.StringEscapeUtils.escapeHtml(com.javaweb.security.utils.SecurityUtils.getPrincipal().getFullName())%></td>
                                         <td><security:authentication property="principal.username"/></td>
-                                        <td>-</td>
                                         <td>
                                             <security:authorize access="hasRole('MANAGER')">
-                                                <span class="role-badge">QTV</span>
+                                                <span class="role-badge">Trưởng quản phả</span>
                                             </security:authorize>
                                             <security:authorize access="!hasRole('MANAGER') and hasRole('EDITOR')">
-                                                <span class="role-badge">EDITOR</span>
+                                                <span class="role-badge">Biên tập phả</span>
                                             </security:authorize>
                                             <security:authorize access="!hasRole('MANAGER') and !hasRole('EDITOR')">
-                                                <span class="role-badge">USER</span>
+                                                <span class="role-badge">Thành viên họ tộc</span>
                                             </security:authorize>
                                         </td>
                                     </tr>
@@ -191,4 +186,3 @@
         </div>
     </div>
 </div>
-

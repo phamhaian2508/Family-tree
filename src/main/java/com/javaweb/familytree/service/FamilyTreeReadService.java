@@ -65,6 +65,8 @@ public class FamilyTreeReadService {
 
         PersonDTO dto = toBasePersonDto(member);
         bindSpouses(dto, resolveNormalizedSpouses(member, dataset));
+        bindParents(dto, dataset);
+        bindMedia(dto);
 
         List<PersonDTO> children = dataset.childIdsByParentId
                 .getOrDefault(personId, Collections.emptyList())
@@ -932,7 +934,52 @@ public class FamilyTreeReadService {
         dto.setSpouses(new ArrayList<PersonDTO>());
         dto.setChildren(new ArrayList<PersonDTO>());
         dto.setChildrenIds(new ArrayList<Long>());
+        dto.setMediaUrls(new ArrayList<String>());
         return dto;
+    }
+
+    private void bindParents(PersonDTO dto, Dataset dataset) {
+        if (dto == null || dataset == null) {
+            return;
+        }
+        if (dto.getFatherId() != null) {
+            FamilyMember father = dataset.membersById.get(dto.getFatherId());
+            if (father != null) {
+                dto.setFatherFullName(father.getFullName());
+            }
+        }
+        if (dto.getMotherId() != null) {
+            FamilyMember mother = dataset.membersById.get(dto.getMotherId());
+            if (mother != null) {
+                dto.setMotherFullName(mother.getFullName());
+            }
+        }
+    }
+
+    private void bindMedia(PersonDTO dto) {
+        if (dto == null || dto.getId() == null) {
+            return;
+        }
+        personRepository.findByIdWithDetails(dto.getId()).ifPresent(entity -> {
+            List<Long> mediaIds = entity.getMedias() == null
+                    ? new ArrayList<>()
+                    : entity.getMedias().stream()
+                    .filter(Objects::nonNull)
+                    .map(media -> media.getId())
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+            List<String> mediaUrls = entity.getMedias() == null
+                    ? new ArrayList<>()
+                    : entity.getMedias().stream()
+                    .filter(Objects::nonNull)
+                    .map(media -> media.getFileUrl())
+                    .filter(Objects::nonNull)
+                    .map(String::trim)
+                    .filter(url -> !url.isEmpty())
+                    .collect(Collectors.toList());
+            dto.setMediaIds(mediaIds);
+            dto.setMediaUrls(mediaUrls);
+        });
     }
 
     private void bindSpouses(PersonDTO dto, List<FamilyMember> spouses) {

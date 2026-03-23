@@ -5,7 +5,11 @@ body.admin-modern {
 }
 
 body.admin-modern {
-    background: #ecf0f5;
+    background:
+        radial-gradient(circle at top, rgba(180, 136, 47, 0.1), transparent 22%),
+        linear-gradient(180deg, #fbf3df, #eddcb4);
+    color: #2d1f16;
+    font-size: 16px;
 }
 
 body.admin-modern .main-container {
@@ -22,22 +26,43 @@ body.admin-modern .navbar {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 250px;
-    background-image: url('https://cp.giaphadaiviet.vn/images/bglogin2.png');
-    background-size: cover;
-    background-position: center;
-    border-right: 1px solid rgba(44, 71, 119, 0.2);
+    width: 272px;
     z-index: 1040;
     display: flex;
     flex-direction: column;
+    background:
+        linear-gradient(180deg, rgba(67, 22, 17, 0.98), rgba(44, 14, 12, 0.99)),
+        url("/web/images/paper-texture.png");
+    background-size: auto, 320px;
+    border-right: 1px solid rgba(180, 136, 47, 0.18);
+    box-shadow: 14px 0 34px rgba(41, 14, 12, 0.12);
     transition: width 0.25s ease, transform 0.25s ease;
 }
 
 .app-sidebar::before {
     content: "";
+    display: block;
     position: absolute;
-    inset: 0;
-    background: rgba(255, 255, 255, 0.2);
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background:
+        linear-gradient(90deg, rgba(180, 136, 47, 0.2), rgba(180, 136, 47, 0.85), rgba(180, 136, 47, 0.2)),
+        repeating-linear-gradient(
+            90deg,
+            transparent 0 18px,
+            rgba(245, 231, 193, 0.18) 18px 22px,
+            transparent 22px 40px
+        );
+}
+
+.app-sidebar::after {
+    content: "";
+    position: absolute;
+    inset: 18px 14px 14px;
+    border: 1px solid rgba(243, 222, 175, 0.08);
+    border-radius: 22px;
     pointer-events: none;
 }
 
@@ -53,27 +78,62 @@ body.admin-modern .navbar {
 .app-brand {
     display: flex;
     align-items: center;
-    gap: 10px;
-    height: 50px;
-    padding: 0 14px;
-    border-bottom: none;
-    box-sizing: border-box;
+    gap: 14px;
+    padding: 26px 24px 18px;
 }
 
-.app-brand .brand-icon {
-    color: #2c4777;
-    font-size: 18px;
+.app-brand .brand-mark {
+    width: 64px;
+    height: 64px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(240, 213, 150, 0.32);
+    background:
+        radial-gradient(circle, rgba(255, 232, 184, 0.2) 0 30%, transparent 32%),
+        radial-gradient(circle, transparent 0 60%, rgba(190, 142, 47, 0.4) 61% 62%, transparent 64%),
+        rgba(122, 30, 30, 0.26);
+    color: #f1dbad;
+    font-family: "Segoe Script", "Brush Script MT", cursive;
+    font-size: 1rem;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
 }
 
-.app-brand .brand-text {
-    color: #2c4777;
-    font-size: 18px;
+.app-brand .brand-copy {
+    min-width: 0;
+}
+
+.app-brand .brand-title {
+    color: #f7e9c1;
+    font-family: "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    font-size: 26px;
     font-weight: 700;
-    white-space: nowrap;
+    line-height: 1.1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.app-brand .brand-subtitle {
+    margin-top: 5px;
+    color: rgba(243, 226, 185, 0.78);
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.app-nav-section {
+    padding: 0 24px 10px;
+    color: rgba(243, 226, 185, 0.6);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
 }
 
 .app-nav {
-    padding: 10px 8px;
+    padding: 4px 14px 16px;
     overflow-y: auto;
     flex: 1;
 }
@@ -81,248 +141,292 @@ body.admin-modern .navbar {
 .app-nav-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    color: #2c4777;
+    gap: 12px;
+    margin-bottom: 6px;
+    padding: 13px 14px;
+    border-radius: 18px;
+    border: 1px solid transparent;
+    color: rgba(248, 232, 183, 0.94);
+    font-size: 16px;
+    font-weight: 500;
     text-decoration: none !important;
-    font-weight: 600;
-    border-radius: 10px;
-    padding: 10px 12px;
-    margin-bottom: 3px;
-    font-size: 14px;
-    transition: background-color 0.15s ease, color 0.15s ease;
+    letter-spacing: 0.02em;
+    transition: color 0.22s ease, background-color 0.22s ease, border-color 0.22s ease, transform 0.22s ease;
 }
 
 .app-nav-item i {
     width: 18px;
     text-align: center;
-    font-size: 15px;
+    font-size: 16px;
+    color: rgba(233, 201, 131, 0.95);
 }
 
 .app-nav-item:hover {
-    color: #1a2f55;
-    background: rgba(0, 0, 0, 0.05);
+    color: #fff3cc;
+    background: rgba(255, 247, 223, 0.1);
+    border-color: rgba(211, 168, 87, 0.24);
+    transform: translateX(2px);
 }
 
 .app-nav-item.active {
-    background: rgba(0, 0, 0, 0.08);
-    color: #2c4777;
-    border-left: 3px solid #3c8dbc;
-    padding-left: 9px;
+    color: #fff5d8;
+    font-size: 17px;
     font-weight: 700;
+    background:
+        linear-gradient(90deg, rgba(143, 32, 32, 0.32), rgba(255, 247, 223, 0.06));
+    border-color: rgba(223, 186, 111, 0.36);
+    box-shadow:
+        inset 3px 0 0 rgba(224, 187, 108, 0.92),
+        0 0 14px rgba(180, 136, 47, 0.08);
 }
 
 .app-nav-item .role-badge {
     margin-left: auto;
-    font-size: 10px;
-    font-weight: 700;
-    border: 1px solid rgba(44, 71, 119, 0.3);
+    padding: 2px 8px;
     border-radius: 999px;
-    padding: 1px 6px;
-    color: #274168;
-    background: rgba(255, 255, 255, 0.4);
-}
-
-.app-sidebar-bottom {
-    border-top: 1px solid rgba(44, 71, 119, 0.15);
-    padding: 10px 8px 12px;
-}
-
-.app-user-box {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.app-user-box.dropdown-toggle {
-    text-decoration: none;
-}
-
-.app-user-box .avatar {
-    width: 30px;
-    height: 30px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.75);
-    border: 1px solid rgba(44, 71, 119, 0.2);
-    color: #2c4777;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border: 1px solid rgba(244, 225, 181, 0.22);
+    background: rgba(255, 247, 223, 0.08);
+    color: #f1dbad;
     font-size: 14px;
-}
-
-.app-user-box .meta .name {
-    color: #2c4777;
     font-weight: 700;
+}
+
+.app-sidebar-footer {
+    padding: 16px 24px 24px;
+    border-top: 1px solid rgba(244, 225, 181, 0.08);
+    color: rgba(243, 226, 185, 0.66);
     font-size: 14px;
-    line-height: 1.2;
-}
-
-.app-user-box .meta .role {
-    color: #4f6890;
-    font-size: 12px;
-}
-
-.app-sidebar-bottom .sign-out {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: #2c4777;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 13px;
-}
-
-.app-sidebar-bottom .sign-out:hover {
-    color: #1a2f55;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
 }
 
 .app-topbar {
     position: fixed;
     top: 0;
-    left: 250px;
+    left: 272px;
     right: 0;
-    height: 50px;
-    background: #ffffff;
-    border-bottom: 1px solid #dee2e6;
+    z-index: 1030;
+    height: 82px;
+    padding: 0 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 14px;
-    z-index: 1030;
+    background: #f7efdd;
+    border-bottom: 1px solid rgba(104, 61, 33, 0.18);
+    box-shadow: 0 10px 24px rgba(76, 42, 18, 0.06);
     transition: left 0.25s ease;
 }
 
-.app-topbar-toggle {
-    border: 0;
-    background: #f8f9fa;
-    color: #64748b;
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
-    padding: 0;
-    position: relative;
-    top: -1px;
+.app-topbar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 8% 50%, rgba(143, 32, 32, 0.06), transparent 16%),
+        radial-gradient(circle at 18% 48%, rgba(180, 136, 47, 0.08), transparent 14%),
+        radial-gradient(circle at 88% 40%, rgba(143, 32, 32, 0.05), transparent 15%),
+        radial-gradient(circle at 78% 56%, rgba(180, 136, 47, 0.07), transparent 13%);
+    pointer-events: none;
 }
 
-.app-topbar-toggle:hover {
-    background: #eef2f7;
-    color: #334155;
+.app-topbar::after {
+    content: "";
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    bottom: 8px;
+    border-bottom: 1px solid rgba(143, 32, 32, 0.12);
+    pointer-events: none;
 }
 
+.app-topbar-left,
 .app-topbar-right {
     display: flex;
     align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.app-topbar-left {
     gap: 14px;
+}
+
+.app-topbar-right {
+    gap: 12px;
+}
+
+.app-topbar-toggle {
+    width: 46px;
+    height: 46px;
+    border: 1px solid rgba(122, 74, 42, 0.26);
+    border-radius: 12px;
+    background: #f1e3c4;
+    color: #6f231f;
+    padding: 0;
+    box-shadow: none;
+}
+
+.app-topbar-toggle:hover {
+    background: #ead8b3;
+    color: #561816;
+}
+
+.app-topbar-intro {
+    display: flex;
+    flex-direction: column;
+}
+
+.app-topbar-kicker {
+    color: #8b3a23;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+
+.app-topbar-title {
+    color: #4e2b1d;
+    font-family: "Noto Serif", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    font-size: 24px;
+    letter-spacing: 0.03em;
 }
 
 .app-topbar-bell {
     position: relative;
-    color: #64748b;
+    min-width: 46px;
+    height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(122, 74, 42, 0.26);
+    border-radius: 12px;
+    background: #f1e3c4;
+    color: #6f231f;
     font-size: 18px;
     text-decoration: none !important;
 }
 
+.app-topbar-bell:hover {
+    background: #ead8b3;
+    color: #561816;
+}
+
 .app-topbar-bell .dot {
     position: absolute;
-    top: 1px;
-    right: -2px;
-    width: 8px;
-    height: 8px;
+    top: 8px;
+    right: 8px;
+    width: 9px;
+    height: 9px;
     border-radius: 999px;
-    background: #ef4444;
-    border: 1px solid #ffffff;
+    background: #b72b2b;
+    border: 1px solid #f8efdc;
 }
 
 .app-topbar-user-link {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    color: #64748b !important;
+    gap: 10px;
+    min-height: 46px;
+    padding: 0 14px;
+    border: 1px solid rgba(122, 74, 42, 0.26);
+    border-radius: 12px;
+    background: #f1e3c4;
+    color: #6d543e !important;
     text-decoration: none !important;
-}
-
-.app-topbar-user-link .avatar {
-    width: 26px;
-    height: 26px;
-    border-radius: 999px;
-    background: #f1f5f9;
-    color: #475569;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-}
-
-.app-topbar-user-link .name {
-    color: #64748b;
-    font-size: 13px;
     font-weight: 600;
 }
 
+.app-topbar-user-link:hover,
+.app-topbar-user.open .app-topbar-user-link {
+    background: #ead8b3;
+    color: #561816 !important;
+}
+
+.app-topbar-user-link .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    border: 1px solid rgba(122, 74, 42, 0.2);
+    background: #f8efdc;
+    color: #6f231f;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+}
+
+.app-topbar-user-link .name {
+    color: #4f3829;
+    font-size: 16px;
+}
+
+.app-topbar-user-link .fa-caret-down {
+    color: #7e5d43;
+    font-size: 14px;
+}
+
+.app-topbar-user .dropdown-menu {
+    margin-top: 16px;
+    border: 1px solid rgba(122, 74, 42, 0.18);
+    border-radius: 16px;
+    background: #f7efdd url("/web/images/paper-texture.png");
+    background-size: 260px;
+    box-shadow: 0 14px 28px rgba(72, 38, 18, 0.1);
+    overflow: hidden;
+}
+
+.app-topbar-user .dropdown-menu > li > a {
+    padding: 12px 16px;
+    color: #5b4634;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.app-topbar-user .dropdown-menu > li > a:hover,
+.app-topbar-user .dropdown-menu > li > a:focus {
+    background: rgba(143, 32, 32, 0.08);
+    color: #6c1717;
+}
+
+.app-topbar-user .dropdown-menu .divider {
+    margin: 0;
+    background-color: rgba(104, 61, 33, 0.1);
+}
+
 body.admin-modern .main-content {
-    margin-left: 250px;
-    margin-top: 50px;
-    min-height: calc(100vh - 50px);
-    background: #f5f7fb;
+    margin-left: 272px;
+    margin-top: 82px;
+    min-height: calc(100vh - 82px);
+    background:
+        linear-gradient(180deg, rgba(255, 250, 240, 0.88), rgba(242, 228, 190, 0.74)),
+        url("/web/images/paper-texture.png");
+    background-size: auto, 320px;
     transition: margin-left 0.25s ease;
+}
+
+body.admin-modern .main-content-inner {
+    padding: 22px 22px 12px;
 }
 
 body.admin-modern .breadcrumbs {
     display: none !important;
 }
 
-body.admin-modern .breadcrumbs.has-quick-icons {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-body.admin-modern .breadcrumbs.has-quick-icons .breadcrumb {
-    margin: 0;
-}
-
-.crumb-quick-icons {
-    display: inline-flex;
-    align-items: center;
-    gap: 16px;
-    margin-left: 10px;
-}
-
-.crumb-icon-btn {
-    position: relative;
-    color: #94a3b8;
-    font-size: 22px;
-    line-height: 1;
-    text-decoration: none !important;
-}
-
-.crumb-icon-btn:hover {
-    color: #64748b;
-}
-
-.crumb-icon-btn.has-dot::after {
-    content: "";
-    position: absolute;
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: #ef4444;
-    right: -2px;
-    top: 1px;
-    border: 2px solid #eef2f7;
-}
-
 body.admin-modern.sidebar-collapsed .app-sidebar {
-    width: 80px;
+    width: 88px;
 }
 
-body.admin-modern.sidebar-collapsed .app-brand .brand-text,
+body.admin-modern.sidebar-collapsed .app-brand .brand-copy,
+body.admin-modern.sidebar-collapsed .app-nav-section,
 body.admin-modern.sidebar-collapsed .app-nav-item span,
 body.admin-modern.sidebar-collapsed .app-nav-item .role-badge,
-body.admin-modern.sidebar-collapsed .app-user-box .meta,
-body.admin-modern.sidebar-collapsed .app-sidebar-bottom .sign-out {
+body.admin-modern.sidebar-collapsed .app-sidebar-footer {
     display: none;
+}
+
+body.admin-modern.sidebar-collapsed .app-brand {
+    justify-content: center;
+    padding-left: 12px;
+    padding-right: 12px;
 }
 
 body.admin-modern.sidebar-collapsed .app-nav-item {
@@ -330,11 +434,36 @@ body.admin-modern.sidebar-collapsed .app-nav-item {
 }
 
 body.admin-modern.sidebar-collapsed .app-topbar {
-    left: 80px;
+    left: 88px;
 }
 
 body.admin-modern.sidebar-collapsed .main-content {
-    margin-left: 80px;
+    margin-left: 88px;
+}
+
+.app-footer {
+    margin-left: 272px;
+    padding: 0 22px 24px;
+    background: transparent;
+    transition: margin-left 0.25s ease;
+}
+
+.app-footer-inner {
+    padding-top: 12px;
+}
+
+.app-footer-copy {
+    padding: 16px 18px;
+    border-radius: 18px;
+    border: 1px solid rgba(104, 61, 33, 0.1);
+    background: rgba(255, 248, 229, 0.62);
+    color: #6b573f;
+    font-size: 15px;
+    text-align: center;
+}
+
+body.admin-modern.sidebar-collapsed .app-footer {
+    margin-left: 88px;
 }
 
 @media (max-width: 991px) {
@@ -344,10 +473,27 @@ body.admin-modern.sidebar-collapsed .main-content {
 
     .app-topbar {
         left: 0;
+        height: 76px;
+        padding: 0 16px;
+    }
+
+    .app-topbar-title {
+        font-size: 22px;
     }
 
     body.admin-modern .main-content {
         margin-left: 0;
+        margin-top: 76px;
+    }
+
+    body.admin-modern .main-content-inner {
+        padding: 16px 16px 10px;
+    }
+
+    .app-footer,
+    body.admin-modern.sidebar-collapsed .app-footer {
+        margin-left: 0;
+        padding: 0 16px 20px;
     }
 
     body.admin-modern.sidebar-collapsed .app-topbar {
@@ -365,10 +511,36 @@ body.admin-modern.sidebar-collapsed .main-content {
     body.admin-modern.sidebar-open-mobile .app-sidebar-overlay {
         position: fixed;
         top: 0;
-        left: 250px;
+        left: 272px;
         right: 0;
         bottom: 0;
         display: block;
         background: rgba(15, 23, 42, 0.35);
+    }
+}
+
+@media (max-width: 767px) {
+    .app-topbar-left {
+        gap: 10px;
+    }
+
+    .app-topbar {
+        padding: 0 12px;
+    }
+
+    .app-topbar-kicker {
+        font-size: 14px;
+    }
+
+    .app-topbar-title {
+        font-size: 20px;
+    }
+
+    .app-topbar-user-link {
+        padding: 0 10px;
+    }
+
+    .app-topbar-user-link .name {
+        display: none;
     }
 }
