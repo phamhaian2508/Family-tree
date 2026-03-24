@@ -106,7 +106,11 @@ jobs:
               EXISTING_MEDIA_UPLOAD_DIR="$(grep '^MEDIA_UPLOAD_DIR=' .env | cut -d '=' -f 2- || true)"
             fi
 
-            if ! docker compose version >/dev/null 2>&1; then
+            if docker compose version >/dev/null 2>&1; then
+              log "Using docker compose plugin"
+            elif command -v docker-compose >/dev/null 2>&1; then
+              log "Using docker-compose binary"
+            else
               log "Docker compose not found, installing plugin"
               mkdir -p ~/.docker/cli-plugins
               ARCH="$(uname -m)"
@@ -115,10 +119,22 @@ jobs:
               else
                 COMPOSE_BIN="docker-compose-linux-x86_64"
               fi
-              curl -fsSL --retry 3 --retry-delay 2 --connect-timeout 10 --max-time 120 \
-                "https://github.com/docker/compose/releases/latest/download/${COMPOSE_BIN}" \
-                -o ~/.docker/cli-plugins/docker-compose
+              if command -v curl >/dev/null 2>&1; then
+                curl -fsSL --retry 3 --retry-delay 2 --connect-timeout 10 --max-time 120 \
+                  "https://github.com/docker/compose/releases/latest/download/${COMPOSE_BIN}" \
+                  -o ~/.docker/cli-plugins/docker-compose
+              elif command -v wget >/dev/null 2>&1; then
+                wget -q -O ~/.docker/cli-plugins/docker-compose \
+                  "https://github.com/docker/compose/releases/latest/download/${COMPOSE_BIN}"
+              else
+                echo "Neither curl nor wget is installed on EC2."
+                exit 1
+              fi
               chmod +x ~/.docker/cli-plugins/docker-compose
+              docker compose version >/dev/null 2>&1 || {
+                echo "Docker compose installation failed."
+                exit 1
+              }
             fi
 
             compose() {
