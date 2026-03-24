@@ -128,8 +128,37 @@ jobs:
             COMPOSE_ENGINE="docker-compose"
             log "Using docker-compose binary"
           else
-            echo "Docker Compose not found on EC2."
-            exit 1
+            log "Docker Compose not found, installing plugin"
+            mkdir -p ~/.docker/cli-plugins
+            ARCH="$(uname -m)"
+            if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+              COMPOSE_BIN="docker-compose-linux-aarch64"
+            else
+              COMPOSE_BIN="docker-compose-linux-x86_64"
+            fi
+            if command -v curl >/dev/null 2>&1; then
+              curl -fsSL --retry 3 --retry-delay 2 --connect-timeout 10 --max-time 120 \
+                "https://github.com/docker/compose/releases/latest/download/${COMPOSE_BIN}" \
+                -o ~/.docker/cli-plugins/docker-compose
+            elif command -v wget >/dev/null 2>&1; then
+              wget -q -O ~/.docker/cli-plugins/docker-compose \
+                "https://github.com/docker/compose/releases/latest/download/${COMPOSE_BIN}"
+            else
+              echo "Neither curl nor wget is installed on EC2."
+              exit 1
+            fi
+            chmod +x ~/.docker/cli-plugins/docker-compose
+
+            if docker compose version >/dev/null 2>&1; then
+              COMPOSE_ENGINE="docker compose"
+              log "Docker compose plugin installed"
+            elif command -v docker-compose >/dev/null 2>&1; then
+              COMPOSE_ENGINE="docker-compose"
+              log "Using docker-compose binary after install attempt"
+            else
+              echo "Docker Compose installation failed."
+              exit 1
+            fi
           fi
 
           compose() {
