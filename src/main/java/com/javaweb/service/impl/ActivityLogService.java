@@ -153,7 +153,8 @@ public class ActivityLogService implements IActivityLogService {
     }
 
     private void buildFailedLoginSeries(SecurityAuditDashboardDTO dto, Date from, Date to) {
-        List<ActivityLogEntity> logs = activityLogRepository.findByTimestampBetweenOrderByTimestampAsc(from, to);
+        List<ActivityLogEntity> logs = activityLogRepository
+                .findByActionAndTimestampBetweenOrderByTimestampAsc(LOGIN_FAILED, from, to);
 
         Map<String, Long> failedByDay = new LinkedHashMap<>();
         SimpleDateFormat keyFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -170,7 +171,7 @@ public class ActivityLogService implements IActivityLogService {
         }
 
         for (ActivityLogEntity log : logs) {
-            if (!LOGIN_FAILED.equals(log.getAction()) || log.getTimestamp() == null) {
+            if (log.getTimestamp() == null) {
                 continue;
             }
             String key = keyFormat.format(log.getTimestamp());

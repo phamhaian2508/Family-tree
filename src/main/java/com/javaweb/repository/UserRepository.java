@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Date;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<UserEntity, Long> , UserRepositoryCustom {
@@ -16,6 +17,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> , UserRe
     Page<UserEntity> findByStatusNot(int status, Pageable pageable);
     long countByUserNameContainingIgnoreCaseOrFullNameContainingIgnoreCaseAndStatusNot(String userName, String fullName, int status);
     long countByStatusNot(int status);
+    long countByCreatedDateBetween(Date from, Date to);
     UserEntity findOneByUserName(String userName);
     boolean existsByEmailIgnoreCase(String email);
     List<UserEntity> findByIdIn(List<Long> id);

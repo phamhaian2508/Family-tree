@@ -1,6 +1,5 @@
 package com.javaweb.controller.admin;
 
-import com.javaweb.entity.BaseEntity;
 import com.javaweb.entity.PersonEntity;
 import com.javaweb.repository.BranchRepository;
 import com.javaweb.repository.MediaRepository;
@@ -52,14 +51,14 @@ public class HomeController {
         long membersCurrentMonth = personRepository.countByBranchIsNotNullAndCreatedDateBetween(currentMonthStart, nextMonthStart);
         long membersPreviousMonth = personRepository.countByBranchIsNotNullAndCreatedDateBetween(previousMonthStart, currentMonthStart);
 
-        long branchesCurrentMonth = countByCreatedDate(branchRepository.findAll(), currentMonthStart, nextMonthStart);
-        long branchesPreviousMonth = countByCreatedDate(branchRepository.findAll(), previousMonthStart, currentMonthStart);
+        long branchesCurrentMonth = branchRepository.countByCreatedDateBetween(currentMonthStart, nextMonthStart);
+        long branchesPreviousMonth = branchRepository.countByCreatedDateBetween(previousMonthStart, currentMonthStart);
 
         long mediaCurrentMonth = mediaRepository.countByCreatedDateBetween(currentMonthStart, nextMonthStart);
         long mediaPreviousMonth = mediaRepository.countByCreatedDateBetween(previousMonthStart, currentMonthStart);
 
-        long usersCurrentMonth = countByCreatedDate(userRepository.findAll(), currentMonthStart, nextMonthStart);
-        long usersPreviousMonth = countByCreatedDate(userRepository.findAll(), previousMonthStart, currentMonthStart);
+        long usersCurrentMonth = userRepository.countByCreatedDateBetween(currentMonthStart, nextMonthStart);
+        long usersPreviousMonth = userRepository.countByCreatedDateBetween(previousMonthStart, currentMonthStart);
 
         mav.addObject("totalMembers", totalMembers);
         mav.addObject("totalBranches", totalBranches);
@@ -123,13 +122,6 @@ public class HomeController {
 
     private Date atStartOfMonth(LocalDate date) {
         return Date.from(date.withDayOfMonth(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-    }
-
-    private long countByCreatedDate(List<? extends BaseEntity> list, Date from, Date to) {
-        return list.stream()
-                .filter(item -> item.getCreatedDate() != null)
-                .filter(item -> !item.getCreatedDate().before(from) && item.getCreatedDate().before(to))
-                .count();
     }
 
     private String formatGrowth(long current, long previous) {
