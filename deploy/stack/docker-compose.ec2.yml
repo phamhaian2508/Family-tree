@@ -43,7 +43,7 @@ services:
     volumes:
       - media_data:/data/media
     ports:
-      - "127.0.0.1:8080:8080"
+      - "80:8080"
     mem_limit: 900m
     cpus: "1.00"
     logging:
