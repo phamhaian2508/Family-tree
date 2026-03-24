@@ -38,9 +38,11 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
+          timeout: 60s
           command_timeout: 40m
+          script_stop: true
           script: |
-            set -e
+            set -euo pipefail
             IMAGE_NAME="${{ env.IMAGE_NAME }}"
             DEPLOY_DIR="$HOME/family-tree"
             REPO_NAME="${{ github.repository }}"
@@ -50,6 +52,11 @@ jobs:
             EXISTING_MYSQL_ROOT_PASSWORD=""
             EXISTING_MEDIA_UPLOAD_DIR=""
 
+            log() {
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1"
+            }
+
+            log "Prepare deploy directory"
             mkdir -p "$DEPLOY_DIR"
             cd "$DEPLOY_DIR"
             mkdir -p deploy/stack database
@@ -67,8 +74,10 @@ jobs:
             }
 
             # Pull deployment manifests directly from repository to avoid SCP timeout.
+            log "Download docker-compose manifest"
             download_file "deploy/stack/docker-compose.ec2.yml" "deploy/stack/docker-compose.ec2.yml"
             if [ ! -f database/family_tree_db.sql ]; then
+              log "Download initial database seed"
               download_file "database/family_tree_db.sql" "database/family_tree_db.sql"
             fi
 
@@ -79,6 +88,7 @@ jobs:
             fi
 
             if ! docker compose version >/dev/null 2>&1; then
+              log "Docker compose not found, installing plugin"
               mkdir -p ~/.docker/cli-plugins
               ARCH="$(uname -m)"
               if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
@@ -86,7 +96,9 @@ jobs:
               else
                 COMPOSE_BIN="docker-compose-linux-x86_64"
               fi
-              curl -SL "https://github.com/docker/compose/releases/latest/download/${COMPOSE_BIN}" -o ~/.docker/cli-plugins/docker-compose
+              curl -fsSL --retry 3 --retry-delay 2 --connect-timeout 10 --max-time 120 \
+                "https://github.com/docker/compose/releases/latest/download/${COMPOSE_BIN}" \
+                -o ~/.docker/cli-plugins/docker-compose
               chmod +x ~/.docker/cli-plugins/docker-compose
             fi
 
@@ -101,8 +113,10 @@ jobs:
               fi
             }
 
+            log "Docker login"
             echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
 
+            log "Write .env"
             cat > .env <<EOF
             APP_IMAGE=$IMAGE_NAME
             MYSQL_DATABASE=${EXISTING_MYSQL_DATABASE:-family_tree_db}
@@ -112,8 +126,20 @@ jobs:
             EOF
 
             # Cleanup legacy standalone containers from old deploy flow.
+            log "Cleanup legacy containers"
             docker rm -f family-tree-app family-tree-mysql family-tree-nginx family-tree-coturn || true
-            compose -f deploy/stack/docker-compose.ec2.yml --env-file .env pull
-            compose -f deploy/stack/docker-compose.ec2.yml --env-file .env up -d --remove-orphans
+
+            log "Pull app image"
+            timeout 1200 compose -f deploy/stack/docker-compose.ec2.yml --env-file .env pull app
+
+            log "Deploy app (and mysql if missing)"
+            if compose -f deploy/stack/docker-compose.ec2.yml --env-file .env ps mysql >/dev/null 2>&1; then
+              timeout 1200 compose -f deploy/stack/docker-compose.ec2.yml --env-file .env up -d --remove-orphans app
+            else
+              timeout 1200 compose -f deploy/stack/docker-compose.ec2.yml --env-file .env up -d --remove-orphans
+            fi
+
+            log "Post-deploy status"
             compose -f deploy/stack/docker-compose.ec2.yml --env-file .env ps
             docker image prune -f || true
+            log "Deploy completed"
