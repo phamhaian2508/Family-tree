@@ -32,6 +32,24 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Preflight SSH Connectivity
+        shell: bash
+        run: |
+          set -euo pipefail
+          HOST="${{ secrets.EC2_HOST }}"
+          echo "Checking SSH reachability to ${HOST}:22"
+          for i in {1..5}; do
+            if timeout 5 bash -c "cat < /dev/null > /dev/tcp/${HOST}/22" 2>/dev/null; then
+              echo "SSH port is reachable."
+              exit 0
+            fi
+            echo "Attempt ${i}/5 failed, retrying..."
+            sleep 3
+          done
+          echo "Cannot reach ${HOST}:22 from GitHub runner."
+          echo "Please check EC2 public IP/DNS, Security Group inbound 22, NACL, route table, and host firewall."
+          exit 1
+
       - name: SSH into EC2 and deploy full stack
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -41,6 +59,7 @@ jobs:
           timeout: 60s
           command_timeout: 40m
           script_stop: true
+          debug: true
           script: |
             set -euo pipefail
             IMAGE_NAME="${{ env.IMAGE_NAME }}"
