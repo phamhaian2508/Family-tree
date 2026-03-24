@@ -85,19 +85,44 @@ jobs:
               DEST_PATH="$2"
               RAW_URL="https://raw.githubusercontent.com/${REPO_NAME}/${BRANCH_NAME}/${SRC_PATH}"
               API_URL="https://api.github.com/repos/${REPO_NAME}/contents/${SRC_PATH}?ref=${BRANCH_NAME}"
-              curl -fsSL --retry 3 --retry-delay 2 --connect-timeout 10 --max-time 120 "${RAW_URL}" -o "${DEST_PATH}" \
-                || curl -fsSL --retry 3 --retry-delay 2 --connect-timeout 10 --max-time 120 \
-                  -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-                  -H "Accept: application/vnd.github.raw" \
-                  "${API_URL}" -o "${DEST_PATH}"
+              TMP_PATH="${DEST_PATH}.tmp"
+              if command -v curl >/dev/null 2>&1; then
+                curl -fSL --retry 3 --retry-delay 2 --connect-timeout 10 --max-time 120 "${RAW_URL}" -o "${TMP_PATH}" \
+                  || curl -fSL --retry 3 --retry-delay 2 --connect-timeout 10 --max-time 120 \
+                    -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+                    -H "Accept: application/vnd.github.raw" \
+                    -H "User-Agent: family-tree-deploy" \
+                    "${API_URL}" -o "${TMP_PATH}"
+              elif command -v wget >/dev/null 2>&1; then
+                wget -q --tries=3 --timeout=30 -O "${TMP_PATH}" "${RAW_URL}" \
+                  || wget -q --tries=3 --timeout=30 \
+                    --header="Authorization: Bearer ${GITHUB_TOKEN}" \
+                    --header="Accept: application/vnd.github.raw" \
+                    --header="User-Agent: family-tree-deploy" \
+                    -O "${TMP_PATH}" "${API_URL}"
+              else
+                echo "Neither curl nor wget is installed on EC2."
+                return 1
+              fi
+              mv "${TMP_PATH}" "${DEST_PATH}"
             }
 
             # Pull deployment manifests directly from repository to avoid SCP timeout.
             log "Download docker-compose manifest"
-            download_file "deploy/stack/docker-compose.ec2.yml" "deploy/stack/docker-compose.ec2.yml"
+            if ! download_file "deploy/stack/docker-compose.ec2.yml" "deploy/stack/docker-compose.ec2.yml"; then
+              if [ -f deploy/stack/docker-compose.ec2.yml ]; then
+                log "Failed to download compose file, fallback to existing local copy"
+              else
+                echo "Failed to download compose file and no local fallback exists."
+                exit 1
+              fi
+            fi
             if [ ! -f database/family_tree_db.sql ]; then
               log "Download initial database seed"
-              download_file "database/family_tree_db.sql" "database/family_tree_db.sql"
+              download_file "database/family_tree_db.sql" "database/family_tree_db.sql" || {
+                echo "Failed to download initial database seed."
+                exit 1
+              }
             fi
 
             if [ -f .env ]; then
