@@ -90,7 +90,7 @@
 
     /* Lam o loc ten de thay ro hon */
     #ftApp #advancedFilterBar #ftFilterName {
-        width: 280px !important;
+        width: 100% !important;
         min-height: 40px;
         font-size: 14px;
         font-weight: 600;
@@ -110,16 +110,27 @@
     }
     #ftApp #advancedFilterBar {
         display: grid !important;
-        grid-template-columns: 1.5fr 1fr auto;
+        grid-template-columns: minmax(260px, 1.8fr) minmax(160px, 1fr) minmax(190px, 1fr) auto;
         align-items: end;
         gap: 10px !important;
-        min-width: min(760px, 100%);
+        min-width: 100%;
     }
     #ftApp #advancedFilterBar .ft-filter-field {
         min-width: 0;
         display: flex;
-        align-items: center;
-        gap: 8px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+    #ftApp #advancedFilterBar .ft-filter-field-search {
+        grid-column: span 1;
+    }
+    #ftApp #advancedFilterBar .ft-filter-field:has(#branchDropdown),
+    #ftApp #advancedFilterBar .ft-filter-field:has(#ftFilterGender),
+    #ftApp #advancedFilterBar .ft-filter-field:has(#ftFilterLifeStatus),
+    #ftApp #advancedFilterBar .ft-filter-field:has(#ftFilterBirthYear),
+    #ftApp #advancedFilterBar .ft-filter-field:has(#ftFilterDeathYear) {
+        display: none !important;
     }
     #ftApp #advancedFilterBar .ft-filter-label {
         font-size: 13px;
@@ -130,6 +141,8 @@
         margin: 0;
     }
     #ftApp #advancedFilterBar .ft-filter-action {
+        display: flex;
+        align-items: flex-end;
         align-self: end;
     }
     #ftApp #advancedFilterBar .form-control {
@@ -298,6 +311,9 @@
         position: relative;
         overflow: hidden;
     }
+    #ftApp .ft-page-banner {
+        display: none !important;
+    }
     #ftApp .ft-page-banner::before {
         content: "";
         position: absolute;
@@ -333,6 +349,9 @@
         color: #5e4738;
         font-size: 14px;
         line-height: 1.5;
+    }
+    #ftApp .ft-page-banner-text {
+        display: none;
     }
     #ftApp .ft-page-banner-actions {
         display: flex;
@@ -722,6 +741,8 @@
         display: flex;
         justify-content: center;
         margin: 6px 0 2px;
+        position: relative;
+        z-index: 2;
     }
     #ftApp .ft-branch-subtree {
         overflow: hidden;
@@ -935,6 +956,10 @@
         }
     }
     @media (max-width: 767px) {
+        #ftApp .container-fluid {
+            padding-left: 8px !important;
+            padding-right: 8px !important;
+        }
         #ftApp .ft-filter-grid {
             grid-template-columns: 1fr;
         }
@@ -943,7 +968,7 @@
         }
         #ftApp .ft-page-banner,
         #ftApp .ft-filter-strip {
-            padding: 12px;
+            padding: 10px;
         }
         #ftApp .ft-page-banner-title {
             font-size: 22px;
@@ -952,46 +977,158 @@
         #ftApp .ft-canvas-note {
             font-size: 13px;
         }
+        #ftApp .ft-quick-strip,
+        #ftApp .ft-tree-controls,
+        #ftApp .ft-canvas-meta {
+            width: 100%;
+            gap: 8px;
+        }
+        #ftApp .ft-tree-controls .btn,
+        #ftApp .ft-canvas-meta .ft-meta-chip {
+            width: calc(50% - 4px);
+            justify-content: center;
+        }
         #ftApp .ft-canvas {
-            min-height: 480px;
-            height: calc(100vh - 170px) !important;
+            min-height: 360px;
+            height: calc(100vh - 210px) !important;
         }
         #ftApp .ft-scroll {
-            padding: 16px 12px 28px !important;
+            padding: 12px 8px 20px !important;
         }
         #ftApp #treeRoot .box-person {
-            --node-width: 166px;
-            --spouse-gap: 12px;
+            --node-width: 138px;
+            --spouse-gap: 8px;
+            min-height: 172px;
+            padding-right: calc(var(--node-width) + var(--spouse-gap));
+        }
+        #ftApp #treeRoot .box-person.no-spouse {
+            min-height: 0;
         }
         #ftApp #treeRoot .person-node {
-            min-height: 198px;
+            min-height: 164px;
+            padding: 8px 8px 10px !important;
         }
         #ftApp #treeRoot .avatar-tree {
-            width: 90px !important;
-            height: 82px !important;
+            width: 70px !important;
+            height: 64px !important;
+            margin-top: 10px !important;
         }
         #ftApp #treeRoot .name-phado {
-            font-size: 17px !important;
+            font-size: 14px !important;
+            line-height: 1.25 !important;
         }
         #ftApp #treeRoot .person-dates {
-            font-size: 13px !important;
+            font-size: 11px !important;
+            line-height: 1.35 !important;
         }
-        #ftApp .modal-dialog {
+        #ftApp #treeRoot .ft-node-status,
+        #ftApp #treeRoot .ft-node-role,
+        #ftApp #treeRoot .tree-branch-chip {
+            font-size: 10px !important;
+        }
+        #ftApp #treeRoot .person-text {
+            margin-top: 10px !important;
+            gap: 4px !important;
+        }
+        #ftApp #treeRoot .li-person {
+            padding-left: 4px !important;
+            padding-right: 4px !important;
+        }
+        #ftApp #treeRoot .ul-person.ft-forest-roots,
+        #ftApp #treeRoot .ul-person {
+            padding-top: 18px !important;
+        }
+        #ftApp #detailMemberModal .modal-dialog {
+            width: calc(100vw - 16px);
+            max-width: calc(100vw - 16px) !important;
+            margin: 8px auto !important;
             padding: 0 !important;
-            margin: 0 !important;
-            min-height: 100% !important;
+            min-height: auto !important;
         }
-        #ftApp .modal-content {
-            min-height: 100vh;
-            max-height: none !important;
-            border-radius: 0 !important;
+        #ftApp #detailMemberModal .modal-content {
+            min-height: auto !important;
+            max-height: calc(100vh - 16px) !important;
+            border-radius: 14px !important;
+        }
+        #ftApp #detailMemberModal .modal-header,
+        #ftApp #detailMemberModal .modal-body,
+        #ftApp #detailMemberModal .modal-footer {
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+        #ftApp #detailMemberModal .modal-body {
+            padding-top: 12px;
+            padding-bottom: 12px;
+        }
+        #ftApp #detailMemberModal .modal-footer {
+            gap: 8px;
+            justify-content: stretch;
+        }
+        #ftApp #detailMemberModal .modal-footer .btn {
+            flex: 1 1 calc(50% - 4px);
+            min-width: 0;
         }
         #ftApp .ft-detail-hero {
             flex-direction: column;
             align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+        }
+        #ftApp .ft-detail-avatar {
+            width: 74px;
+            height: 74px;
         }
         #ftApp .ft-detail-name {
-            font-size: 24px;
+            font-size: 22px;
+            line-height: 1.25;
+        }
+        #ftApp .ft-detail-subline,
+        #ftApp .ft-detail-empty,
+        #ftApp #detailMemberBody .form-label + div {
+            font-size: 14px;
+            line-height: 1.45;
+        }
+        #ftApp .ft-detail-pill {
+            min-height: 28px;
+            padding: 5px 10px;
+            font-size: 12px;
+            margin: 2px 4px 2px 0;
+        }
+        #ftApp .ft-detail-media-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+        }
+    }
+    @media (max-width: 575px) {
+        #ftApp .ft-tree-controls .btn,
+        #ftApp .ft-canvas-meta .ft-meta-chip {
+            width: 100%;
+        }
+        #ftApp .ft-canvas {
+            min-height: 320px;
+            height: calc(100vh - 230px) !important;
+        }
+        #ftApp #treeRoot .box-person {
+            --node-width: 126px;
+            --spouse-gap: 6px;
+            min-height: 156px;
+        }
+        #ftApp #treeRoot .person-node {
+            min-height: 150px;
+            padding: 7px 7px 9px !important;
+        }
+        #ftApp #treeRoot .avatar-tree {
+            width: 62px !important;
+            height: 58px !important;
+        }
+        #ftApp #treeRoot .name-phado {
+            font-size: 13px !important;
+        }
+        #ftApp #treeRoot .person-dates {
+            font-size: 10px !important;
+        }
+        #ftApp #detailMemberModal .modal-footer .btn {
+            flex: 1 1 100%;
         }
     }
     @media print {
@@ -1484,6 +1621,85 @@
             });
         })();
 
+        function collapseLegacyFilterFields() {
+            ['branchDropdown', 'ftFilterGender', 'ftFilterLifeStatus', 'ftFilterBirthYear', 'ftFilterDeathYear'].forEach(function (id) {
+                const input = document.getElementById(id);
+                const field = input && input.closest('.ft-filter-field');
+                if (field) {
+                    field.style.display = 'none';
+                }
+            });
+        }
+
+        function configureVisibleFilters() {
+            const currentYear = new Date().getFullYear();
+            const nameLabel = document.querySelector('label[for="ftFilterName"]');
+            const nameInput = document.getElementById('ftFilterName');
+            const birthYearLabel = document.querySelector('label[for="ftFilterDob"]');
+            const birthYearInput = document.getElementById('ftFilterDob');
+
+            if (nameLabel) {
+                nameLabel.textContent = 'Tìm theo tên';
+            }
+            if (nameInput) {
+                nameInput.placeholder = 'Nhập tên, không cần đầy đủ...';
+                nameInput.setAttribute('autocomplete', 'off');
+            }
+            if (birthYearLabel) {
+                birthYearLabel.textContent = 'Năm sinh';
+            }
+            if (birthYearInput) {
+                birthYearInput.type = 'number';
+                birthYearInput.min = '1';
+                birthYearInput.max = String(currentYear);
+                birthYearInput.step = '1';
+                birthYearInput.inputMode = 'numeric';
+                birthYearInput.placeholder = 'Ví dụ 1942';
+                birthYearInput.setAttribute('aria-label', 'Lọc theo năm sinh');
+            }
+        }
+
+        function resetSecondaryFiltersForNameSearch() {
+            const generationInput = document.getElementById('ftFilterGeneration');
+            const dobInput = document.getElementById('ftFilterDob');
+            const genderInput = document.getElementById('ftFilterGender');
+            const lifeStatusInput = document.getElementById('ftFilterLifeStatus');
+            const birthYearInput = document.getElementById('ftFilterBirthYear');
+            const deathYearInput = document.getElementById('ftFilterDeathYear');
+
+            if (generationInput) generationInput.value = '';
+            if (dobInput) dobInput.value = '';
+            if (genderInput) genderInput.value = '';
+            if (lifeStatusInput) lifeStatusInput.value = '';
+            if (birthYearInput) birthYearInput.value = '';
+            if (deathYearInput) deathYearInput.value = '';
+
+            CURRENT_DOB_FILTER = '';
+            CURRENT_GENERATION_FILTER = null;
+            CURRENT_GENDER_FILTER = '';
+            CURRENT_LIFE_STATUS_FILTER = '';
+            CURRENT_BIRTH_YEAR_FROM = null;
+            CURRENT_BIRTH_YEAR_TO = null;
+            CURRENT_DEATH_YEAR = null;
+        }
+
+        function restoreDefaultBranchSelection() {
+            BRANCH_ID = 0;
+            ACTIVE_BRANCH_NAME = 'Toàn bộ';
+            const activeBranchLabel = document.getElementById('activeBranchLabel');
+            if (activeBranchLabel) {
+                activeBranchLabel.textContent = 'Toàn bộ';
+            }
+            document.getElementById('branchMenu')?.classList.remove('show');
+
+            const formBranchId = getDefaultFormBranchId(BRANCH_CACHE);
+            const normalizedFormBranchId = formBranchId > 0 ? String(formBranchId) : '';
+            const mBranch = document.getElementById('mBranch');
+            const aBranch = document.getElementById('aBranch');
+            if (mBranch) mBranch.value = normalizedFormBranchId;
+            if (aBranch) aBranch.value = normalizedFormBranchId;
+        }
+
         let BRANCH_CACHE = [];
         let CURRENT_TREE_ROOTS = [];
         const ROOT_PERSON_CACHE = {};
@@ -1808,7 +2024,68 @@
                 .replace(/[đĐ]/g, 'd')
                 .toLowerCase()
                 .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '');
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]+/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function normalizeCompactSearchText(value) {
+            return normalizeSearchText(value).replace(/\s+/g, '');
+        }
+
+        function nameTokenMatches(queryToken, nameToken) {
+            const query = String(queryToken || '').trim();
+            const token = String(nameToken || '').trim();
+            if (!query || !token) return false;
+            if (query === token) return true;
+            if (query.length <= 1) return false;
+            return token.indexOf(query) === 0;
+        }
+
+        function queryTokensMatchNameTokens(queryTokens, nameTokens) {
+            const sourceTokens = Array.isArray(queryTokens) ? queryTokens.filter(Boolean) : [];
+            const targetTokens = Array.isArray(nameTokens) ? nameTokens.filter(Boolean) : [];
+            if (!sourceTokens.length) return true;
+            if (!targetTokens.length) return false;
+
+            const usedIndexes = new Set();
+            return sourceTokens.every(function (queryToken) {
+                for (let index = 0; index < targetTokens.length; index += 1) {
+                    if (usedIndexes.has(index)) continue;
+                    if (nameTokenMatches(queryToken, targetTokens[index])) {
+                        usedIndexes.add(index);
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
+
+        function fuzzyNameMatches(fullName, query) {
+            const normalizedQuery = normalizeSearchText(query);
+            if (!normalizedQuery) return true;
+
+            const normalizedName = normalizeSearchText(fullName);
+            if (!normalizedName) return false;
+            if (normalizedName.indexOf(normalizedQuery) >= 0) return true;
+
+            const compactName = normalizeCompactSearchText(normalizedName);
+            const compactQuery = normalizeCompactSearchText(normalizedQuery);
+            if (compactQuery && compactQuery.length >= 6 && compactName.indexOf(compactQuery) >= 0) return true;
+
+            const queryTokens = normalizedQuery.split(' ').filter(Boolean);
+            const nameTokens = normalizedName.split(' ').filter(Boolean);
+            if (!queryTokens.length) return true;
+
+            if (queryTokens.length === 1) {
+                const singleToken = queryTokens[0];
+                return nameTokens.some(function (nameToken) {
+                    return nameTokenMatches(singleToken, nameToken);
+                });
+            }
+
+            return queryTokensMatchNameTokens(queryTokens, nameTokens);
         }
 
         function getExpectedSpouseGender(person) {
@@ -1823,11 +2100,12 @@
         }
 
         function getBirthYearFromDateString(dateStr) {
-            if (!dateStr || typeof dateStr !== 'string') return null;
-            const parts = dateStr.split('-');
-            if (parts.length !== 3) return null;
-            const year = Number(parts[0]);
-            return Number.isFinite(year) ? year : null;
+            const raw = String(dateStr || '').trim();
+            if (!raw) return null;
+            const match = raw.match(/\d{4}/);
+            if (!match) return null;
+            const year = Number(match[0]);
+            return Number.isFinite(year) && year > 0 ? year : null;
         }
 
         function getDeathYearFromDateString(dateStr) {
@@ -1955,58 +2233,18 @@
             const normalizedNameFilter = normalizeSearchText(CURRENT_NAME_FILTER).trim();
             if (normalizedNameFilter) {
                 const nameMatched = candidates.some(function (c) {
-                    return normalizeSearchText(c.fullName).indexOf(normalizedNameFilter) >= 0;
+                    return fuzzyNameMatches(c.fullName, normalizedNameFilter);
                 });
                 if (!nameMatched) return false;
             }
 
-            if (CURRENT_DOB_FILTER) {
+            if (CURRENT_DOB_FILTER != null) {
                 const dobMatched = candidates.some(function (c) {
-                    return String(c.dob || '').trim() === CURRENT_DOB_FILTER;
+                    return getBirthYearFromDateString(c.dob || '') === CURRENT_DOB_FILTER;
                 });
                 if (!dobMatched) {
                     return false;
                 }
-            }
-
-            if (CURRENT_GENDER_FILTER) {
-                const genderMatched = candidates.some(function (c) {
-                    return String(c.gender || '').toLowerCase() === CURRENT_GENDER_FILTER;
-                });
-                if (!genderMatched) return false;
-            }
-
-            if (CURRENT_LIFE_STATUS_FILTER) {
-                const lifeStatusMatched = candidates.some(function (c) {
-                    const hasDod = !!c.dod;
-                    if (CURRENT_LIFE_STATUS_FILTER === 'alive') return !hasDod;
-                    if (CURRENT_LIFE_STATUS_FILTER === 'deceased') return hasDod;
-                    return true;
-                });
-                if (!lifeStatusMatched) return false;
-            }
-
-            if (CURRENT_BIRTH_YEAR_FROM != null) {
-                const matchedFromYear = candidates.some(function (c) {
-                    const birthYear = getBirthYearFromDateString(c.dob || '');
-                    return birthYear != null && birthYear >= CURRENT_BIRTH_YEAR_FROM;
-                });
-                if (!matchedFromYear) return false;
-            }
-            if (CURRENT_BIRTH_YEAR_TO != null) {
-                const matchedToYear = candidates.some(function (c) {
-                    const birthYear = getBirthYearFromDateString(c.dob || '');
-                    return birthYear != null && birthYear <= CURRENT_BIRTH_YEAR_TO;
-                });
-                if (!matchedToYear) return false;
-            }
-
-            if (CURRENT_DEATH_YEAR != null) {
-                const deathYearMatched = candidates.some(function (c) {
-                    const deathYear = getDeathYearFromDateString(c.dod || '');
-                    return deathYear != null && deathYear === CURRENT_DEATH_YEAR;
-                });
-                if (!deathYearMatched) return false;
             }
 
             return true;
@@ -2015,12 +2253,7 @@
         function hasAdvancedFilter() {
             return !!(CURRENT_NAME_FILTER
                 || CURRENT_DOB_FILTER
-                || CURRENT_GENERATION_FILTER != null
-                || CURRENT_GENDER_FILTER
-                || CURRENT_LIFE_STATUS_FILTER
-                || CURRENT_BIRTH_YEAR_FROM != null
-                || CURRENT_BIRTH_YEAR_TO != null
-                || CURRENT_DEATH_YEAR != null);
+                || CURRENT_GENERATION_FILTER != null);
         }
 
         function hasAnyActiveFilter() {
@@ -2165,6 +2398,7 @@
                 CURRENT_VIEW_MODE = 'full';
                 applyTreeViewMode();
             }
+            restoreDefaultBranchSelection();
             if (FT_FILTER_DEBOUNCE) {
                 clearTimeout(FT_FILTER_DEBOUNCE);
                 FT_FILTER_DEBOUNCE = null;
@@ -3044,6 +3278,30 @@
                     return '<span class="ft-detail-pill">' + childName + (childGen ? ' (' + childGen + ')' : '') + '</span>';
                 }).join(' ')
                 : '<span class="ft-detail-empty">Chưa có thông tin</span>';
+            const spouseIds = new Set();
+            if (person.spouseId != null && Number(person.spouseId) > 0) {
+                spouseIds.add(Number(person.spouseId));
+            }
+            spouses.forEach(function (spouse) {
+                const spouseId = Number(spouse && spouse.id || 0);
+                if (spouseId > 0) {
+                    spouseIds.add(spouseId);
+                }
+            });
+            const sharedChildren = spouseIds.size > 0
+                ? children.filter(function (child) {
+                    const fatherId = Number(child && child.fatherId || 0);
+                    const motherId = Number(child && child.motherId || 0);
+                    return spouseIds.has(fatherId) || spouseIds.has(motherId);
+                })
+                : children;
+            const detailChildrenHtml = sharedChildren.length > 0
+                ? sharedChildren.map(function (child) {
+                    const childName = escapeHtml(child.fullName || 'Chưa có tên');
+                    const childGen = child.generation != null ? ('Đời ' + child.generation) : '';
+                    return '<span class="ft-detail-pill">' + childName + (childGen ? ' (' + childGen + ')' : '') + '</span>';
+                }).join(' ')
+                : '<span class="ft-detail-empty">Chưa có thông tin</span>';
             const spousesText = spouses.length > 0
                 ? spouses.map(function (spouse) {
                     const spouseName = escapeHtml(spouse.fullName || 'Chưa có tên');
@@ -3084,7 +3342,7 @@
                 + '    <div class="col-md-6"><div class="form-label fw-semibold">Nơi ở hiện tại</div><div>' + formatOptionalText(person.currentResidence) + '</div></div>'
                 + '    <div class="col-md-6"><div class="form-label fw-semibold">Nghề nghiệp</div><div>' + formatOptionalText(person.occupation) + '</div></div>'
                 + '    <div class="col-md-6"><div class="form-label fw-semibold">Phối ngẫu</div><div>' + spousesText + '</div></div>'
-                + '    <div class="col-12"><div class="form-label fw-semibold">Con</div><div>' + childrenText + '</div></div>'
+                + '    <div class="col-12"><div class="form-label fw-semibold">Con</div><div>' + detailChildrenHtml + '</div></div>'
                 + '    <div class="col-12"><div class="form-label fw-semibold">Ghi chú</div><div>' + formatOptionalText(person.otherNote) + '</div></div>'
                 + '    <div class="col-12"><div class="form-label fw-semibold">Tư liệu đính kèm</div>' + mediaHtml + '</div>'
                 + '</div>';
@@ -3384,7 +3642,7 @@
 
             return '' +
                 '<li class="li-person' + (overflowHtml ? ' ft-depth-capped' : '') + '" data-tree-node-id="' + personId + '">' +
-                    '<div class="' + (overflowHtml ? 'ft-depth-cap-row' : '') + '">' +
+                    '<div class="ft-branch-head' + (overflowHtml ? ' ft-depth-cap-row' : '') + '">' +
                         '<div class="box-person ' + (hasAnySpouse(person) ? 'has-spouse' : 'no-spouse') + '">' +
                             buildMemberPairHtml(person, {
                                 isRoot: !!options.isRoot
@@ -3483,6 +3741,54 @@
             const treeRoot = document.getElementById('treeRoot');
             if (!treeRoot || !personId) return null;
             return treeRoot.querySelector('.ft-branch-subtree[data-branch-owner-id="' + String(personId) + '"]');
+        }
+
+        function getOffsetBottomWithinAncestor(element, ancestor) {
+            if (!element || !ancestor) return 0;
+            let current = element;
+            let offsetTop = 0;
+
+            while (current && current !== ancestor) {
+                offsetTop += current.offsetTop || 0;
+                current = current.offsetParent;
+            }
+
+            return offsetTop + (element.offsetHeight || 0);
+        }
+
+        function syncBranchToggleSpacing() {
+            const treeRoot = document.getElementById('treeRoot');
+            if (!treeRoot) return;
+
+            treeRoot.querySelectorAll('.li-person').forEach(function (item) {
+                const head = item.querySelector('.ft-branch-head');
+                const box = head ? head.querySelector('.box-person') : null;
+                const toggleWrap = Array.from(item.children).find(function (child) {
+                    return child && child.classList && child.classList.contains('ft-branch-toggle-wrap');
+                });
+
+                if (toggleWrap) {
+                    toggleWrap.style.marginTop = '6px';
+                }
+                if (!box || !toggleWrap || !box.classList.contains('has-spouse')) {
+                    return;
+                }
+
+                const nodes = box.querySelectorAll('.person-node');
+                if (!nodes.length) {
+                    return;
+                }
+
+                const boxHeight = box.offsetHeight || 0;
+                const maxNodeBottom = Array.from(nodes).reduce(function (maxBottom, node) {
+                    return Math.max(maxBottom, getOffsetBottomWithinAncestor(node, box));
+                }, 0);
+                const overflowBottom = Math.max(0, Math.ceil(maxNodeBottom - boxHeight));
+
+                if (overflowBottom > 0) {
+                    toggleWrap.style.marginTop = (6 + overflowBottom) + 'px';
+                }
+            });
         }
 
         function updateBranchToggleLabel(button, isCollapsed) {
@@ -3648,6 +3954,7 @@
             CURRENT_DEATH_YEAR = null;
             CURRENT_VIEW_MODE = 'full';
             COLLAPSED_NODE_IDS.clear();
+            restoreDefaultBranchSelection();
 
             if (FT_FILTER_DEBOUNCE) {
                 clearTimeout(FT_FILTER_DEBOUNCE);
@@ -3656,6 +3963,7 @@
 
             applyTreeViewMode();
             resetTreeViewport();
+            clearRootPersonCache();
             await loadRootPersons({ forceReload: false, center: true, centerBranchId: BRANCH_ID });
         }
 
@@ -3709,6 +4017,8 @@
             } else {
                 treeRoot.innerHTML = renderGenerationOnly(visibleMembers);
             }
+            syncBranchToggleSpacing();
+            requestAnimationFrame(syncBranchToggleSpacing);
             if (app) {
                 const nodes = treeRoot.querySelectorAll('.person-node').length;
                 app.classList.toggle('ft-heavy', nodes > 140);
@@ -4320,6 +4630,7 @@
             });
 
             window.addEventListener('resize', function () {
+                syncBranchToggleSpacing();
                 FT_VIEWPORT.apply();
             });
         }
@@ -4346,7 +4657,7 @@
 
         function bindBirthDateInputGuards() {
             const todayIso = new Date().toISOString().slice(0, 10);
-            ['mDob', 'aDob', 'ftFilterDob'].forEach(function (id) {
+            ['mDob', 'aDob'].forEach(function (id) {
                 const input = document.getElementById(id);
                 if (!input) return;
                 input.setAttribute('max', todayIso);
@@ -4391,38 +4702,29 @@
             const nameInput = document.getElementById('ftFilterName');
             const dobInput = document.getElementById('ftFilterDob');
             const generationInput = document.getElementById('ftFilterGeneration');
-            const genderInput = document.getElementById('ftFilterGender');
-            const lifeStatusInput = document.getElementById('ftFilterLifeStatus');
-            const birthYearInput = document.getElementById('ftFilterBirthYear');
-            const deathYearInput = document.getElementById('ftFilterDeathYear');
             const viewModeInput = document.getElementById('ftViewMode');
             const resetBtn = document.getElementById('ftFilterReset');
-            if (!nameInput || !dobInput || !generationInput || !genderInput || !lifeStatusInput || !birthYearInput || !deathYearInput || !viewModeInput || !resetBtn) {
+            if (!nameInput || !dobInput || !generationInput || !viewModeInput || !resetBtn) {
                 return;
             }
-            const todayIso = new Date().toISOString().slice(0, 10);
-            dobInput.setAttribute('max', todayIso);
+            const currentYear = new Date().getFullYear();
+            dobInput.setAttribute('max', String(currentYear));
 
             const applyAllFilters = function () {
                 CURRENT_NAME_FILTER = String(nameInput.value || '').trim();
-                const normalizedDob = normalizeDateFilterValue(dobInput.value);
+                const rawDobYear = normalizeYearInputValue(dobInput.value);
+                const normalizedDob = rawDobYear != null ? Math.min(rawDobYear, currentYear) : null;
                 CURRENT_DOB_FILTER = normalizedDob;
                 CURRENT_GENERATION_FILTER = normalizeYearInputValue(generationInput.value);
-                CURRENT_GENDER_FILTER = String(genderInput.value || '').trim().toLowerCase();
-                CURRENT_LIFE_STATUS_FILTER = String(lifeStatusInput.value || '').trim().toLowerCase();
-                const birthYear = normalizeYearInputValue(birthYearInput.value);
-                CURRENT_BIRTH_YEAR_FROM = birthYear;
-                CURRENT_BIRTH_YEAR_TO = birthYear;
-                CURRENT_DEATH_YEAR = normalizeYearInputValue(deathYearInput.value);
+                CURRENT_GENDER_FILTER = '';
+                CURRENT_LIFE_STATUS_FILTER = '';
+                CURRENT_BIRTH_YEAR_FROM = null;
+                CURRENT_BIRTH_YEAR_TO = null;
+                CURRENT_DEATH_YEAR = null;
                 CURRENT_VIEW_MODE = String(viewModeInput.value || 'full').trim().toLowerCase() || 'full';
                 const hasSearchState = !!(CURRENT_NAME_FILTER
                     || CURRENT_DOB_FILTER
-                    || CURRENT_GENERATION_FILTER != null
-                    || CURRENT_GENDER_FILTER
-                    || CURRENT_LIFE_STATUS_FILTER
-                    || CURRENT_BIRTH_YEAR_FROM != null
-                    || CURRENT_BIRTH_YEAR_TO != null
-                    || CURRENT_DEATH_YEAR != null);
+                    || CURRENT_GENERATION_FILTER != null);
                 if (hasSearchState) {
                     CURRENT_TREE_MODE = 'search';
                     CURRENT_DESCENDANT_ROOT_ID = null;
@@ -4434,27 +4736,46 @@
                 applyTreeViewMode();
                 if (String(dobInput.value || '').trim() && !normalizedDob) {
                     dobInput.value = '';
+                } else if (rawDobYear != null && rawDobYear > currentYear) {
+                    dobInput.value = String(currentYear);
                 }
                 resetTreeViewport();
                 requestTreeRender();
+            };
+
+            const shouldResetToCenteredRoot = function () {
+                const hasName = !!String(nameInput.value || '').trim();
+                const hasBirthYear = normalizeYearInputValue(dobInput.value) != null;
+                const hasGeneration = normalizeYearInputValue(generationInput.value) != null;
+                return !hasName && !hasBirthYear && !hasGeneration;
             };
 
             const applyDebounced = function () {
                 if (FT_FILTER_DEBOUNCE) {
                     clearTimeout(FT_FILTER_DEBOUNCE);
                 }
-                FT_FILTER_DEBOUNCE = setTimeout(function () {
+                FT_FILTER_DEBOUNCE = setTimeout(async function () {
+                    if (shouldResetToCenteredRoot()) {
+                        try {
+                            await resetFiltersAndBackToRoot();
+                        } catch (err) {
+                            console.error('Centered reset failed:', err);
+                            applyAllFilters();
+                        }
+                        return;
+                    }
                     applyAllFilters();
                 }, 120);
             };
 
             nameInput.addEventListener('input', applyDebounced);
+            nameInput.addEventListener('input', function () {
+                if (String(nameInput.value || '').trim()) {
+                    resetSecondaryFiltersForNameSearch();
+                }
+            });
             dobInput.addEventListener('input', applyDebounced);
             generationInput.addEventListener('change', applyDebounced);
-            genderInput.addEventListener('change', applyDebounced);
-            lifeStatusInput.addEventListener('change', applyDebounced);
-            birthYearInput.addEventListener('input', applyDebounced);
-            deathYearInput.addEventListener('input', applyDebounced);
             viewModeInput.addEventListener('change', function () {
                 applyAllFilters();
                 if (CURRENT_VIEW_MODE === 'print') {
@@ -4462,8 +4783,12 @@
                 }
             });
             dobInput.addEventListener('blur', function () {
-                const normalized = normalizeDateFilterValue(dobInput.value);
-                dobInput.value = normalized || '';
+                const normalized = normalizeYearInputValue(dobInput.value);
+                if (normalized != null && normalized > currentYear) {
+                    dobInput.value = String(currentYear);
+                    return;
+                }
+                dobInput.value = normalized != null ? String(normalized) : '';
             });
             resetBtn.addEventListener('click', async function () {
                 try {
@@ -4484,6 +4809,8 @@
             });
         }
 
+        configureVisibleFilters();
+        collapseLegacyFilterFields();
         bindAvatarPicker('mAvatarFile', 'mAvatar');
         bindAvatarPicker('aAvatarFile', 'aAvatar');
         bindBirthDateInputGuards();
