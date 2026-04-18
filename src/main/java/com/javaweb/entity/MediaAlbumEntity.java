@@ -13,6 +13,10 @@ import java.util.List;
 @Setter
 public class MediaAlbumEntity extends BaseEntity {
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "family_tree_id")
+    private FamilyTreeEntity familyTree;
+
     @Column(name = "name", nullable = false)
     private String name;
 

@@ -17,6 +17,10 @@ import javax.persistence.Table;
 public class SpouseRelationEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "family_tree_id")
+    private FamilyTreeEntity familyTree;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "left_person_id", nullable = false)
     private PersonEntity leftPerson;
 

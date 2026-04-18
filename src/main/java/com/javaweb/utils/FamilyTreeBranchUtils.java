@@ -1,5 +1,6 @@
 package com.javaweb.utils;
 
+import java.text.Normalizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,7 +14,11 @@ public final class FamilyTreeBranchUtils {
         if (rawValue == null) {
             return null;
         }
-        String normalized = rawValue.trim().replaceAll("\\s+", " ").toLowerCase();
+        String normalized = Normalizer.normalize(rawValue.trim().replaceAll("\\s+", " "), Normalizer.Form.NFD)
+                .replaceAll("\\p{M}+", "")
+                .replace('\u0111', 'd')
+                .replace('\u0110', 'D')
+                .toLowerCase();
         if (normalized.isEmpty()) {
             return null;
         }

@@ -47,6 +47,18 @@ public interface PersonRepository extends JpaRepository<PersonEntity,Long> {
             "left join fetch f.branch " +
             "left join fetch p.mother m " +
             "left join fetch m.branch " +
+            "where p.familyTree.id = :familyTreeId " +
+            "order by p.generation asc, p.id asc")
+    List<PersonEntity> findAllByFamilyTreeIdWithRelations(@Param("familyTreeId") Long familyTreeId);
+
+    @Query("select distinct p from PersonEntity p " +
+            "left join fetch p.branch " +
+            "left join fetch p.spouse s " +
+            "left join fetch s.branch " +
+            "left join fetch p.father f " +
+            "left join fetch f.branch " +
+            "left join fetch p.mother m " +
+            "left join fetch m.branch " +
             "where p.branch.id = :branchId " +
             "order by p.generation asc, p.id asc")
     List<PersonEntity> findAllByBranchIdWithRelations(@Param("branchId") Long branchId);
@@ -78,10 +90,13 @@ public interface PersonRepository extends JpaRepository<PersonEntity,Long> {
     @Query("select p from PersonEntity p left join fetch p.branch where p.createdDate is not null order by p.createdDate desc, p.id desc")
     List<PersonEntity> findRecentCreated(Pageable pageable);
 
+    @Query("select p from PersonEntity p left join fetch p.branch where p.familyTree.id = :familyTreeId and p.createdDate is not null order by p.createdDate desc, p.id desc")
+    List<PersonEntity> findRecentCreatedByFamilyTree(@Param("familyTreeId") Long familyTreeId, Pageable pageable);
+
     Optional<PersonEntity> findByUserId(Long userId);
 
     @Query("select p from PersonEntity p " +
-            "where p.branch is null " +
+            "where p.familyTree is null and p.branch is null " +
             "and p.generation is null and p.father is null and p.mother is null and p.spouse is null " +
             "and (:fullName is null or lower(p.fullName) like lower(concat('%', :fullName, '%'))) " +
             "and (:gender is null or lower(p.gender) = lower(:gender)) " +
@@ -94,13 +109,22 @@ public interface PersonRepository extends JpaRepository<PersonEntity,Long> {
     Optional<PersonEntity> findByIdAndFatherIsNullAndMotherIsNullAndSpouseIsNull(Long id);
 
     long countByBranch_Id(Long branchId);
+    long countByFamilyTree_Id(Long familyTreeId);
 
     long countByBranchIsNotNull();
+    long countByFamilyTree_IdAndBranchIsNotNull(Long familyTreeId);
 
     long countByBranchIsNotNullAndCreatedDateBetween(Date from, Date to);
+    long countByFamilyTree_IdAndBranchIsNotNullAndCreatedDateBetween(Long familyTreeId, Date from, Date to);
 
     long countByCreatedDateBetween(Date from, Date to);
+    long countByFamilyTree_IdAndCreatedDateBetween(Long familyTreeId, Date from, Date to);
 
     @Query("select coalesce(max(p.generation), 0) from PersonEntity p where p.branch is not null")
     Integer findMaxGenerationByBranchIsNotNull();
+
+    @Query("select coalesce(max(p.generation), 0) from PersonEntity p where p.familyTree.id = :familyTreeId and p.branch is not null")
+    Integer findMaxGenerationByFamilyTreeIdAndBranchIsNotNull(@Param("familyTreeId") Long familyTreeId);
+
+    void deleteByFamilyTree_Id(Long familyTreeId);
 }

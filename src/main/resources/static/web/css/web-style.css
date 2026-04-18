@@ -235,7 +235,40 @@ a {
 }
 
 .gpo-hero-frame {
-    padding: 42px 38px;
+    padding: 62px 38px 42px;
+}
+
+.gpo-hero-frame > .row {
+    position: relative;
+    z-index: 1;
+}
+
+.gpo-hero-dragons {
+    position: absolute;
+    top: 10px;
+    left: 24px;
+    right: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.gpo-hero-dragon {
+    width: 148px;
+    height: 148px;
+    object-fit: contain;
+    opacity: 0.96;
+    filter: drop-shadow(0 14px 20px rgba(86, 42, 14, 0.2));
+}
+
+.gpo-hero-dragon-left {
+    transform: translate(-10px, -8px);
+}
+
+.gpo-hero-dragon-right {
+    transform: translate(10px, -8px);
 }
 
 .gpo-kicker,
@@ -675,7 +708,18 @@ a {
     .gpo-frame-panel,
     .gpo-tree-panel,
     .gpo-footer-main {
-        padding: 24px 20px;
+        padding: 68px 20px 24px;
+    }
+
+    .gpo-hero-dragons {
+        top: 10px;
+        left: 16px;
+        right: 16px;
+    }
+
+    .gpo-hero-dragon {
+        width: 116px;
+        height: 116px;
     }
 
     .gpo-board-grid {
@@ -733,7 +777,19 @@ a {
     .gpo-frame-panel,
     .gpo-tree-panel,
     .gpo-footer-main {
-        padding: 18px 16px;
+        padding: 58px 16px 18px;
+    }
+
+    .gpo-hero-dragons {
+        top: 8px;
+        left: 10px;
+        right: 10px;
+    }
+
+    .gpo-hero-dragon {
+        width: 82px;
+        height: 82px;
+        opacity: 0.9;
     }
 
     .gpo-board-grid {

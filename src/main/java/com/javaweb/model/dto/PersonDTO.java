@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PersonDTO extends AbstractDTO<PersonDTO> {
+    private Long familyTreeId;
     private String fullName;
     private LocalDate dob; // Ngày sinh
     private LocalDate dod; // Ngày mất
@@ -40,6 +41,14 @@ public class PersonDTO extends AbstractDTO<PersonDTO> {
     private List<Long> mediaIds;
     private List<String> mediaUrls = new ArrayList<>();
     private List<Long> childrenIds;
+
+    public Long getFamilyTreeId() {
+        return familyTreeId;
+    }
+
+    public void setFamilyTreeId(Long familyTreeId) {
+        this.familyTreeId = familyTreeId;
+    }
 
     public String getFullName() {
         return fullName;

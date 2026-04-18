@@ -11,6 +11,10 @@ import javax.persistence.*;
 @Setter
 public class MediaEntity extends BaseEntity {
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "family_tree_id")
+    private FamilyTreeEntity familyTree;
+
     @Column(name = "file_url", nullable = false, length = 500)
     private String fileUrl;
 

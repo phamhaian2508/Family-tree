@@ -7,8 +7,10 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS activitylog;
 DROP TABLE IF EXISTS livestream;
 DROP TABLE IF EXISTS media;
+DROP TABLE IF EXISTS media_album;
 DROP TABLE IF EXISTS spouse_relation;
 DROP TABLE IF EXISTS person;
+DROP TABLE IF EXISTS family_tree;
 DROP TABLE IF EXISTS user_role;
 DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `role`;
@@ -35956,4 +35958,430 @@ SET @sql_add_album_fk := IF(
 PREPARE stmt FROM @sql_add_album_fk;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
+
+-- =========================================================
+-- MULTI FAMILY TREE MIGRATION
+-- =========================================================
+
+CREATE TABLE IF NOT EXISTS `family_tree` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `name` varchar(255) NOT NULL,
+    `description` varchar(1000) NOT NULL,
+    `cover_image` longtext DEFAULT NULL,
+    `owner_user_id` bigint(20) DEFAULT NULL,
+    `createddate` datetime DEFAULT NULL,
+    `modifieddate` datetime DEFAULT NULL,
+    `createdby` varchar(255) DEFAULT NULL,
+    `modifiedby` varchar(255) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_family_tree_owner` (`owner_user_id`),
+    CONSTRAINT `fk_family_tree_owner` FOREIGN KEY (`owner_user_id`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `family_tree` (`name`, `description`, `cover_image`, `owner_user_id`, `createddate`, `modifieddate`, `createdby`, `modifiedby`)
+SELECT
+    'Họ Trần Đức',
+    'Gia phả gốc được nâng cấp từ hệ thống một cây gia phả sang nhiều cây gia phả.',
+    NULL,
+    (
+        SELECT ur.`user_id`
+        FROM `user_role` ur
+        INNER JOIN `role` r ON r.`id` = ur.`role_id`
+        WHERE r.`code` = 'MANAGER'
+        ORDER BY ur.`user_id` ASC
+        LIMIT 1
+    ),
+    NOW(),
+    NOW(),
+    'multi_tree_upgrade',
+    'multi_tree_upgrade'
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM `family_tree` ft
+    WHERE ft.`name` = 'Họ Trần Đức'
+);
+
+SET @legacy_family_tree_id := (
+    SELECT ft.`id`
+    FROM `family_tree` ft
+    WHERE ft.`name` = 'Họ Trần Đức'
+    ORDER BY ft.`id` ASC
+    LIMIT 1
+);
+
+SET @OLD_SQL_SAFE_UPDATES := @@SQL_SAFE_UPDATES;
+SET SQL_SAFE_UPDATES = 0;
+
+SET @has_branch_family_tree_col := (
+    SELECT COUNT(*)
+    FROM information_schema.COLUMNS
+    WHERE BINARY TABLE_SCHEMA = BINARY DATABASE()
+      AND TABLE_NAME = 'branch'
+      AND COLUMN_NAME = 'family_tree_id'
+);
+SET @sql_add_branch_family_tree_col := IF(
+    @has_branch_family_tree_col = 0,
+    'ALTER TABLE `branch` ADD COLUMN `family_tree_id` bigint(20) DEFAULT NULL',
+    'SELECT 1'
+);
+PREPARE stmt FROM @sql_add_branch_family_tree_col;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @has_person_family_tree_col := (
+    SELECT COUNT(*)
+    FROM information_schema.COLUMNS
+    WHERE BINARY TABLE_SCHEMA = BINARY DATABASE()
+      AND TABLE_NAME = 'person'
+      AND COLUMN_NAME = 'family_tree_id'
+);
+SET @sql_add_person_family_tree_col := IF(
+    @has_person_family_tree_col = 0,
+    'ALTER TABLE `person` ADD COLUMN `family_tree_id` bigint(20) DEFAULT NULL',
+    'SELECT 1'
+);
+PREPARE stmt FROM @sql_add_person_family_tree_col;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @has_media_album_family_tree_col := (
+    SELECT COUNT(*)
+    FROM information_schema.COLUMNS
+    WHERE BINARY TABLE_SCHEMA = BINARY DATABASE()
+      AND TABLE_NAME = 'media_album'
+      AND COLUMN_NAME = 'family_tree_id'
+);
+SET @sql_add_media_album_family_tree_col := IF(
+    @has_media_album_family_tree_col = 0,
+    'ALTER TABLE `media_album` ADD COLUMN `family_tree_id` bigint(20) DEFAULT NULL',
+    'SELECT 1'
+);
+PREPARE stmt FROM @sql_add_media_album_family_tree_col;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @has_media_family_tree_col := (
+    SELECT COUNT(*)
+    FROM information_schema.COLUMNS
+    WHERE BINARY TABLE_SCHEMA = BINARY DATABASE()
+      AND TABLE_NAME = 'media'
+      AND COLUMN_NAME = 'family_tree_id'
+);
+SET @sql_add_media_family_tree_col := IF(
+    @has_media_family_tree_col = 0,
+    'ALTER TABLE `media` ADD COLUMN `family_tree_id` bigint(20) DEFAULT NULL',
+    'SELECT 1'
+);
+PREPARE stmt FROM @sql_add_media_family_tree_col;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @has_spouse_relation_family_tree_col := (
+    SELECT COUNT(*)
+    FROM information_schema.COLUMNS
+    WHERE BINARY TABLE_SCHEMA = BINARY DATABASE()
+      AND TABLE_NAME = 'spouse_relation'
+      AND COLUMN_NAME = 'family_tree_id'
+);
+SET @sql_add_spouse_relation_family_tree_col := IF(
+    @has_spouse_relation_family_tree_col = 0,
+    'ALTER TABLE `spouse_relation` ADD COLUMN `family_tree_id` bigint(20) DEFAULT NULL',
+    'SELECT 1'
+);
+PREPARE stmt FROM @sql_add_spouse_relation_family_tree_col;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+UPDATE `branch`
+SET `family_tree_id` = @legacy_family_tree_id
+WHERE `family_tree_id` IS NULL;
+
+UPDATE `person`
+SET `family_tree_id` = @legacy_family_tree_id
+WHERE `family_tree_id` IS NULL;
+
+UPDATE `media_album` ma
+LEFT JOIN `branch` b ON b.`id` = ma.`branch_id`
+LEFT JOIN `person` p ON p.`id` = ma.`person_id`
+SET ma.`family_tree_id` = COALESCE(ma.`family_tree_id`, b.`family_tree_id`, p.`family_tree_id`, @legacy_family_tree_id)
+WHERE ma.`family_tree_id` IS NULL;
+
+UPDATE `media` m
+LEFT JOIN `branch` b ON b.`id` = m.`branch_id`
+LEFT JOIN `person` p ON p.`id` = m.`person_id`
+LEFT JOIN `media_album` ma ON ma.`id` = m.`album_id`
+SET m.`family_tree_id` = COALESCE(m.`family_tree_id`, ma.`family_tree_id`, b.`family_tree_id`, p.`family_tree_id`, @legacy_family_tree_id)
+WHERE m.`family_tree_id` IS NULL;
+
+UPDATE `spouse_relation` sr
+LEFT JOIN `person` lp ON lp.`id` = sr.`left_person_id`
+LEFT JOIN `person` rp ON rp.`id` = sr.`right_person_id`
+SET sr.`family_tree_id` = COALESCE(sr.`family_tree_id`, lp.`family_tree_id`, rp.`family_tree_id`, @legacy_family_tree_id)
+WHERE sr.`family_tree_id` IS NULL;
+
+SET @has_branch_family_tree_idx := (
+    SELECT COUNT(*)
+    FROM information_schema.STATISTICS
+    WHERE BINARY TABLE_SCHEMA = BINARY DATABASE()
+      AND TABLE_NAME = 'branch'
+      AND INDEX_NAME = 'idx_branch_family_tree'
+);
+SET @sql_add_branch_family_tree_idx := IF(
+    @has_branch_family_tree_idx = 0,
+    'ALTER TABLE `branch` ADD KEY `idx_branch_family_tree` (`family_tree_id`)',
+    'SELECT 1'
+);
+PREPARE stmt FROM @sql_add_branch_family_tree_idx;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @has_person_family_tree_idx := (
+    SELECT COUNT(*)
+    FROM information_schema.STATISTICS
+    WHERE BINARY TABLE_SCHEMA = BINARY DATABASE()
+      AND TABLE_NAME = 'person'
+      AND INDEX_NAME = 'idx_person_family_tree'
+);
+SET @sql_add_person_family_tree_idx := IF(
+    @has_person_family_tree_idx = 0,
+    'ALTER TABLE `person` ADD KEY `idx_person_family_tree` (`family_tree_id`)',
+    'SELECT 1'
+);
+PREPARE stmt FROM @sql_add_person_family_tree_idx;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @has_media_album_family_tree_idx := (
+    SELECT COUNT(*)
+    FROM information_schema.STATISTICS
+    WHERE BINARY TABLE_SCHEMA = BINARY DATABASE()
+      AND TABLE_NAME = 'media_album'
+      AND INDEX_NAME = 'idx_media_album_family_tree'
+);
+SET @sql_add_media_album_family_tree_idx := IF(
+    @has_media_album_family_tree_idx = 0,
+    'ALTER TABLE `media_album` ADD KEY `idx_media_album_family_tree` (`family_tree_id`)',
+    'SELECT 1'
+);
+PREPARE stmt FROM @sql_add_media_album_family_tree_idx;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @has_media_family_tree_idx := (
+    SELECT COUNT(*)
+    FROM information_schema.STATISTICS
+    WHERE BINARY TABLE_SCHEMA = BINARY DATABASE()
+      AND TABLE_NAME = 'media'
+      AND INDEX_NAME = 'idx_media_family_tree'
+);
+SET @sql_add_media_family_tree_idx := IF(
+    @has_media_family_tree_idx = 0,
+    'ALTER TABLE `media` ADD KEY `idx_media_family_tree` (`family_tree_id`)',
+    'SELECT 1'
+);
+PREPARE stmt FROM @sql_add_media_family_tree_idx;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @has_spouse_relation_family_tree_idx := (
+    SELECT COUNT(*)
+    FROM information_schema.STATISTICS
+    WHERE BINARY TABLE_SCHEMA = BINARY DATABASE()
+      AND TABLE_NAME = 'spouse_relation'
+      AND INDEX_NAME = 'idx_spouse_relation_family_tree'
+);
+SET @sql_add_spouse_relation_family_tree_idx := IF(
+    @has_spouse_relation_family_tree_idx = 0,
+    'ALTER TABLE `spouse_relation` ADD KEY `idx_spouse_relation_family_tree` (`family_tree_id`)',
+    'SELECT 1'
+);
+PREPARE stmt FROM @sql_add_spouse_relation_family_tree_idx;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @has_branch_family_tree_fk := (
+    SELECT COUNT(*)
+    FROM information_schema.REFERENTIAL_CONSTRAINTS
+    WHERE BINARY CONSTRAINT_SCHEMA = BINARY DATABASE()
+      AND CONSTRAINT_NAME = 'fk_branch_family_tree'
+);
+SET @sql_add_branch_family_tree_fk := IF(
+    @has_branch_family_tree_fk = 0,
+    'ALTER TABLE `branch` ADD CONSTRAINT `fk_branch_family_tree` FOREIGN KEY (`family_tree_id`) REFERENCES `family_tree` (`id`) ON DELETE CASCADE ON UPDATE CASCADE',
+    'SELECT 1'
+);
+PREPARE stmt FROM @sql_add_branch_family_tree_fk;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @has_person_family_tree_fk := (
+    SELECT COUNT(*)
+    FROM information_schema.REFERENTIAL_CONSTRAINTS
+    WHERE BINARY CONSTRAINT_SCHEMA = BINARY DATABASE()
+      AND CONSTRAINT_NAME = 'fk_person_family_tree'
+);
+SET @sql_add_person_family_tree_fk := IF(
+    @has_person_family_tree_fk = 0,
+    'ALTER TABLE `person` ADD CONSTRAINT `fk_person_family_tree` FOREIGN KEY (`family_tree_id`) REFERENCES `family_tree` (`id`) ON DELETE SET NULL ON UPDATE CASCADE',
+    'SELECT 1'
+);
+PREPARE stmt FROM @sql_add_person_family_tree_fk;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @has_media_album_family_tree_fk := (
+    SELECT COUNT(*)
+    FROM information_schema.REFERENTIAL_CONSTRAINTS
+    WHERE BINARY CONSTRAINT_SCHEMA = BINARY DATABASE()
+      AND CONSTRAINT_NAME = 'fk_media_album_family_tree'
+);
+SET @sql_add_media_album_family_tree_fk := IF(
+    @has_media_album_family_tree_fk = 0,
+    'ALTER TABLE `media_album` ADD CONSTRAINT `fk_media_album_family_tree` FOREIGN KEY (`family_tree_id`) REFERENCES `family_tree` (`id`) ON DELETE SET NULL ON UPDATE CASCADE',
+    'SELECT 1'
+);
+PREPARE stmt FROM @sql_add_media_album_family_tree_fk;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @has_media_family_tree_fk := (
+    SELECT COUNT(*)
+    FROM information_schema.REFERENTIAL_CONSTRAINTS
+    WHERE BINARY CONSTRAINT_SCHEMA = BINARY DATABASE()
+      AND CONSTRAINT_NAME = 'fk_media_family_tree'
+);
+SET @sql_add_media_family_tree_fk := IF(
+    @has_media_family_tree_fk = 0,
+    'ALTER TABLE `media` ADD CONSTRAINT `fk_media_family_tree` FOREIGN KEY (`family_tree_id`) REFERENCES `family_tree` (`id`) ON DELETE SET NULL ON UPDATE CASCADE',
+    'SELECT 1'
+);
+PREPARE stmt FROM @sql_add_media_family_tree_fk;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @has_spouse_relation_family_tree_fk := (
+    SELECT COUNT(*)
+    FROM information_schema.REFERENTIAL_CONSTRAINTS
+    WHERE BINARY CONSTRAINT_SCHEMA = BINARY DATABASE()
+      AND CONSTRAINT_NAME = 'fk_spouse_relation_family_tree'
+);
+SET @sql_add_spouse_relation_family_tree_fk := IF(
+    @has_spouse_relation_family_tree_fk = 0,
+    'ALTER TABLE `spouse_relation` ADD CONSTRAINT `fk_spouse_relation_family_tree` FOREIGN KEY (`family_tree_id`) REFERENCES `family_tree` (`id`) ON DELETE CASCADE ON UPDATE CASCADE',
+    'SELECT 1'
+);
+PREPARE stmt FROM @sql_add_spouse_relation_family_tree_fk;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET SQL_SAFE_UPDATES = @OLD_SQL_SAFE_UPDATES;
+
+CREATE TABLE IF NOT EXISTS `family_introduction` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `title` varchar(255) NOT NULL,
+    `cover_image` longtext DEFAULT NULL,
+    `content` longtext DEFAULT NULL,
+    `gallery_images` longtext DEFAULT NULL,
+    `video_url` varchar(1000) DEFAULT NULL,
+    `is_visible` tinyint(1) NOT NULL DEFAULT 1,
+    `is_primary` tinyint(1) NOT NULL DEFAULT 0,
+    `family_tree_id` bigint(20) NOT NULL,
+    `createddate` datetime DEFAULT NULL,
+    `modifieddate` datetime DEFAULT NULL,
+    `createdby` varchar(255) DEFAULT NULL,
+    `modifiedby` varchar(255) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_family_intro_tree` (`family_tree_id`),
+    CONSTRAINT `fk_family_intro_tree` FOREIGN KEY (`family_tree_id`) REFERENCES `family_tree` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `contribution_record` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `contribution_year` int(11) NOT NULL,
+    `contributor_name` varchar(255) NOT NULL,
+    `family_unit` varchar(255) DEFAULT NULL,
+    `contribution_value` decimal(18,2) DEFAULT NULL,
+    `content` longtext DEFAULT NULL,
+    `contribution_date` date DEFAULT NULL,
+    `proof_image` longtext DEFAULT NULL,
+    `family_tree_id` bigint(20) NOT NULL,
+    `createddate` datetime DEFAULT NULL,
+    `modifieddate` datetime DEFAULT NULL,
+    `createdby` varchar(255) DEFAULT NULL,
+    `modifiedby` varchar(255) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_contribution_tree` (`family_tree_id`),
+    KEY `idx_contribution_year` (`contribution_year`),
+    CONSTRAINT `fk_contribution_tree` FOREIGN KEY (`family_tree_id`) REFERENCES `family_tree` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `award_record` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `full_name` varchar(255) NOT NULL,
+    `award_year` int(11) NOT NULL,
+    `achievement` longtext DEFAULT NULL,
+    `education_level` varchar(255) DEFAULT NULL,
+    `school_name` varchar(255) DEFAULT NULL,
+    `reward_type` varchar(255) DEFAULT NULL,
+    `reward_value` varchar(255) DEFAULT NULL,
+    `category_name` varchar(255) DEFAULT NULL,
+    `note` longtext DEFAULT NULL,
+    `proof_image` longtext DEFAULT NULL,
+    `family_tree_id` bigint(20) NOT NULL,
+    `createddate` datetime DEFAULT NULL,
+    `modifieddate` datetime DEFAULT NULL,
+    `createdby` varchar(255) DEFAULT NULL,
+    `modifiedby` varchar(255) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_award_tree` (`family_tree_id`),
+    KEY `idx_award_year` (`award_year`),
+    CONSTRAINT `fk_award_tree` FOREIGN KEY (`family_tree_id`) REFERENCES `family_tree` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `academic_profile` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `full_name` varchar(255) NOT NULL,
+    `birth_year` int(11) DEFAULT NULL,
+    `branch_name` varchar(255) DEFAULT NULL,
+    `degree_name` varchar(255) DEFAULT NULL,
+    `academic_rank` varchar(255) DEFAULT NULL,
+    `major_name` varchar(255) DEFAULT NULL,
+    `workplace` varchar(255) DEFAULT NULL,
+    `current_position` varchar(255) DEFAULT NULL,
+    `achievement_highlights` longtext DEFAULT NULL,
+    `portrait_image` longtext DEFAULT NULL,
+    `note` longtext DEFAULT NULL,
+    `family_tree_id` bigint(20) NOT NULL,
+    `createddate` datetime DEFAULT NULL,
+    `modifieddate` datetime DEFAULT NULL,
+    `createdby` varchar(255) DEFAULT NULL,
+    `modifiedby` varchar(255) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_academic_tree` (`family_tree_id`),
+    KEY `idx_academic_degree` (`degree_name`),
+    KEY `idx_academic_rank` (`academic_rank`),
+    CONSTRAINT `fk_academic_tree` FOREIGN KEY (`family_tree_id`) REFERENCES `family_tree` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `family_news` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `title` varchar(255) NOT NULL,
+    `cover_image` longtext DEFAULT NULL,
+    `summary_text` longtext DEFAULT NULL,
+    `content` longtext DEFAULT NULL,
+    `published_date` date DEFAULT NULL,
+    `author_name` varchar(255) DEFAULT NULL,
+    `category_name` varchar(255) DEFAULT NULL,
+    `is_visible` tinyint(1) NOT NULL DEFAULT 1,
+    `attachment_images` longtext DEFAULT NULL,
+    `family_tree_id` bigint(20) NOT NULL,
+    `createddate` datetime DEFAULT NULL,
+    `modifieddate` datetime DEFAULT NULL,
+    `createdby` varchar(255) DEFAULT NULL,
+    `modifiedby` varchar(255) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_news_tree` (`family_tree_id`),
+    KEY `idx_news_publish_date` (`published_date`),
+    CONSTRAINT `fk_news_tree` FOREIGN KEY (`family_tree_id`) REFERENCES `family_tree` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
