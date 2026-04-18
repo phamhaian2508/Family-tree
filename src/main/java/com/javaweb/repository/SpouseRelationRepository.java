@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface SpouseRelationRepository extends JpaRepository<SpouseRelationEntity, Long> {
     List<SpouseRelationEntity> findAllByOrderByRelationOrderAscIdAsc();
+    List<SpouseRelationEntity> findAllByFamilyTree_IdOrderByRelationOrderAscIdAsc(Long familyTreeId);
+    void deleteByFamilyTree_Id(Long familyTreeId);
 }

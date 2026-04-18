@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="/common/taglib.jsp"%>
 <title>Tư liệu dòng họ</title>
-<link rel="stylesheet" href="assets/css/media-page.css" />
+<link rel="stylesheet" href="<c:url value='/admin/assets/css/media-page.css'/>" />
 
 <div class="main-content">
     <div class="main-content-inner">
@@ -142,6 +142,7 @@
 <script>
 var canUpload = false;
 <security:authorize access="hasAnyRole('MANAGER','EDITOR')">canUpload = true;</security:authorize>
+var currentFamilyTreeId = Number('${empty currentFamilyTreeId ? 0 : currentFamilyTreeId}');
 
 var state = { view: 'list', perPage: 10, search: '', tab: 'photos', albumId: null, albums: [], mediaItems: [] };
 var modal = { resolve: null, coverFile: null };
@@ -328,6 +329,7 @@ function upload(fs, ctx, displayNames) {
         fd.append('displayNames', custom || fallback);
         fd.append('visibilityScopes', 'PUBLIC');
     });
+    if (currentFamilyTreeId > 0) fd.append('familyTreeId', currentFamilyTreeId);
     if (ctx && ctx.albumId) fd.append('albumId', ctx.albumId);
     if (ctx && ctx.personId) fd.append('personId', ctx.personId);
     if (ctx && ctx.branchId) fd.append('branchId', ctx.branchId);
@@ -388,6 +390,7 @@ function createAlbum() {
         fd.append('name', name);
         fd.append('description', desc);
         fd.append('accessScope', 'PUBLIC');
+        if (currentFamilyTreeId > 0) fd.append('familyTreeId', currentFamilyTreeId);
         fetch('/api/media/albums', { method: 'POST', body: fd })
             .then(function (res) { if (!res.ok) return res.text().then(function (t) { throw new Error(t || 'Tạo album thất bại'); }); return res.json(); })
             .then(function (a) { if (!modal.coverFile) return a; return upload([modal.coverFile], { albumId: Number(a.id) }).then(function () { return a; }); })

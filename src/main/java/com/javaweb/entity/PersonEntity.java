@@ -15,6 +15,10 @@ import java.util.List;
 public class PersonEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "family_tree_id")
+    private FamilyTreeEntity familyTree;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id")
     private BranchEntity branch;
 

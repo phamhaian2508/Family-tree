@@ -1,7 +1,9 @@
 package com.javaweb.controller.admin;
 
 import com.javaweb.entity.PersonEntity;
-import com.javaweb.repository.BranchRepository;
+import com.javaweb.repository.ContributionRecordRepository;
+import com.javaweb.repository.FamilyNewsRepository;
+import com.javaweb.repository.FamilyTreeRepository;
 import com.javaweb.repository.MediaRepository;
 import com.javaweb.repository.PersonRepository;
 import com.javaweb.repository.UserRepository;
@@ -27,7 +29,13 @@ public class HomeController {
     private PersonRepository personRepository;
 
     @Autowired
-    private BranchRepository branchRepository;
+    private FamilyTreeRepository familyTreeRepository;
+
+    @Autowired
+    private FamilyNewsRepository familyNewsRepository;
+
+    @Autowired
+    private ContributionRecordRepository contributionRecordRepository;
 
     @Autowired
     private MediaRepository mediaRepository;
@@ -38,21 +46,22 @@ public class HomeController {
     @RequestMapping(value = "/admin/home", method = RequestMethod.GET)
     public ModelAndView homePage() {
         ModelAndView mav = new ModelAndView("admin/home");
+        LocalDate today = LocalDate.now();
+        int currentYear = today.getYear();
 
         long totalMembers = personRepository.countByBranchIsNotNull();
-        long totalBranches = branchRepository.count();
+        long annualContributions = contributionRecordRepository.countByContributionYear(currentYear);
+        long totalFamilyTrees = familyTreeRepository.count();
+        long totalNews = familyNewsRepository.count();
         long totalMediaFiles = mediaRepository.count();
         long activeUsers = userRepository.countByStatusNot(0);
 
-        Date currentMonthStart = atStartOfMonth(LocalDate.now());
-        Date previousMonthStart = atStartOfMonth(LocalDate.now().minusMonths(1));
-        Date nextMonthStart = atStartOfMonth(LocalDate.now().plusMonths(1));
+        Date currentMonthStart = atStartOfMonth(today);
+        Date previousMonthStart = atStartOfMonth(today.minusMonths(1));
+        Date nextMonthStart = atStartOfMonth(today.plusMonths(1));
 
         long membersCurrentMonth = personRepository.countByBranchIsNotNullAndCreatedDateBetween(currentMonthStart, nextMonthStart);
         long membersPreviousMonth = personRepository.countByBranchIsNotNullAndCreatedDateBetween(previousMonthStart, currentMonthStart);
-
-        long branchesCurrentMonth = branchRepository.countByCreatedDateBetween(currentMonthStart, nextMonthStart);
-        long branchesPreviousMonth = branchRepository.countByCreatedDateBetween(previousMonthStart, currentMonthStart);
 
         long mediaCurrentMonth = mediaRepository.countByCreatedDateBetween(currentMonthStart, nextMonthStart);
         long mediaPreviousMonth = mediaRepository.countByCreatedDateBetween(previousMonthStart, currentMonthStart);
@@ -61,12 +70,14 @@ public class HomeController {
         long usersPreviousMonth = userRepository.countByCreatedDateBetween(previousMonthStart, currentMonthStart);
 
         mav.addObject("totalMembers", totalMembers);
-        mav.addObject("totalBranches", totalBranches);
+        mav.addObject("annualContributions", annualContributions);
+        mav.addObject("currentContributionYear", currentYear);
+        mav.addObject("totalFamilyTrees", totalFamilyTrees);
+        mav.addObject("totalNews", totalNews);
         mav.addObject("totalMediaFiles", totalMediaFiles);
         mav.addObject("activeUsers", activeUsers);
 
         mav.addObject("membersGrowth", formatGrowth(membersCurrentMonth, membersPreviousMonth));
-        mav.addObject("branchesGrowth", formatGrowth(branchesCurrentMonth, branchesPreviousMonth));
         mav.addObject("mediaGrowth", formatGrowth(mediaCurrentMonth, mediaPreviousMonth));
         mav.addObject("activeUsersGrowth", formatGrowth(usersCurrentMonth, usersPreviousMonth));
 

@@ -1,6 +1,7 @@
 package com.javaweb.model.dto;
 
 public class MediaAlbumDTO extends AbstractDTO<MediaAlbumDTO> {
+    private Long familyTreeId;
     private String name;
     private String description;
     private String coverUrl;
@@ -8,6 +9,14 @@ public class MediaAlbumDTO extends AbstractDTO<MediaAlbumDTO> {
     private Long branchId;
     private Long uploaderId;
     private String accessScope;
+
+    public Long getFamilyTreeId() {
+        return familyTreeId;
+    }
+
+    public void setFamilyTreeId(Long familyTreeId) {
+        this.familyTreeId = familyTreeId;
+    }
 
     public String getName() {
         return name;

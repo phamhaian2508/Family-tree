@@ -12,6 +12,7 @@ import com.javaweb.familytree.dto.FamilyTreeAuditReport;
 import com.javaweb.model.dto.PersonDTO;
 import com.javaweb.repository.PersonRepository;
 import com.javaweb.repository.SpouseRelationRepository;
+import com.javaweb.service.impl.FamilyTreeContextService;
 import com.javaweb.utils.FamilyTreeBranchUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,22 +34,26 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service
 public class FamilyTreeReadService {
     private final PersonRepository personRepository;
     private final SpouseRelationRepository spouseRelationRepository;
-    private volatile Dataset cachedDataset;
+    private final FamilyTreeContextService familyTreeContextService;
+    private final Map<Long, Dataset> cachedDatasets = new ConcurrentHashMap<>();
 
     public FamilyTreeReadService(PersonRepository personRepository,
-                                 SpouseRelationRepository spouseRelationRepository) {
+                                 SpouseRelationRepository spouseRelationRepository,
+                                 FamilyTreeContextService familyTreeContextService) {
         this.personRepository = personRepository;
         this.spouseRelationRepository = spouseRelationRepository;
+        this.familyTreeContextService = familyTreeContextService;
     }
 
     public void evictCache() {
-        cachedDataset = null;
+        cachedDatasets.clear();
     }
 
     @Transactional(readOnly = true)
@@ -195,23 +200,28 @@ public class FamilyTreeReadService {
     }
 
     private Dataset loadDataset() {
-        Dataset snapshot = cachedDataset;
+        Long familyTreeId = familyTreeContextService.getCurrentFamilyTreeId();
+        if (familyTreeId == null) {
+            return emptyDataset();
+        }
+        Dataset snapshot = cachedDatasets.get(familyTreeId);
         if (snapshot != null) {
             return snapshot;
         }
         synchronized (this) {
-            if (cachedDataset != null) {
-                return cachedDataset;
+            Dataset cached = cachedDatasets.get(familyTreeId);
+            if (cached != null) {
+                return cached;
             }
-            Dataset built = buildDataset();
-            cachedDataset = built;
+            Dataset built = buildDataset(familyTreeId);
+            cachedDatasets.put(familyTreeId, built);
             return built;
         }
     }
 
-    private Dataset buildDataset() {
-        List<PersonEntity> entities = personRepository.findAllWithRelations();
-        List<SpouseRelationEntity> spouseRelationEntities = spouseRelationRepository.findAllByOrderByRelationOrderAscIdAsc();
+    private Dataset buildDataset(Long familyTreeId) {
+        List<PersonEntity> entities = personRepository.findAllByFamilyTreeIdWithRelations(familyTreeId);
+        List<SpouseRelationEntity> spouseRelationEntities = spouseRelationRepository.findAllByFamilyTree_IdOrderByRelationOrderAscIdAsc(familyTreeId);
         Map<Long, FamilyMember> membersById = new LinkedHashMap<>();
         for (PersonEntity entity : entities) {
             if (entity == null || entity.getId() == null) {
@@ -267,6 +277,18 @@ public class FamilyTreeReadService {
                 parentChildRelations,
                 spouseNormalization.relations,
                 issueCollector.toList()
+        );
+    }
+
+    private Dataset emptyDataset() {
+        return new Dataset(
+                new LinkedHashMap<Long, FamilyMember>(),
+                new LinkedHashMap<Long, List<Long>>(),
+                new LinkedHashMap<Long, List<Long>>(),
+                new LinkedHashMap<Long, List<SpouseRelation>>(),
+                new ArrayList<ParentChildRelation>(),
+                new ArrayList<SpouseRelation>(),
+                new ArrayList<FamilyTreeAuditIssue>()
         );
     }
 

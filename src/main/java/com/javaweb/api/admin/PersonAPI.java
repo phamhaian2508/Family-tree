@@ -4,6 +4,7 @@ import com.javaweb.familytree.dto.FamilyTreeAuditReport;
 import com.javaweb.familytree.service.FamilyTreeReadService;
 import com.javaweb.model.dto.PersonDTO;
 import com.javaweb.service.IPersonService;
+import com.javaweb.service.impl.FamilyTreeContextService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,14 +24,19 @@ import java.time.LocalDate;
 public class PersonAPI {
     private final IPersonService iPersonService;
     private final FamilyTreeReadService familyTreeReadService;
+    private final FamilyTreeContextService familyTreeContextService;
 
-    public PersonAPI(IPersonService iPersonService, FamilyTreeReadService familyTreeReadService) {
+    public PersonAPI(IPersonService iPersonService,
+                     FamilyTreeReadService familyTreeReadService,
+                     FamilyTreeContextService familyTreeContextService) {
         this.iPersonService = iPersonService;
         this.familyTreeReadService = familyTreeReadService;
+        this.familyTreeContextService = familyTreeContextService;
     }
     @PostMapping
     public ResponseEntity<?> createPerson(@RequestBody PersonDTO personDTO) {
         try {
+            familyTreeContextService.resolveCurrentFamilyTreeId(personDTO != null ? personDTO.getFamilyTreeId() : null);
             return ResponseEntity.ok(iPersonService.createPerson(personDTO));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
@@ -38,13 +44,16 @@ public class PersonAPI {
     }
 
     @GetMapping("/count")
-    public ResponseEntity<Long> countPersons() {
+    public ResponseEntity<Long> countPersons(@RequestParam(value = "familyTreeId", required = false) Long familyTreeId) {
+        familyTreeContextService.resolveCurrentFamilyTreeId(familyTreeId);
         return ResponseEntity.ok(iPersonService.countPersons());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getPersonById(@PathVariable("id") Long personId) {
+    public ResponseEntity<?> getPersonById(@PathVariable("id") Long personId,
+                                           @RequestParam(value = "familyTreeId", required = false) Long familyTreeId) {
         try {
+            familyTreeContextService.resolveCurrentFamilyTreeId(familyTreeId);
             return ResponseEntity.ok(familyTreeReadService.findPersonById(personId));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
@@ -54,10 +63,12 @@ public class PersonAPI {
     @GetMapping("/available")
     public ResponseEntity<List<PersonDTO>> findAvailablePersons(
             @RequestParam(value = "branchId") Long branchId,
+            @RequestParam(value = "familyTreeId", required = false) Long familyTreeId,
             @RequestParam(value = "fullName", required = false) String fullName,
             @RequestParam(value = "gender", required = false) String gender,
             @RequestParam(value = "dob", required = false) String dob
     ) {
+        familyTreeContextService.resolveCurrentFamilyTreeId(familyTreeId);
         LocalDate dobValue = null;
         try {
             if (dob != null && !dob.trim().isEmpty()) {
@@ -71,13 +82,16 @@ public class PersonAPI {
 
     @GetMapping("/roots")
     public ResponseEntity<List<PersonDTO>> getRootPersons(
+            @RequestParam(value = "familyTreeId", required = false) Long familyTreeId,
             @RequestParam(value = "branchId", defaultValue = "0") Long branchId
     ) {
+        familyTreeContextService.resolveCurrentFamilyTreeId(familyTreeId);
         return ResponseEntity.ok(familyTreeReadService.findRootPersonsByBranchId(branchId));
     }
 
     @GetMapping("/members")
     public ResponseEntity<List<PersonDTO>> getMembersByFilters(
+            @RequestParam(value = "familyTreeId", required = false) Long familyTreeId,
             @RequestParam(value = "branchId", defaultValue = "0") Long branchId,
             @RequestParam(value = "generation", required = false) Integer generation,
             @RequestParam(value = "name", required = false) String name,
@@ -88,6 +102,7 @@ public class PersonAPI {
             @RequestParam(value = "birthYearTo", required = false) Integer birthYearTo,
             @RequestParam(value = "focusPersonId", required = false) Long focusPersonId
     ) {
+        familyTreeContextService.resolveCurrentFamilyTreeId(familyTreeId);
         LocalDate dobValue = null;
         try {
             if (dob != null && !dob.trim().isEmpty()) {
@@ -103,8 +118,10 @@ public class PersonAPI {
 
     @GetMapping("/audit")
     public ResponseEntity<FamilyTreeAuditReport> auditFamilyTree(
+            @RequestParam(value = "familyTreeId", required = false) Long familyTreeId,
             @RequestParam(value = "branchId", defaultValue = "0") Long branchId
     ) {
+        familyTreeContextService.resolveCurrentFamilyTreeId(familyTreeId);
         return ResponseEntity.ok(familyTreeReadService.audit(branchId));
     }
 
@@ -114,6 +131,7 @@ public class PersonAPI {
             @RequestBody PersonDTO spouseDTO
     ) {
         try {
+            familyTreeContextService.resolveCurrentFamilyTreeId(spouseDTO != null ? spouseDTO.getFamilyTreeId() : null);
             return ResponseEntity.ok(iPersonService.addSpouse(personId, spouseDTO));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
@@ -126,6 +144,7 @@ public class PersonAPI {
             @RequestBody PersonDTO childDTO
     ) {
         try {
+            familyTreeContextService.resolveCurrentFamilyTreeId(childDTO != null ? childDTO.getFamilyTreeId() : null);
             return ResponseEntity.ok(iPersonService.addChild(personId, childDTO));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
@@ -138,6 +157,7 @@ public class PersonAPI {
             @RequestBody PersonDTO personDTO
     ) {
         try {
+            familyTreeContextService.resolveCurrentFamilyTreeId(personDTO != null ? personDTO.getFamilyTreeId() : null);
             return ResponseEntity.ok(iPersonService.updatePerson(personId, personDTO));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
@@ -145,8 +165,10 @@ public class PersonAPI {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePerson(@PathVariable("id") Long personId) {
+    public ResponseEntity<?> deletePerson(@PathVariable("id") Long personId,
+                                          @RequestParam(value = "familyTreeId", required = false) Long familyTreeId) {
         try {
+            familyTreeContextService.resolveCurrentFamilyTreeId(familyTreeId);
             iPersonService.deletePerson(personId);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException ex) {

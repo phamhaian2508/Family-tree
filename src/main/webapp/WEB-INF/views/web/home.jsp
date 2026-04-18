@@ -9,6 +9,10 @@
 <section id="coi-nguon" class="gpo-hero-shell">
     <div class="container">
         <div class="gpo-hero-frame gpo-reveal">
+            <div class="gpo-hero-dragons" aria-hidden="true">
+                <img class="gpo-hero-dragon gpo-hero-dragon-left" src="<c:url value='/admin/assets/images/dragon-left.png'/>" alt="">
+                <img class="gpo-hero-dragon gpo-hero-dragon-right" src="<c:url value='/admin/assets/images/dragon-right.png'/>" alt="">
+            </div>
             <div class="row g-4 align-items-center">
                 <div class="col-lg-7">
                     <p class="gpo-kicker">Gia phả họ Trần Đức</p>

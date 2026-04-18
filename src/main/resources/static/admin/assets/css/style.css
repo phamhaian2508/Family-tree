@@ -322,17 +322,20 @@ input::placeholder {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 48px;
+    min-width: 132px;
     height: 48px;
     margin-bottom: 16px;
+    padding: 0 18px;
     border: 1px solid rgba(143, 32, 32, 0.22);
-    border-radius: 50%;
+    border-radius: 999px;
     background: rgba(143, 32, 32, 0.06);
-    color: #7f1f1f;
+    color: #7b241f;
     font-family: "Noto Serif", "Palatino Linotype", "Book Antiqua", Georgia, serif;
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1;
+    white-space: nowrap;
 }
 
 .dashboard-home-v2 .overview-number {
@@ -357,8 +360,17 @@ input::placeholder {
     line-height: 1.45;
     font-weight: 700;
     color: #5a4230;
-    flex: 1 1 auto;
+    min-height: 56px;
     width: 100%;
+    text-align: center;
+}
+
+.dashboard-home-v2 .overview-note {
+    margin-top: 2px;
+    color: #8a7256;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
     text-align: center;
 }
 
@@ -590,6 +602,12 @@ input::placeholder {
     margin-top: 16px;
 }
 
+.dashboard-home-v2 .admin-panel .family-section-header {
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
 .dashboard-home-v2 .admin-count {
     background: rgba(242, 223, 178, 0.9);
     color: #7b261f;
@@ -684,6 +702,7 @@ input::placeholder {
     .dashboard-home-v2 .family-kpi-card {
         min-height: 124px;
     }
+
 }
 
 @media (max-width: 767px) {
@@ -723,6 +742,12 @@ input::placeholder {
 
     .dashboard-home-v2 .family-kpi-card {
         min-height: 116px;
+    }
+
+    .dashboard-home-v2 .admin-panel .family-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
     }
 }
 

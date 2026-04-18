@@ -234,6 +234,7 @@
 
     /* ===== Heritage redesign overrides ===== */
     #ftApp {
+        position: relative;
         background: transparent !important;
         color: #35241a;
         font-family: "Segoe UI", Tahoma, sans-serif;
@@ -494,11 +495,19 @@
         padding: 22px 28px 44px !important;
         overflow: hidden !important;
         position: relative;
+        user-select: none;
+        -webkit-user-select: none;
     }
     #ftApp .ft-tree-scale {
         position: relative;
         min-width: max-content;
         min-height: max-content;
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+        transform-style: preserve-3d;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-user-drag: none;
     }
     #ftApp .ft-legend {
         left: 18px;
@@ -543,6 +552,7 @@
         --spouse-gap: 20px;
         min-height: 248px;
         padding-right: calc(var(--node-width) + var(--spouse-gap));
+        position: relative;
     }
     #ftApp #treeRoot .box-person.no-spouse {
         padding-right: 0;
@@ -563,6 +573,29 @@
         border-top: 3px solid #8c241f !important;
         box-shadow: none !important;
     }
+    #ftApp #treeRoot .box-person.ft-root-box {
+        padding-top: 156px;
+    }
+    #ftApp #treeRoot .ft-root-ornament {
+        position: absolute;
+        top: -36px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: min(430px, calc(100% + 180px));
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        pointer-events: none;
+        user-select: none;
+        z-index: 3;
+    }
+    #ftApp #treeRoot .ft-root-ornament img {
+        width: 150px;
+        height: 150px;
+        object-fit: contain;
+        filter: drop-shadow(0 4px 10px rgba(73, 37, 18, 0.16));
+        opacity: 0.96;
+    }
     #ftApp #treeRoot .person-node {
         width: var(--node-width);
         min-height: 224px;
@@ -576,6 +609,8 @@
         box-shadow: 0 8px 20px rgba(73, 37, 18, 0.08) !important;
         position: relative;
         overflow: visible;
+        backface-visibility: hidden;
+        transform: translateZ(0);
         transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
     }
     #ftApp #treeRoot .person-node::before,
@@ -640,6 +675,61 @@
         border: 2px solid rgba(255, 244, 214, 0.9);
         box-shadow: 0 4px 10px rgba(73, 37, 18, 0.12);
         pointer-events: none;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-user-drag: none;
+    }
+    #ftApp #treeRoot .person-node,
+    #ftApp #treeRoot .person-node * {
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-user-drag: none;
+    }
+    #ftApp.ft-interacting .ft-tree-scale {
+        will-change: transform;
+    }
+    #ftApp.ft-pan-active #treeRoot {
+        pointer-events: none;
+    }
+    #ftApp.ft-pan-active #treeRoot .person-node {
+        transition: none !important;
+        box-shadow: 0 2px 8px rgba(73, 37, 18, 0.05) !important;
+        background:
+            linear-gradient(180deg, rgba(255, 249, 231, 0.98), rgba(243, 230, 198, 0.98)) !important;
+    }
+    #ftApp.ft-pan-active #treeRoot .person-node::before,
+    #ftApp.ft-pan-active #treeRoot .person-node::after,
+    #ftApp.ft-pan-active #treeRoot .box-person.has-spouse::before {
+        display: none !important;
+    }
+    #ftApp.ft-pan-active #treeRoot .avatar-tree {
+        box-shadow: none !important;
+    }
+    #ftApp.ft-low-zoom #treeRoot .person-node {
+        box-shadow: 0 2px 8px rgba(73, 37, 18, 0.05) !important;
+        background:
+            linear-gradient(180deg, rgba(255, 249, 231, 0.98), rgba(243, 230, 198, 0.98)) !important;
+    }
+    #ftApp.ft-low-zoom #treeRoot .person-node::before,
+    #ftApp.ft-low-zoom #treeRoot .person-node::after,
+    #ftApp.ft-low-zoom #treeRoot .box-person.has-spouse::before {
+        display: none !important;
+    }
+    #ftApp.ft-low-zoom #treeRoot .avatar-tree {
+        box-shadow: none !important;
+        border-width: 1px;
+    }
+    #ftApp.ft-low-zoom #treeRoot .person-node.person-role-notable {
+        box-shadow: 0 2px 8px rgba(73, 37, 18, 0.05) !important;
+    }
+    #ftApp.ft-low-zoom #treeRoot .person-node.person-role-deceased .avatar-tree {
+        filter: none;
+    }
+    #ftApp.ft-low-zoom #treeRoot .li-person::before,
+    #ftApp.ft-low-zoom #treeRoot .li-person::after,
+    #ftApp.ft-low-zoom #treeRoot .ul-person .ul-person::before,
+    #ftApp.ft-low-zoom #treeRoot .li-person:last-child::before {
+        border-width: 3px !important;
     }
     #ftApp #treeRoot .ft-node-headline {
         display: flex;
@@ -705,6 +795,13 @@
     #ftApp #treeRoot .person-date-line .date-label {
         color: #6f231f;
     }
+    #ftApp #treeRoot .person-node > .dropdown.btn-setting-custom {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: auto;
+        z-index: 5;
+    }
     #ftApp #treeRoot .btn-setting-custom {
         opacity: 0;
         transform: translateY(-2px);
@@ -726,12 +823,27 @@
         border: 0 !important;
     }
     #ftApp #treeRoot .tree-action-menu {
-        min-width: 210px;
+        display: none;
+        position: absolute !important;
+        left: calc(100% + 8px) !important;
+        right: auto !important;
+        top: 0 !important;
+        bottom: auto !important;
+        z-index: 10020 !important;
+        min-width: 188px;
         border-radius: 6px;
         border: 1px solid rgba(120, 73, 42, 0.16);
         background: #f8f0df url("/web/images/paper-texture.png") !important;
         background-size: 220px !important;
         box-shadow: 0 14px 30px rgba(73, 37, 18, 0.16);
+        padding: 4px 0;
+        margin: 0;
+    }
+    #ftApp #treeRoot .tree-action-menu.show {
+        display: block;
+    }
+    #ftApp #treeRoot .tree-action-menu li {
+        list-style: none;
     }
     #ftApp #treeRoot .tree-action-menu .dropdown-item {
         padding: 9px 12px;
@@ -785,6 +897,73 @@
     #ftApp .ft-empty {
         color: #6a201d;
         font-size: 18px;
+    }
+    #ftApp .ft-tree-empty-state {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        min-height: 420px;
+        padding: 28px;
+    }
+    #ftApp .ft-tree-empty-state.is-visible {
+        display: flex;
+    }
+    #ftApp .ft-tree-empty-card {
+        width: min(620px, 100%);
+        padding: 26px 28px;
+        border-radius: 18px;
+        border: 1px solid rgba(120, 73, 42, 0.16);
+        background:
+            linear-gradient(180deg, rgba(255, 249, 231, 0.98), rgba(243, 230, 198, 0.98)),
+            url("/web/images/paper-texture.png");
+        background-size: auto, 280px;
+        box-shadow: 0 16px 34px rgba(73, 37, 18, 0.12);
+        text-align: center;
+    }
+    #ftApp .ft-tree-empty-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: rgba(140, 36, 31, 0.08);
+        color: #7c271d;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    #ftApp .ft-tree-empty-title {
+        margin: 0 0 10px;
+        color: #6a201d;
+        font-family: "Noto Serif", "Palatino Linotype", Georgia, serif;
+        font-size: 30px;
+        line-height: 1.18;
+    }
+    #ftApp .ft-tree-empty-text {
+        margin: 0 auto;
+        max-width: 520px;
+        color: #634a39;
+        font-size: 15px;
+        line-height: 1.65;
+    }
+    #ftApp .ft-tree-empty-actions {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    #ftApp .ft-tree-empty-hint {
+        margin-top: 14px;
+        color: #7c614c;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+    #ftApp .ft-canvas.is-empty #contentArea,
+    #ftApp .ft-canvas.is-empty #legend {
+        display: none;
     }
     #ftApp .modal-content,
     #ftApp .offcanvas {
@@ -1308,6 +1487,37 @@
             </div>
 
             <div class="ft-canvas">
+                <div id="treeEmptyState" class="ft-tree-empty-state" aria-live="polite">
+                    <div class="ft-tree-empty-card">
+                        <div class="ft-tree-empty-badge">
+                            <i class="fa fa-seedling"></i>
+                            Cây mới chưa khởi tạo
+                        </div>
+                        <h3 class="ft-tree-empty-title">Cần thêm thành viên đầu tiên để bắt đầu cây gia phả</h3>
+                        <p class="ft-tree-empty-text">
+                            Cây gia phả này hiện chưa có thành viên gốc nên hệ thống chưa thể hiển thị sơ đồ huyết thống.
+                            Hãy thêm thành viên đầu tiên để tạo gốc cây, sau đó mới tiếp tục thêm vợ/chồng, con và các nhánh khác.
+                        </p>
+                        <div class="ft-tree-empty-actions">
+                            <% if (canManageMember) { %>
+                                <button id="treeEmptyCreateFirstBtn" type="button" class="btn btn-dark">
+                                    <i class="fa fa-user-plus"></i>
+                                    Thêm thành viên đầu tiên
+                                </button>
+                            <% } else { %>
+                                <a href="${homeUrl}" class="btn btn-light">Quay lại trang chủ</a>
+                            <% } %>
+                        </div>
+                        <div class="ft-tree-empty-hint">
+                            <% if (canManageMember) { %>
+                                Sau khi lưu thành viên đầu tiên, sơ đồ gia phả của cây này sẽ được mở đầy đủ.
+                            <% } else { %>
+                                Bạn không có quyền thêm thành viên. Hãy liên hệ quản trị viên hoặc người biên tập của cây gia phả này.
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="contentArea" class="ft-scroll">
                     <div id="scaleWrap" class="ft-tree-scale">
                         <div class="d-flex justify-content-center">
@@ -1603,7 +1813,10 @@
         // Nếu muốn truyền branchId từ server side:
         // const BRANCH_ID = "<%= request.getAttribute("branchId") %>";
         let BRANCH_ID = 0;
+        const CURRENT_FAMILY_TREE_ID = Number('${empty currentFamilyTreeId ? 0 : currentFamilyTreeId}');
+        const SHOULD_AUTO_OPEN_CREATE_FIRST = new URLSearchParams(window.location.search).get('openCreateFirst') === '1';
         const HOME_TOTAL_MEMBERS = Number('${empty totalMembers ? 0 : totalMembers}');
+        const SHOULD_ENFORCE_FIRST_MEMBER = HOME_TOTAL_MEMBERS === 0;
         const canManageMember = <%= canManageMember %>;
 
         // Dropdown minimal toggle (không phụ thuộc BS5)
@@ -1722,6 +1935,7 @@
         let FT_FILTER_DEBOUNCE = null;
         const COLLAPSED_NODE_IDS = new Set();
         const SERVER_TOTAL_GENERATIONS = Number('${empty totalGenerations ? 1 : totalGenerations}');
+        const PERSON_DETAIL_CACHE = {};
         const FT_VIEWPORT = {
             initialized: false,
             scale: 1,
@@ -1729,10 +1943,45 @@
             panY: 0,
             skipPanClampOnce: false
         };
+        const FT_TREE_METRICS = {
+            width: 0,
+            height: 0,
+            dirty: true
+        };
         const EXISTING_PERSON_CACHE = {
             m: [],
             a: []
         };
+        let HAS_AUTO_OPENED_CREATE_FIRST = false;
+
+        function invalidateTreeMetrics() {
+            FT_TREE_METRICS.dirty = true;
+        }
+
+        function measureTreeMetrics(force) {
+            const treeRoot = document.getElementById('treeRoot');
+            if (!treeRoot) {
+                FT_TREE_METRICS.width = 0;
+                FT_TREE_METRICS.height = 0;
+                FT_TREE_METRICS.dirty = false;
+                return FT_TREE_METRICS;
+            }
+            if (!force && FT_TREE_METRICS.dirty !== true) {
+                return FT_TREE_METRICS;
+            }
+            FT_TREE_METRICS.width = Math.max(
+                treeRoot.scrollWidth || 0,
+                treeRoot.offsetWidth || 0,
+                treeRoot.clientWidth || 0
+            );
+            FT_TREE_METRICS.height = Math.max(
+                treeRoot.scrollHeight || 0,
+                treeRoot.offsetHeight || 0,
+                treeRoot.clientHeight || 0
+            );
+            FT_TREE_METRICS.dirty = false;
+            return FT_TREE_METRICS;
+        }
 
         function normalizeBranchKey(name) {
             const normalized = normalizeSearchText(name).trim();
@@ -1766,6 +2015,51 @@
         function getTreeBranchQueryId() {
             const normalized = Number(BRANCH_ID || 0);
             return Number.isFinite(normalized) ? normalized : 0;
+        }
+
+        function appendFamilyTreeId(url) {
+            const normalizedTreeId = Number(CURRENT_FAMILY_TREE_ID || 0);
+            if (!Number.isFinite(normalizedTreeId) || normalizedTreeId <= 0) {
+                return url;
+            }
+            if (/[?&]familyTreeId=/.test(url)) {
+                return url;
+            }
+            return url + (url.indexOf('?') >= 0 ? '&' : '?') + 'familyTreeId=' + encodeURIComponent(normalizedTreeId);
+        }
+
+        function withFamilyTreePayload(payload) {
+            const normalizedTreeId = Number(CURRENT_FAMILY_TREE_ID || 0);
+            if (!Number.isFinite(normalizedTreeId) || normalizedTreeId <= 0) {
+                return Object.assign({}, payload || {});
+            }
+            return Object.assign({}, payload || {}, { familyTreeId: normalizedTreeId });
+        }
+
+        function maybeOpenCreateFirstModal() {
+            if ((!SHOULD_AUTO_OPEN_CREATE_FIRST && !SHOULD_ENFORCE_FIRST_MEMBER) || HAS_AUTO_OPENED_CREATE_FIRST || !canManageMember) {
+                return;
+            }
+            const actionBtn = document.getElementById('treeEmptyCreateFirstBtn') || document.getElementById('btnCreateFirst');
+            if (!actionBtn) {
+                return;
+            }
+            HAS_AUTO_OPENED_CREATE_FIRST = true;
+            history.replaceState({}, document.title, window.location.pathname + '?familyTreeId=' + encodeURIComponent(CURRENT_FAMILY_TREE_ID));
+            requestAnimationFrame(function () {
+                actionBtn.click();
+            });
+        }
+
+        function setTreeEmptyStateVisible(visible) {
+            const emptyState = document.getElementById('treeEmptyState');
+            const canvas = document.querySelector('#ftApp .ft-canvas');
+            if (emptyState) {
+                emptyState.classList.toggle('is-visible', !!visible);
+            }
+            if (canvas) {
+                canvas.classList.toggle('is-empty', !!visible);
+            }
         }
 
         function requestTreeRender() {
@@ -1978,7 +2272,7 @@
 
         async function loadBranches(preferredBranchId) {
             try {
-                const res = await fetch('/api/branch');
+                const res = await fetch(appendFamilyTreeId('/api/branch'));
                 if (!res.ok) return;
                 const branches = await res.json();
                 if (!Array.isArray(branches) || branches.length === 0) return;
@@ -2009,9 +2303,15 @@
                 Object.keys(ROOT_PERSON_CACHE).forEach(function (key) {
                     delete ROOT_PERSON_CACHE[key];
                 });
+                Object.keys(PERSON_DETAIL_CACHE).forEach(function (key) {
+                    delete PERSON_DETAIL_CACHE[key];
+                });
                 return;
             }
             delete ROOT_PERSON_CACHE[getRootCacheKey(branchId)];
+            Object.keys(PERSON_DETAIL_CACHE).forEach(function (key) {
+                delete PERSON_DETAIL_CACHE[key];
+            });
         }
 
         function getSourceMode(groupName, fallback) {
@@ -2522,7 +2822,7 @@
 
         async function loadAvailablePersonsByBranch(branchId, fullName, gender, dob) {
             try {
-                let url = '/api/person/available?branchId=' + encodeURIComponent(branchId);
+                let url = appendFamilyTreeId('/api/person/available?branchId=' + encodeURIComponent(branchId));
                 if (fullName) {
                     url += '&fullName=' + encodeURIComponent(fullName);
                 }
@@ -2654,12 +2954,18 @@
         // Tạo thành viên đầu tiên
         (function () {
             const btn = document.getElementById('btnCreateFirst');
-            if (!btn) return;
+            const emptyBtn = document.getElementById('treeEmptyCreateFirstBtn');
+            if (!btn && !emptyBtn) return;
             // Default hidden; will be toggled after loading root person state.
-            btn.style.setProperty('display', 'none', 'important');
+            if (btn) {
+                btn.style.setProperty('display', 'none', 'important');
+            }
 
             window.ftSetCreateFirstVisible = function (visible) {
-                btn.style.setProperty('display', visible ? 'inline-flex' : 'none', 'important');
+                if (btn) {
+                    btn.style.setProperty('display', visible ? 'inline-flex' : 'none', 'important');
+                }
+                setTreeEmptyStateVisible(visible);
             };
 
             window.ftRefreshCreateFirstVisibility = async function (fallbackVisible, knownRoots) {
@@ -2669,7 +2975,7 @@
                         window.ftSetCreateFirstVisible(!hasKnownRoot);
                         return;
                     }
-                    const rootRes = await fetch('/api/person/roots?branchId=' + encodeURIComponent(getTreeBranchQueryId()));
+                    const rootRes = await fetch(appendFamilyTreeId('/api/person/roots?branchId=' + encodeURIComponent(getTreeBranchQueryId())));
                     if (!rootRes.ok) {
                         window.ftSetCreateFirstVisible(!!fallbackVisible);
                         return;
@@ -2682,7 +2988,7 @@
                 }
             };
 
-            btn.addEventListener('click', function () {
+            const openCreateFirstModal = function () {
                 // Mở modal
                 if (window.ftUi && typeof window.ftUi.openModal === 'function') {
                     window.ftUi.openModal('memberModal');
@@ -2701,9 +3007,10 @@
                 setVal('mFullname', '');
                 setVal('mDob', '');
                 setVal('mDod', '');
+                const defaultBranchId = getDefaultFormBranchId();
                 setVal('mGeneration', '1');
-                setVal('mBranch', String(BRANCH_ID));
-                setVal('mBranchName', 'Tự động: Chính');
+                setVal('mBranch', defaultBranchId > 0 ? String(defaultBranchId) : '');
+                setVal('mBranchName', 'Tự động: Chi chính của cây gia phả');
                 setVal('mAvatar', '');
                 setVal('mAvatarFile', '');
                 setVal('mHometown', '');
@@ -2726,8 +3033,15 @@
                 const fullname = document.getElementById('mFullname');
                 if (fullname) fullname.focus();
 
-                refreshExistingPersonCache('m', BRANCH_ID);
-            });
+                refreshExistingPersonCache('m', defaultBranchId);
+            };
+
+            if (btn) {
+                btn.addEventListener('click', openCreateFirstModal);
+            }
+            if (emptyBtn) {
+                emptyBtn.addEventListener('click', openCreateFirstModal);
+            }
         })();
 
         // Lưu thành viên đầu tiên
@@ -2744,7 +3058,7 @@
             const genderEl = document.querySelector('input[name="mGender"]:checked');
             const gender = genderEl ? genderEl.value : null;
 
-            const payload = {
+            const payload = withFamilyTreePayload({
                 fullName,
                 dob,          // LocalDate nhận chuỗi yyyy-MM-dd OK
                 dod,
@@ -2760,7 +3074,7 @@
                 spouseId: null,
                 mediaIds: [],
                 childrenIds: []
-            };
+            });
 
             // Validate tối thiểu
             if (sourceMode === 'new' && !payload.fullName) {
@@ -2787,7 +3101,7 @@
             }
 
             try {
-                const res = await fetch("/api/person", {
+                const res = await fetch(appendFamilyTreeId("/api/person"), {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload)
@@ -3032,7 +3346,7 @@
                 return;
             }
 
-            const payload = {
+            const payload = withFamilyTreePayload({
                 fullName: fullName,
                 dob: document.getElementById('aDob').value || null,
                 dod: document.getElementById('aDod').value || null,
@@ -3043,7 +3357,7 @@
                 currentResidence: document.getElementById('aCurrentResidence').value.trim() || null,
                 occupation: document.getElementById('aOccupation').value.trim() || null,
                 otherNote: document.getElementById('aOtherNote').value.trim() || null
-            };
+            });
             if (sourceMode === 'existing' && mode !== 'edit-member') {
                 payload.existingPersonId = Number(selectedExistingId);
                 payload.fullName = 'existing-person';
@@ -3066,7 +3380,7 @@
 
             if (mode === 'add-spouse') {
                 try {
-                    const res = await fetch('/api/person/' + personId + '/spouse', {
+                    const res = await fetch(appendFamilyTreeId('/api/person/' + personId + '/spouse'), {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
@@ -3096,7 +3410,7 @@
                     return;
                 }
                 try {
-                    const res = await fetch('/api/person/' + personId + '/child', {
+                    const res = await fetch(appendFamilyTreeId('/api/person/' + personId + '/child'), {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
@@ -3122,7 +3436,7 @@
 
             if (mode === 'edit-member') {
                 try {
-                    const res = await fetch('/api/person/' + personId, {
+                    const res = await fetch(appendFamilyTreeId('/api/person/' + personId), {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
@@ -3256,11 +3570,19 @@
         }
 
         async function loadPersonDetailById(personId) {
-            const res = await fetch('/api/person/' + encodeURIComponent(personId));
+            const normalizedId = Number(personId || 0);
+            if (normalizedId > 0 && PERSON_DETAIL_CACHE[normalizedId]) {
+                return PERSON_DETAIL_CACHE[normalizedId];
+            }
+            const res = await fetch(appendFamilyTreeId('/api/person/' + encodeURIComponent(personId)));
             if (!res.ok) {
                 throw new Error(await res.text() || 'Không tải được thông tin thành viên');
             }
-            return await res.json();
+            const detail = await res.json();
+            if (normalizedId > 0) {
+                PERSON_DETAIL_CACHE[normalizedId] = detail;
+            }
+            return detail;
         }
 
         function renderDetailMemberModal(person) {
@@ -3356,6 +3678,7 @@
             const canAddSpouse = (String(person.gender || '').toLowerCase() === 'male'
                 || String(person.gender || '').toLowerCase() === 'female')
                 && !hasAnySpouse(person);
+            const addSpouseLabel = getExpectedSpouseGender(person) === 'male' ? 'Thêm chồng' : 'Thêm vợ';
             const canAddChild = canAddChildInBranch(person.branchName);
             actions.innerHTML = ''
                 + '<button type="button" class="btn btn-link text-secondary" data-close="detailMemberModal">Đóng</button>'
@@ -3364,7 +3687,7 @@
                     ? '<button type="button" class="btn btn-outline-secondary" id="detailAddChildBtn"><i class="bi bi-person-plus"></i> Thêm con</button>'
                     : '')
                 + (canAddSpouse
-                    ? '<button type="button" class="btn btn-outline-secondary" id="detailAddSpouseBtn"><i class="bi bi-heart"></i> Thêm vợ</button>'
+                    ? '<button type="button" class="btn btn-outline-secondary" id="detailAddSpouseBtn"><i class="bi bi-heart"></i> ' + addSpouseLabel + '</button>'
                     : '')
                 + '<button type="button" class="btn btn-dark" id="detailDeleteMemberBtn"><i class="bi bi-trash"></i> Xóa</button>';
             document.getElementById('detailEditMemberBtn')?.addEventListener('click', function () {
@@ -3377,10 +3700,12 @@
                     openActionMemberModal('add-child', person);
                 });
             }
-            document.getElementById('detailAddSpouseBtn')?.addEventListener('click', function () {
-                window.ftUi.closeModal('detailMemberModal');
-                openActionMemberModal('add-spouse', person);
-            });
+            if (canAddSpouse) {
+                document.getElementById('detailAddSpouseBtn')?.addEventListener('click', function () {
+                    window.ftUi.closeModal('detailMemberModal');
+                    openActionMemberModal('add-spouse', person);
+                });
+            }
             document.getElementById('detailDeleteMemberBtn')?.addEventListener('click', async function () {
                 window.ftUi.closeModal('detailMemberModal');
                 await deleteMember(person);
@@ -3406,7 +3731,7 @@
             if (!okToDelete) return;
 
             try {
-                const res = await fetch('/api/person/' + person.id, {
+                const res = await fetch(appendFamilyTreeId('/api/person/' + person.id), {
                     method: 'DELETE'
                 });
 
@@ -3542,7 +3867,7 @@
             const genderBadge = gender === 'female' ? 'Nữ' : (gender === 'male' ? 'Nam' : 'Khác');
 
             return '' +
-                '<div class="' + cssGender + ' person-node person-role-' + roleKey + ' ' + className + '"' + spouseIdAttr + ' data-id="' + personId + '" data-branch-id="' + escapeHtml(branchId) + '" data-role-key="' + roleKey + '">' +
+                '<div class="' + cssGender + ' person-node person-role-' + roleKey + ' ' + className + '" draggable="false"' + spouseIdAttr + ' data-id="' + personId + '" data-branch-id="' + escapeHtml(branchId) + '" data-role-key="' + roleKey + '">' +
                     (showGenerationBadge ? ('<span class="rounded bg-white fw-bold generation-number">' + generation + '</span>') : '') +
                     (showManageMenu
                         ? '<div class="dropdown btn-setting-custom">' +
@@ -3554,7 +3879,7 @@
                         '<span class="ft-node-role">' + escapeHtml(roleLabel) + '</span>' +
                         '<span class="ft-node-gender">' + escapeHtml(genderBadge) + '</span>' +
                     '</div>' +
-                    '<img src="' + escapeHtml(avatar) + '" class="rounded mb-2 mt-3 avatar-tree" alt="' + escapeHtml(fullName) + '" onerror="this.src=\'' + fallbackAvatar + '\'">' +
+                    '<img src="' + escapeHtml(avatar) + '" class="rounded mb-2 mt-3 avatar-tree" alt="' + escapeHtml(fullName) + '" draggable="false" onerror="this.src=\'' + fallbackAvatar + '\'">' +
                     '<div class="person-text">' +
                         '<div data-id="' + personId + '" class="name-phado">' + escapeHtml(fullName) + '</div>' +
                         datesHtml +
@@ -3614,6 +3939,12 @@
             const children = Array.isArray(person.children) ? person.children : [];
             const personId = Number(person && person.id || 0);
             const isCollapsed = personId > 0 && COLLAPSED_NODE_IDS.has(personId);
+            const rootOrnamentHtml = options.isRoot
+                ? '<div class="ft-root-ornament">'
+                    + '<img src="<c:url value="/admin/assets/images/dragon-left.png"/>" alt="" aria-hidden="true">'
+                    + '<img src="<c:url value="/admin/assets/images/dragon-right.png"/>" alt="" aria-hidden="true">'
+                  + '</div>'
+                : '';
             let childrenHtml = '';
             let overflowHtml = '';
             if (children.length > 0) {
@@ -3643,7 +3974,8 @@
             return '' +
                 '<li class="li-person' + (overflowHtml ? ' ft-depth-capped' : '') + '" data-tree-node-id="' + personId + '">' +
                     '<div class="ft-branch-head' + (overflowHtml ? ' ft-depth-cap-row' : '') + '">' +
-                        '<div class="box-person ' + (hasAnySpouse(person) ? 'has-spouse' : 'no-spouse') + '">' +
+                        '<div class="box-person ' + (hasAnySpouse(person) ? 'has-spouse' : 'no-spouse') + (options.isRoot ? ' ft-root-box' : '') + '">' +
+                            rootOrnamentHtml +
                             buildMemberPairHtml(person, {
                                 isRoot: !!options.isRoot
                             }) +
@@ -3866,6 +4198,13 @@
                 subtree.offsetHeight;
                 subtree.classList.add('is-collapsed');
                 subtree.style.maxHeight = '0px';
+                invalidateTreeMetrics();
+                window.setTimeout(function () {
+                    invalidateTreeMetrics();
+                    if (typeof FT_VIEWPORT.apply === 'function') {
+                        FT_VIEWPORT.apply();
+                    }
+                }, durationMs + 30);
                 preserveAnchorAfterLayout(opts.anchorPersonId || personId, beforeRect);
                 return;
             }
@@ -3881,6 +4220,10 @@
             window.setTimeout(function () {
                 if (!subtree.classList.contains('is-collapsed')) {
                     subtree.style.maxHeight = 'none';
+                }
+                invalidateTreeMetrics();
+                if (typeof FT_VIEWPORT.apply === 'function') {
+                    FT_VIEWPORT.apply();
                 }
             }, durationMs + 30);
         }
@@ -3920,6 +4263,13 @@
                 }
             });
 
+            invalidateTreeMetrics();
+            window.setTimeout(function () {
+                invalidateTreeMetrics();
+                if (typeof FT_VIEWPORT.apply === 'function') {
+                    FT_VIEWPORT.apply();
+                }
+            }, 230);
             preserveAnchorAfterLayout(anchorPersonId || ids[0], beforeRect);
         }
 
@@ -3968,7 +4318,7 @@
         }
 
         async function fetchRootsByBranchId(branchId) {
-            const res = await fetch('/api/person/roots?branchId=' + encodeURIComponent(branchId));
+            const res = await fetch(appendFamilyTreeId('/api/person/roots?branchId=' + encodeURIComponent(branchId)));
             if (!res.ok) return [];
             const data = await res.json();
             return Array.isArray(data) ? data : [];
@@ -3994,10 +4344,13 @@
             const app = document.getElementById('ftApp');
             if (!Array.isArray(CURRENT_TREE_ROOTS) || CURRENT_TREE_ROOTS.length === 0) {
                 treeRoot.innerHTML = '';
+                setTreeEmptyStateVisible(true);
                 if (app) app.classList.remove('ft-heavy');
+                invalidateTreeMetrics();
                 updateTopStats(0, 0);
                 return;
             }
+            setTreeEmptyStateVisible(false);
 
             const renderRoots = getCurrentRenderRoots();
 
@@ -4017,10 +4370,14 @@
             } else {
                 treeRoot.innerHTML = renderGenerationOnly(visibleMembers);
             }
+            invalidateTreeMetrics();
             syncBranchToggleSpacing();
-            requestAnimationFrame(syncBranchToggleSpacing);
+            requestAnimationFrame(function () {
+                syncBranchToggleSpacing();
+                measureTreeMetrics(true);
+            });
             if (app) {
-                const nodes = treeRoot.querySelectorAll('.person-node').length;
+                const nodes = treeRoot.getElementsByClassName('person-node').length;
                 app.classList.toggle('ft-heavy', nodes > 140);
             }
             const baseStats = computeVisibleStatsFromMembers(hasAnyActiveFilter() ? visibleMembers : scopedMembers);
@@ -4053,7 +4410,7 @@
                 if (!Array.isArray(roots)) {
                     roots = await fetchRootsByBranchId(treeBranchId);
                     if (treeBranchId === 0 && (!Array.isArray(roots) || roots.length === 0)) {
-                        const branchRes = await fetch('/api/branch');
+                        const branchRes = await fetch(appendFamilyTreeId('/api/branch'));
                         if (branchRes.ok) {
                             const branches = await branchRes.json();
                             const ids = (Array.isArray(branches) ? branches : [])
@@ -4078,13 +4435,16 @@
                     CURRENT_FOCUS_PERSON_ID = null;
                     CURRENT_DESCENDANT_ROOT_ID = null;
                     treeRoot.innerHTML = '';
+                    invalidateTreeMetrics();
                     updateTopStats(0, 0);
                     if (typeof window.ftRefreshCreateFirstVisibility === 'function') {
                         await window.ftRefreshCreateFirstVisibility(true, []);
                     }
+                    maybeOpenCreateFirstModal();
                     return;
                 }
                 CURRENT_TREE_ROOTS = validRoots;
+                invalidateTreeMetrics();
                 syncGenerationFilterOptions(getMaxGenerationFromRoots(validRoots));
                 if (CURRENT_DESCENDANT_ROOT_ID != null && !findAnchorNodeByMemberIdInRoots(CURRENT_DESCENDANT_ROOT_ID)) {
                     CURRENT_DESCENDANT_ROOT_ID = null;
@@ -4115,17 +4475,159 @@
                 CURRENT_TREE_ROOTS = [];
                 CURRENT_DESCENDANT_ROOT_ID = null;
                 treeRoot.innerHTML = '';
+                invalidateTreeMetrics();
                 updateTopStats(0, 0);
                 if (typeof window.ftRefreshCreateFirstVisibility === 'function') {
                     await window.ftRefreshCreateFirstVisibility(true, []);
                 }
+                maybeOpenCreateFirstModal();
             }
         }
 
         function setupPersonCardActions() {
             const treeRoot = document.getElementById('treeRoot');
+            const app = document.getElementById('ftApp');
             if (!treeRoot || treeRoot.dataset.actionsBound === 'true') return;
             treeRoot.dataset.actionsBound = 'true';
+
+            function ensureTreeMenuLayer() {
+                if (!app) return null;
+                let layer = app.querySelector('.ft-tree-menu-layer');
+                if (!layer) {
+                    layer = document.createElement('div');
+                    layer.className = 'ft-tree-menu-layer';
+                    app.appendChild(layer);
+                }
+                return layer;
+            }
+
+            function restoreTreeMenu(menu) {
+                if (!menu) return;
+                const placeholder = menu.__treeMenuPlaceholder;
+                if (placeholder && placeholder.parentNode) {
+                    placeholder.parentNode.insertBefore(menu, placeholder);
+                    placeholder.parentNode.removeChild(placeholder);
+                }
+                menu.__treeMenuPlaceholder = null;
+                menu.classList.remove('is-floating');
+                menu.style.removeProperty('left');
+                menu.style.removeProperty('top');
+            }
+
+            function resetTreeMenuPosition(menu) {
+                if (!menu) return;
+                menu.style.removeProperty('left');
+                menu.style.removeProperty('top');
+            }
+
+            function floatTreeMenu(menu) {
+                if (!menu || menu.classList.contains('is-floating')) return;
+                const layer = ensureTreeMenuLayer();
+                const parentNode = menu.parentNode;
+                if (!layer || !parentNode) return;
+                const placeholder = document.createComment('tree-action-menu-placeholder');
+                parentNode.insertBefore(placeholder, menu);
+                menu.__treeMenuPlaceholder = placeholder;
+                layer.appendChild(menu);
+                menu.classList.add('is-floating');
+            }
+
+            function positionTreeMenu(menu, toggle) {
+                if (!menu || !toggle) return;
+                resetTreeMenuPosition(menu);
+                const toggleRect = toggle.getBoundingClientRect();
+                const menuRect = menu.getBoundingClientRect();
+                const viewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+                const gap = 8;
+                const gutter = 12;
+
+                let left = toggleRect.right + gap;
+                let top = toggleRect.top;
+                const maxLeft = Math.max(gutter, viewportWidth - menuRect.width - gutter);
+                const maxTop = Math.max(gutter, viewportHeight - menuRect.height - gutter);
+
+                left = Math.max(gutter, Math.min(left, maxLeft));
+                top = Math.max(gutter, Math.min(top, maxTop));
+
+                menu.style.left = Math.round(left) + 'px';
+                menu.style.top = Math.round(top) + 'px';
+            }
+
+            async function handleTreeActionClick(actionEl) {
+                if (!actionEl) return;
+                closeAllTreeMenus();
+                const action = String(actionEl.getAttribute('data-tree-action') || '');
+                const personId = Number(actionEl.getAttribute('data-person-id') || 0);
+                let person = findPersonByIdInRoots(personId);
+                if (!person && action !== 'back-root' && personId > 0) {
+                    try {
+                        person = await loadPersonDetailById(personId);
+                    } catch (err) {
+                        console.error('Load person detail for action failed:', err);
+                        showToast('KhÃ´ng táº£i Ä‘Æ°á»£c thÃ´ng tin thÃ nh viÃªn', 'error');
+                        return;
+                    }
+                }
+                if (!person && action !== 'back-root') return;
+
+                if (action === 'add-root') {
+                    const createBtn = document.getElementById('btnCreateFirst');
+                    if (createBtn) createBtn.click();
+                    return;
+                }
+                if (action === 'center-person') {
+                    centerTreeOnPerson(personId);
+                    return;
+                }
+                if (action === 'view-descendants') {
+                    openDescendantSubtree(person);
+                    return;
+                }
+                if (action === 'back-root') {
+                    resetFiltersAndBackToRoot()
+                        .catch(function (err) {
+                            console.error('Back root reload failed:', err);
+                            requestTreeRender();
+                        });
+                    return;
+                }
+                if (action === 'copy-data') {
+                    const copyData = [
+                        'Há» tÃªn: ' + (person.fullName || ''),
+                        'Giá»›i tÃ­nh: ' + (person.gender || ''),
+                        'NgÃ y sinh: ' + formatDate(person.dob),
+                        'NgÃ y máº¥t: ' + formatDate(person.dod),
+                        'Chi: ' + (person.branchName || '')
+                    ].join('\n');
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(copyData).then(function () {
+                            showToast('ÄÃ£ sao chÃ©p dá»¯ liá»‡u', 'success');
+                        }).catch(function () {
+                            showToast('KhÃ´ng thá»ƒ sao chÃ©p dá»¯ liá»‡u', 'error');
+                        });
+                    } else {
+                        showToast('TrÃ¬nh duyá»‡t khÃ´ng há»— trá»£ sao chÃ©p', 'error');
+                    }
+                    return;
+                }
+                if (!canManageMember) return;
+                if (action === 'add-child') {
+                    openActionMemberModal('add-child', person);
+                    return;
+                }
+                if (action === 'add-spouse') {
+                    openActionMemberModal('add-spouse', person);
+                    return;
+                }
+                if (action === 'edit-member') {
+                    openActionMemberModal('edit-member', person);
+                    return;
+                }
+                if (action === 'delete-member') {
+                    deleteMember(person);
+                }
+            }
 
             function closeAllTreeMenus() {
                 treeRoot.querySelectorAll('.tree-action-menu.show').forEach(function (menu) {
@@ -4159,11 +4661,11 @@
                     const menu = menuId ? document.getElementById(menuId) : null;
                     if (!menu) return;
                     const willOpen = !menu.classList.contains('show');
+                    const ownerNode = toggle.closest('.person-node');
+                    const ownerLi = toggle.closest('.li-person');
                     closeAllTreeMenus();
                     if (willOpen) {
                         menu.classList.add('show');
-                        const ownerNode = menu.closest('.person-node');
-                        const ownerLi = menu.closest('.li-person');
                         if (ownerNode) ownerNode.classList.add('menu-open');
                         if (ownerLi) ownerLi.classList.add('menu-open');
                     }
@@ -4255,7 +4757,10 @@
                 if (personId > 0) openDetailMemberModal(personId);
             });
 
-            document.addEventListener('click', function () {
+            document.addEventListener('click', function (e) {
+                if (e.target.closest('.tree-menu-toggle')) {
+                    return;
+                }
                 closeAllTreeMenus();
             });
         }
@@ -4277,12 +4782,12 @@
             let viewportRaf = 0;
             let interactionTimer = 0;
             const getPanBounds = function (scaleValue) {
-                const treeRoot = document.getElementById('treeRoot');
                 const scale = Number.isFinite(scaleValue) ? scaleValue : FT_VIEWPORT.scale || 1;
                 const viewportWidth = contentArea.clientWidth || 0;
                 const viewportHeight = contentArea.clientHeight || 0;
-                const treeWidth = treeRoot ? Math.max(treeRoot.scrollWidth || 0, treeRoot.offsetWidth || 0) : 0;
-                const treeHeight = treeRoot ? Math.max(treeRoot.scrollHeight || 0, treeRoot.offsetHeight || 0) : 0;
+                const metrics = measureTreeMetrics();
+                const treeWidth = metrics.width || 0;
+                const treeHeight = metrics.height || 0;
                 const scaledWidth = Math.max(treeWidth * scale, 0);
                 const scaledHeight = Math.max(treeHeight * scale, 0);
                 const bufferX = Math.max(120, viewportWidth * 0.28);
@@ -4341,6 +4846,14 @@
                     scaleWrap.style.willChange = 'auto';
                 }, 160);
             };
+            const setPanActive = function (active) {
+                if (!app) return;
+                app.classList.toggle('ft-pan-active', !!active);
+            };
+            const syncZoomPerformanceMode = function () {
+                if (!app) return;
+                app.classList.toggle('ft-low-zoom', FT_VIEWPORT.scale <= 0.58);
+            };
 
             const applyViewportNow = function () {
                 viewportRaf = 0;
@@ -4351,7 +4864,8 @@
                     FT_VIEWPORT.panX = clampPan(FT_VIEWPORT.panX, 'x', FT_VIEWPORT.scale);
                     FT_VIEWPORT.panY = clampPan(FT_VIEWPORT.panY, 'y', FT_VIEWPORT.scale);
                 }
-                scaleWrap.style.transform = 'translate(' + FT_VIEWPORT.panX + 'px,' + FT_VIEWPORT.panY + 'px) scale(' + FT_VIEWPORT.scale + ')';
+                scaleWrap.style.transform = 'translate3d(' + FT_VIEWPORT.panX + 'px,' + FT_VIEWPORT.panY + 'px,0) scale(' + FT_VIEWPORT.scale + ')';
+                syncZoomPerformanceMode();
             };
 
             FT_VIEWPORT.apply = function () {
@@ -4377,6 +4891,10 @@
             let pendingPanDx = 0;
             let pendingPanDy = 0;
             let panRaf = 0;
+            let wheelZoomRaf = 0;
+            let pendingWheelFactor = 1;
+            let pendingWheelClientX = 0;
+            let pendingWheelClientY = 0;
             const flushPan = function () {
                 panRaf = 0;
                 if (!pendingPanDx && !pendingPanDy) return;
@@ -4392,6 +4910,24 @@
                 setInteractingState();
                 if (!panRaf) {
                     panRaf = requestAnimationFrame(flushPan);
+                }
+            };
+            const flushWheelZoom = function () {
+                wheelZoomRaf = 0;
+                if (Math.abs(pendingWheelFactor - 1) < 0.0001) return;
+                const factor = pendingWheelFactor;
+                const clientX = pendingWheelClientX;
+                const clientY = pendingWheelClientY;
+                pendingWheelFactor = 1;
+                zoomAtPoint(FT_VIEWPORT.scale * factor, clientX, clientY);
+            };
+            const scheduleWheelZoom = function (factor, clientX, clientY) {
+                pendingWheelFactor *= factor;
+                pendingWheelFactor = Math.min(1.6, Math.max(0.54, pendingWheelFactor));
+                pendingWheelClientX = clientX;
+                pendingWheelClientY = clientY;
+                if (!wheelZoomRaf) {
+                    wheelZoomRaf = requestAnimationFrame(flushWheelZoom);
                 }
             };
 
@@ -4412,8 +4948,14 @@
                 if (FT_VIEWPORT.scale < 0.18 && factor > 1) {
                     factor = Math.pow(factor, 1.25);
                 }
-                zoomAtPoint(FT_VIEWPORT.scale * factor, e.clientX, e.clientY);
+                scheduleWheelZoom(factor, e.clientX, e.clientY);
             }, { passive: false });
+            contentArea.addEventListener('selectstart', function (e) {
+                if (e.target.closest('.tree-action-menu')) {
+                    return;
+                }
+                e.preventDefault();
+            });
             contentArea.addEventListener('dragstart', function (e) {
                 e.preventDefault();
             });
@@ -4463,6 +5005,7 @@
                     const dy = (touch.clientY - touchPanState.lastY) * 1.25;
                     if (Math.abs(dx) > 0.4 || Math.abs(dy) > 0.4) {
                         touchPanState.moved = true;
+                        setPanActive(true);
                         schedulePan(dx, dy);
                     }
                     touchPanState.lastX = touch.clientX;
@@ -4478,10 +5021,12 @@
                     if (touchPanState.moved) {
                         FT_SUPPRESS_CLICK_UNTIL = Date.now() + 220;
                     }
+                    setPanActive(false);
                     touchPanState = null;
                 }
             });
             contentArea.addEventListener('touchcancel', function () {
+                setPanActive(false);
                 pinchState = null;
                 touchPanState = null;
             });
@@ -4506,7 +5051,7 @@
                 dragStartY = e.clientY;
                 lastX = e.clientX;
                 lastY = e.clientY;
-                contentArea.style.cursor = 'grabbing';
+                contentArea.style.cursor = 'grab';
             });
 
             window.addEventListener('mousemove', function (e) {
@@ -4515,6 +5060,7 @@
                     dragging = false;
                     panStarted = false;
                     contentArea.style.cursor = 'grab';
+                    setPanActive(false);
                     return;
                 }
                 const dx = e.clientX - lastX;
@@ -4526,6 +5072,9 @@
                         return;
                     }
                     panStarted = true;
+                    e.preventDefault();
+                    contentArea.style.cursor = 'grabbing';
+                    setPanActive(true);
                 }
                 if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
                     dragMoved = true;
@@ -4540,6 +5089,7 @@
                 dragging = false;
                 panStarted = false;
                 contentArea.style.cursor = 'grab';
+                setPanActive(false);
                 if (panRaf) {
                     cancelAnimationFrame(panRaf);
                     panRaf = 0;
@@ -4552,22 +5102,20 @@
 
             function fitTreeToViewport() {
                 const treeRoot = document.getElementById('treeRoot');
-                if (!treeRoot) return;
-                const firstNode = treeRoot.querySelector('.person-node');
-                if (!firstNode) return;
+                if (!treeRoot || !treeRoot.querySelector('.person-node')) return;
                 FT_VIEWPORT.scale = 1;
                 FT_VIEWPORT.panX = 0;
                 FT_VIEWPORT.panY = 0;
                 applyViewportNow();
 
                 const areaRect = contentArea.getBoundingClientRect();
-                const treeRect = treeRoot.getBoundingClientRect();
-                if (!treeRect.width || !treeRect.height || !areaRect.width || !areaRect.height) return;
+                const metrics = measureTreeMetrics(true);
+                if (!metrics.width || !metrics.height || !areaRect.width || !areaRect.height) return;
 
-                const widthScale = (areaRect.width - 40) / treeRect.width;
-                const heightScale = (areaRect.height - 40) / treeRect.height;
+                const widthScale = (areaRect.width - 40) / metrics.width;
+                const heightScale = (areaRect.height - 40) / metrics.height;
                 FT_VIEWPORT.scale = clampScale(Math.min(widthScale, heightScale, 1));
-                FT_VIEWPORT.panX = clampPan((areaRect.width - (treeRect.width * FT_VIEWPORT.scale)) / 2, 'x', FT_VIEWPORT.scale);
+                FT_VIEWPORT.panX = clampPan((areaRect.width - (metrics.width * FT_VIEWPORT.scale)) / 2, 'x', FT_VIEWPORT.scale);
                 FT_VIEWPORT.panY = clampPan(24, 'y', FT_VIEWPORT.scale);
                 FT_VIEWPORT.apply();
             }
@@ -4629,9 +5177,17 @@
                 setMultipleBranchesCollapsedState(targetIds, false, CURRENT_FOCUS_PERSON_ID || targetIds[0] || 0);
             });
 
+            let resizeRaf = 0;
             window.addEventListener('resize', function () {
-                syncBranchToggleSpacing();
-                FT_VIEWPORT.apply();
+                if (resizeRaf) {
+                    cancelAnimationFrame(resizeRaf);
+                }
+                resizeRaf = requestAnimationFrame(function () {
+                    resizeRaf = 0;
+                    invalidateTreeMetrics();
+                    syncBranchToggleSpacing();
+                    FT_VIEWPORT.apply();
+                });
             });
         }
 
