@@ -66,7 +66,7 @@
         <div class="page-content content-admin-page">
             <div class="content-hero">
                 <h2>Gi&#7899;i thi&#7879;u d&#242;ng h&#7885;</h2>
-                <p>Qu&#7843;n l&#253; b&#224;i gi&#7899;i thi&#7879;u ch&#237;nh cho c&#226;y gia ph&#7843; <strong><c:out value="${currentFamilyTreeName}"/></strong>. M&#7895;i d&#242;ng h&#7885; c&#243; m&#7897;t n&#7897;i dung gi&#7899;i thi&#7879;u ri&#234;ng, hi&#7875;n th&#7883; &#273;&#7897;c l&#7853;p.</p>
+                <p>Qu&#7843;n l&#253; b&#224;i gi&#7899;i thi&#7879;u ch&#237;nh cho c&#226;y gia ph&#7843; <strong><c:out value="${currentFamilyTreeName}"/></strong>.</p>
             </div>
             <div class="content-grid">
                 <div class="content-card">
