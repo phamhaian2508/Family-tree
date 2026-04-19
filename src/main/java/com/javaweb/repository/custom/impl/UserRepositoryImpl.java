@@ -16,9 +16,10 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 	private EntityManager entityManager;
 	@Override
 	public List<UserEntity> findByRole(String roleCode) {
-		//JPQL
-		String sql = "FROM UserEntity";
-		Query query = entityManager.createNativeQuery(sql, UserEntity.class);
+		Query query = entityManager.createQuery(
+				"select distinct u from UserEntity u join u.roles r where upper(r.code) = :roleCode order by u.id asc",
+				UserEntity.class);
+		query.setParameter("roleCode", roleCode == null ? "" : roleCode.trim().toUpperCase());
 		return query.getResultList();
 	}
 	@Override

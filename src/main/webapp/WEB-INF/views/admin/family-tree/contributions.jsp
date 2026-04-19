@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="/common/taglib.jsp"%>
-<title>C&#244;ng &#273;&#7913;c h&#7857;ng n&#259;m</title>
+<title>Công đức hàng năm</title>
 <jsp:include page="/WEB-INF/views/admin/family-tree/partials/record-page.jsp">
-    <jsp:param name="pageTitle" value="C&#244;ng &#273;&#7913;c h&#7857;ng n&#259;m"/>
-    <jsp:param name="pageSubtitle" value="Qu&#7843;n l&#253; danh s&#225;ch c&#225; nh&#226;n, gia &#273;&#236;nh &#273;&#243;ng g&#243;p c&#244;ng &#273;&#7913;c theo t&#7915;ng n&#259;m cho c&#226;y gia ph&#7843; hi&#7879;n t&#7841;i."/>
+    <jsp:param name="pageTitle" value="Công đức hàng năm"/>
+    <jsp:param name="pageSubtitle" value="Quản lý danh sách cá nhân, gia đình đóng góp công đức theo từng năm cho cây gia phả hiện tại."/>
 </jsp:include>
 <script>
     window.familyContentPageConfig = {

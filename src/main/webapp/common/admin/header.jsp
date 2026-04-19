@@ -2,15 +2,45 @@
 <%@include file="/common/taglib.jsp"%>
 <%@ page import="com.javaweb.security.utils.SecurityUtils" %>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page import="java.net.URLEncoder" %>
+<%@ page import="java.util.Locale" %>
 
 <header class="app-topbar">
+    <%
+        String profileFullName = StringEscapeUtils.escapeHtml(SecurityUtils.getPrincipal().getFullName());
+        String profileUsername;
+        try {
+            profileUsername = URLEncoder.encode(SecurityUtils.getPrincipal().getUsername(), "UTF-8");
+        } catch (Exception ex) {
+            profileUsername = SecurityUtils.getPrincipal().getUsername();
+        }
+
+        String familyTreeName = (String) pageContext.findAttribute("currentFamilyTreeName");
+        familyTreeName = familyTreeName == null ? "" : familyTreeName.trim();
+
+        String topbarTitle;
+        if (familyTreeName.isEmpty() || "Chua chon gia pha".equalsIgnoreCase(familyTreeName)) {
+            topbarTitle = "Gia phả dòng họ";
+        } else {
+            String lowerFamilyTreeName = familyTreeName.toLowerCase(Locale.ROOT);
+            if (lowerFamilyTreeName.startsWith("gia phả") || lowerFamilyTreeName.startsWith("gia pha")) {
+                topbarTitle = familyTreeName;
+            } else if (lowerFamilyTreeName.startsWith("họ ") || lowerFamilyTreeName.startsWith("ho ")) {
+                topbarTitle = "Gia phả " + familyTreeName;
+            } else {
+                topbarTitle = "Gia phả họ " + familyTreeName;
+            }
+        }
+
+        String topbarKicker = "Uống nước nhớ nguồn";
+    %>
     <div class="app-topbar-left">
         <button class="app-topbar-toggle" id="appSidebarToggle" type="button" aria-label="Mở menu">
             <i class="fa fa-bars"></i>
         </button>
         <div class="app-topbar-intro">
-            <strong class="app-topbar-title">Gia phả họ Trần Đức</strong>
-            <span class="app-topbar-kicker">Uống nước nhớ nguồn</span>
+            <strong class="app-topbar-title"><%= StringEscapeUtils.escapeHtml(topbarTitle) %></strong>
+            <span class="app-topbar-kicker"><%= StringEscapeUtils.escapeHtml(topbarKicker) %></span>
         </div>
     </div>
 
@@ -23,12 +53,12 @@
         <div class="dropdown app-topbar-user">
             <a data-toggle="dropdown" href="#" class="dropdown-toggle app-topbar-user-link">
                 <span class="avatar"><i class="fa fa-user"></i></span>
-                <span class="name"><%=StringEscapeUtils.escapeHtml(SecurityUtils.getPrincipal().getFullName())%></span>
+                <span class="name"><%= profileFullName %></span>
                 <i class="fa fa-caret-down"></i>
             </a>
             <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                 <li>
-                    <a href="/admin/profile-<%=SecurityUtils.getPrincipal().getUsername()%>">
+                    <a href="/admin/profile-<%= profileUsername %>">
                         <i class="ace-icon fa fa-user"></i>
                         Thông tin tài khoản
                     </a>

@@ -51,7 +51,7 @@
                                 <button type="button" class="close" data-dismiss="alert">
                                     <i class="ace-icon fa fa-times"></i>
                                 </button>
-                                    ${messageResponse}
+                                    <c:out value="${messageResponse}"/>
                             </div>
                         </c:if>
 

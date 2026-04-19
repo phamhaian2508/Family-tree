@@ -12,6 +12,7 @@ import com.javaweb.repository.PersonRepository;
 import com.javaweb.repository.RoleRepository;
 import com.javaweb.repository.UserRepository;
 import com.javaweb.service.IUserService;
+import com.javaweb.utils.InputSanitizationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -143,6 +144,10 @@ public class UserService implements IUserService {
         if (newUser == null) {
             throw new IllegalArgumentException("user_payload_invalid");
         }
+        String normalizedUserName = InputSanitizationUtils.normalizeUsername(newUser.getUserName());
+        if (userRepository.findOneByUserName(normalizedUserName) != null) {
+            throw new IllegalArgumentException("username_invalid");
+        }
         RoleEntity role = roleRepository.findOneByCode(newUser.getRoleCode());
         if (role == null) {
             throw new IllegalArgumentException("role_invalid");
@@ -150,6 +155,7 @@ public class UserService implements IUserService {
         UserEntity userEntity = userConverter.convertToEntity(newUser);
         // Prevent clients from forcing update existing row via crafted id.
         userEntity.setId(null);
+        userEntity.setUserName(normalizedUserName);
         userEntity.setFullName(sanitizeFullName(newUser.getFullName()));
         userEntity.setRoles(Stream.of(role).collect(Collectors.toList()));
         userEntity.setStatus(1);
@@ -167,14 +173,24 @@ public class UserService implements IUserService {
             throw new MyException("register_required_fields");
         }
         String normalizedFullName = sanitizeRegisterFullName(fullName);
-        String normalizedUserName = userName.trim();
+        String normalizedUserName;
+        try {
+            normalizedUserName = InputSanitizationUtils.normalizeUsername(userName);
+        } catch (IllegalArgumentException ex) {
+            throw new MyException("username_invalid");
+        }
         if (!password.equals(confirmPassword)) {
             throw new MyException("register_confirm_password_not_match");
         }
         if (userRepository.findOneByUserName(normalizedUserName) != null) {
             throw new MyException("register_username_existed");
         }
-        String normalizedEmail = StringUtils.trimToNull(email);
+        String normalizedEmail;
+        try {
+            normalizedEmail = InputSanitizationUtils.normalizeEmail(email);
+        } catch (IllegalArgumentException ex) {
+            throw new MyException("email_invalid");
+        }
         if (normalizedEmail != null && userRepository.existsByEmailIgnoreCase(normalizedEmail)) {
             throw new MyException("register_email_existed");
         }
@@ -197,7 +213,11 @@ public class UserService implements IUserService {
         userEntity.setUserName(normalizedUserName);
         userEntity.setFullName(normalizedFullName);
         userEntity.setEmail(normalizedEmail);
-        userEntity.setPhone(StringUtils.trimToNull(phone));
+        try {
+            userEntity.setPhone(InputSanitizationUtils.normalizePhone(phone));
+        } catch (IllegalArgumentException ex) {
+            throw new MyException("phone_invalid");
+        }
         userEntity.setStatus(1);
         userEntity.setPassword(passwordEncoder.encode(password));
         userEntity.setRoles(Stream.of(role).collect(Collectors.toList()));
@@ -226,6 +246,8 @@ public class UserService implements IUserService {
         userEntity.setUserName(oldUser.getUserName());
         userEntity.setFullName(sanitizeFullName(updateUser.getFullName()));
         userEntity.setStatus(oldUser.getStatus());
+        userEntity.setEmail(oldUser.getEmail());
+        userEntity.setPhone(oldUser.getPhone());
         userEntity.setRoles(Stream.of(role).collect(Collectors.toList()));
         userEntity.setPassword(oldUser.getPassword());
         UserEntity savedUser = userRepository.save(userEntity);
@@ -329,11 +351,8 @@ public class UserService implements IUserService {
     }
 
     private String sanitizeFullName(String fullName) {
-        String normalized = StringUtils.trimToEmpty(fullName).replaceAll("\\s+", " ");
+        String normalized = InputSanitizationUtils.normalizePlainText(fullName, 100).replaceAll("\\s+", " ");
         if (StringUtils.isBlank(normalized)) {
-            throw new IllegalArgumentException("full_name_invalid");
-        }
-        if (normalized.length() > 100) {
             throw new IllegalArgumentException("full_name_invalid");
         }
         if (normalized.contains("<") || normalized.contains(">")) {

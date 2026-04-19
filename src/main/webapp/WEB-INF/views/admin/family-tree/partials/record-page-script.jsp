@@ -308,7 +308,11 @@
                 : '<span class="record-chip">T\u1ed5ng s\u1ed1: ' + items.length + '</span>';
 
             if (!items.length) {
-                wrap.innerHTML = '<div class="record-empty">Ch\u01b0a c\u00f3 d\u1eef li\u1ec7u ph\u00f9 h\u1ee3p.</div>';
+                wrap.innerHTML = ''
+                    + '<div class="record-empty">'
+                    + '<p class="record-empty-title">Ch\u01b0a c\u00f3 d\u1eef li\u1ec7u ph\u00f9 h\u1ee3p</p>'
+                    + '<p class="record-empty-note">H\u00e3y th\u1eed t\u00ecm ki\u1ebfm theo t\u1eeb kh\u00f3a kh\u00e1c, ch\u1ecdn l\u1ea1i n\u0103m ho\u1eb7c th\u00eam b\u1ea3n ghi m\u1edbi cho n\u1ed9i dung n\u00e0y.</p>'
+                    + '</div>';
                 return;
             }
 
@@ -319,7 +323,7 @@
                 head += '<th>Thao t\u00e1c</th>';
             }
 
-            wrap.innerHTML = '<table class="record-table"><thead><tr>' + head + '</tr></thead><tbody>'
+            wrap.innerHTML = '<div class="record-table-scroll"><table class="record-table"><thead><tr>' + head + '</tr></thead><tbody>'
                 + items.map(function (item) {
                     var cells = (config.columns || []).map(function (column) {
                         var value = typeof column.render === 'function' ? column.render(item[column.key], item) : item[column.key];
@@ -330,7 +334,7 @@
                         : '';
                     return '<tr>' + cells + '</td>' + actionCell + '</tr>';
                 }).join('')
-                + '</tbody></table>';
+                + '</tbody></table></div>';
         }
 
         function loadItems() {

@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="/common/taglib.jsp"%>
-<title>Khen th&#432;&#7903;ng - Khuy&#7871;n h&#7885;c</title>
+<title>Khen thưởng - Khuyến học</title>
 <jsp:include page="/WEB-INF/views/admin/family-tree/partials/record-page.jsp">
-    <jsp:param name="pageTitle" value="Khen th&#432;&#7903;ng - Khuy&#7871;n h&#7885;c"/>
-    <jsp:param name="pageSubtitle" value="Qu&#7843;n l&#253; danh s&#225;ch c&#225; nh&#226;n c&#243; th&#224;nh t&#237;ch, nh&#7853;n khen th&#432;&#7903;ng ho&#7863;c h&#7895; tr&#7907; khuy&#7871;n h&#7885;c trong c&#226;y gia ph&#7843; hi&#7879;n t&#7841;i."/>
+    <jsp:param name="pageTitle" value="Khen thưởng - Khuyến học"/>
+    <jsp:param name="pageSubtitle" value="Quản lý danh sách cá nhân có thành tích, nhận khen thưởng hoặc hỗ trợ khuyến học trong cây gia phả hiện tại."/>
 </jsp:include>
 <script>
     window.familyContentPageConfig = {

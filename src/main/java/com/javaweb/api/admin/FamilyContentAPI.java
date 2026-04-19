@@ -3,6 +3,7 @@ package com.javaweb.api.admin;
 import com.javaweb.entity.*;
 import com.javaweb.repository.*;
 import com.javaweb.service.impl.FamilyContentScopeService;
+import com.javaweb.utils.InputSanitizationUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -176,60 +177,74 @@ public class FamilyContentAPI {
     }
 
     private void copyIntroduction(FamilyIntroductionEntity target, FamilyIntroductionEntity source) {
-        target.setTitle(source.getTitle());
-        target.setCoverImage(source.getCoverImage());
-        target.setContent(source.getContent());
-        target.setGalleryImages(source.getGalleryImages());
-        target.setVideoUrl(source.getVideoUrl());
+        target.setTitle(InputSanitizationUtils.requirePlainText(source.getTitle(), 255, "Tieu de bai gioi thieu khong duoc de trong"));
+        target.setCoverImage(InputSanitizationUtils.normalizeUrl(source.getCoverImage(), 1000));
+        target.setContent(InputSanitizationUtils.normalizeMultilineText(source.getContent(), 8000));
+        target.setGalleryImages(InputSanitizationUtils.normalizeMultiUrlText(source.getGalleryImages(), 4000, 20));
+        target.setVideoUrl(InputSanitizationUtils.normalizeUrl(source.getVideoUrl(), 1000));
         target.setVisible(source.getVisible() == null ? Boolean.TRUE : source.getVisible());
     }
 
     private void copyContribution(ContributionRecordEntity target, ContributionRecordEntity source) {
-        target.setContributionYear(source.getContributionYear());
-        target.setContributorName(source.getContributorName());
-        target.setBranchLabel(source.getBranchLabel());
-        target.setContributionValue(source.getContributionValue());
-        target.setNote(source.getNote());
-        target.setContributionDate(source.getContributionDate());
-        target.setAttachmentUrl(source.getAttachmentUrl());
+        target.setContributionYear(normalizeOptionalYear(source.getContributionYear(), "Nam cong duc khong hop le"));
+        target.setContributorName(InputSanitizationUtils.requirePlainText(source.getContributorName(), 150, "Ho ten nguoi dong gop khong duoc de trong"));
+        target.setBranchLabel(InputSanitizationUtils.normalizePlainText(source.getBranchLabel(), 150));
+        target.setContributionValue(InputSanitizationUtils.normalizePlainText(source.getContributionValue(), 150));
+        target.setNote(InputSanitizationUtils.normalizeMultilineText(source.getNote(), 2000));
+        target.setContributionDate(InputSanitizationUtils.normalizePlainText(source.getContributionDate(), 50));
+        target.setAttachmentUrl(InputSanitizationUtils.normalizeUrl(source.getAttachmentUrl(), 1000));
     }
 
     private void copyAward(AwardRecordEntity target, AwardRecordEntity source) {
-        target.setFullName(source.getFullName());
-        target.setAwardYear(source.getAwardYear());
-        target.setAchievementTitle(source.getAchievementTitle());
-        target.setEducationLevel(source.getEducationLevel());
-        target.setSchoolName(source.getSchoolName());
-        target.setRewardType(source.getRewardType());
-        target.setRewardValue(source.getRewardValue());
-        target.setCategoryName(source.getCategoryName());
-        target.setNote(source.getNote());
-        target.setProofImage(source.getProofImage());
+        target.setFullName(InputSanitizationUtils.requirePlainText(source.getFullName(), 150, "Ho ten khong duoc de trong"));
+        target.setAwardYear(normalizeYear(source.getAwardYear(), "Nam khen thuong khong hop le"));
+        target.setAchievementTitle(InputSanitizationUtils.normalizePlainText(source.getAchievementTitle(), 255));
+        target.setEducationLevel(InputSanitizationUtils.normalizePlainText(source.getEducationLevel(), 150));
+        target.setSchoolName(InputSanitizationUtils.normalizePlainText(source.getSchoolName(), 255));
+        target.setRewardType(InputSanitizationUtils.normalizePlainText(source.getRewardType(), 150));
+        target.setRewardValue(InputSanitizationUtils.normalizePlainText(source.getRewardValue(), 150));
+        target.setCategoryName(InputSanitizationUtils.normalizePlainText(source.getCategoryName(), 150));
+        target.setNote(InputSanitizationUtils.normalizeMultilineText(source.getNote(), 2000));
+        target.setProofImage(InputSanitizationUtils.normalizeUrl(source.getProofImage(), 1000));
     }
 
     private void copyAcademic(AcademicProfileEntity target, AcademicProfileEntity source) {
-        target.setFullName(source.getFullName());
-        target.setBirthYear(source.getBirthYear());
-        target.setBranchName(source.getBranchName());
-        target.setDegreeName(source.getDegreeName());
-        target.setAcademicRank(source.getAcademicRank());
-        target.setSpecialty(source.getSpecialty());
-        target.setWorkplace(source.getWorkplace());
-        target.setCurrentPosition(source.getCurrentPosition());
-        target.setHighlightAchievement(source.getHighlightAchievement());
-        target.setPortraitUrl(source.getPortraitUrl());
-        target.setNote(source.getNote());
+        target.setFullName(InputSanitizationUtils.requirePlainText(source.getFullName(), 150, "Ho ten khong duoc de trong"));
+        target.setBirthYear(normalizeOptionalYear(source.getBirthYear(), "Nam sinh khong hop le"));
+        target.setBranchName(InputSanitizationUtils.normalizePlainText(source.getBranchName(), 150));
+        target.setDegreeName(InputSanitizationUtils.normalizePlainText(source.getDegreeName(), 150));
+        target.setAcademicRank(InputSanitizationUtils.normalizePlainText(source.getAcademicRank(), 150));
+        target.setSpecialty(InputSanitizationUtils.normalizePlainText(source.getSpecialty(), 150));
+        target.setWorkplace(InputSanitizationUtils.normalizePlainText(source.getWorkplace(), 255));
+        target.setCurrentPosition(InputSanitizationUtils.normalizePlainText(source.getCurrentPosition(), 255));
+        target.setHighlightAchievement(InputSanitizationUtils.normalizeMultilineText(source.getHighlightAchievement(), 2000));
+        target.setPortraitUrl(InputSanitizationUtils.normalizeUrl(source.getPortraitUrl(), 1000));
+        target.setNote(InputSanitizationUtils.normalizeMultilineText(source.getNote(), 2000));
     }
 
     private void copyNews(FamilyNewsEntity target, FamilyNewsEntity source) {
-        target.setTitle(source.getTitle());
-        target.setCoverImage(source.getCoverImage());
-        target.setSummary(source.getSummary());
-        target.setContent(source.getContent());
-        target.setPublishedAt(source.getPublishedAt());
-        target.setPublisherName(source.getPublisherName());
-        target.setCategoryName(source.getCategoryName());
+        target.setTitle(InputSanitizationUtils.requirePlainText(source.getTitle(), 255, "Tieu de tin tuc khong duoc de trong"));
+        target.setCoverImage(InputSanitizationUtils.normalizeUrl(source.getCoverImage(), 1000));
+        target.setSummary(InputSanitizationUtils.normalizeMultilineText(source.getSummary(), 2000));
+        target.setContent(InputSanitizationUtils.normalizeMultilineText(source.getContent(), 8000));
+        target.setPublishedAt(InputSanitizationUtils.normalizePlainText(source.getPublishedAt(), 50));
+        target.setPublisherName(InputSanitizationUtils.normalizePlainText(source.getPublisherName(), 150));
+        target.setCategoryName(InputSanitizationUtils.normalizePlainText(source.getCategoryName(), 150));
         target.setVisible(source.getVisible() == null ? Boolean.TRUE : source.getVisible());
-        target.setAttachmentUrls(source.getAttachmentUrls());
+        target.setAttachmentUrls(InputSanitizationUtils.normalizeMultiUrlText(source.getAttachmentUrls(), 4000, 20));
+    }
+
+    private Integer normalizeYear(Integer value, String message) {
+        if (value == null || value < 1800 || value > 3000) {
+            throw new IllegalArgumentException(message);
+        }
+        return value;
+    }
+
+    private Integer normalizeOptionalYear(Integer value, String message) {
+        if (value == null) {
+            return null;
+        }
+        return normalizeYear(value, message);
     }
 }

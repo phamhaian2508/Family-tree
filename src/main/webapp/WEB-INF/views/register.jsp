@@ -47,7 +47,7 @@
 
                     <c:if test="${not empty messageResponse}">
                         <div class="gpo-alert gpo-alert-${alert}">
-                            ${messageResponse}
+                            <c:out value="${messageResponse}"/>
                         </div>
                     </c:if>
 

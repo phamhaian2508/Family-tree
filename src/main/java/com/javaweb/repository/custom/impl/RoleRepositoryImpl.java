@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
@@ -23,15 +24,21 @@ public class RoleRepositoryImpl implements RoleRepository {
 
 	@Override
 	public RoleEntity findOneByCode(String code) {
-		String sql = "select * FROM role as r where r.code = '" + code + "'";
-		Query query = entityManager.createNativeQuery(sql, RoleEntity.class);
-		return (RoleEntity) query.getSingleResult();
+		if (code == null) {
+			return null;
+		}
+		try {
+			Query query = entityManager.createQuery("select r from RoleEntity r where upper(r.code) = :code", RoleEntity.class);
+			query.setParameter("code", code.trim().toUpperCase());
+			return (RoleEntity) query.getSingleResult();
+		} catch (NoResultException ex) {
+			return null;
+		}
 	}
 
 	@Override
 	public List<RoleEntity> findAll() {
-		String sql = "select * FROM role as r";
-		Query query = entityManager.createNativeQuery(sql, RoleEntity.class);
+		Query query = entityManager.createQuery("select r from RoleEntity r order by r.id asc", RoleEntity.class);
 		return query.getResultList();
 	}
 

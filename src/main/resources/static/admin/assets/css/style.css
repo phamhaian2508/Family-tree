@@ -643,9 +643,12 @@ input::placeholder {
     background: rgba(244, 230, 191, 0.92);
     color: #8f2020;
     border-radius: 999px;
-    padding: 4px 12px;
-    font-size: 14px;
-    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    font-size: 1rem;
+    line-height: 1.4;
+    font-weight: 600;
     border: 1px solid rgba(167, 119, 49, 0.28);
 }
 
@@ -1422,6 +1425,43 @@ input::placeholder {
 
 .user-list-page .user-table tbody tr:hover td {
     background: rgba(247, 233, 201, 0.98);
+}
+
+.user-list-page .user-role-col {
+    width: 180px;
+}
+
+.user-list-page .user-role-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 150px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 12px;
+    line-height: 1.3;
+    font-weight: 700;
+    text-align: center;
+    white-space: normal;
+}
+
+.user-list-page .user-role-badge.is-manager {
+    background: rgba(140, 36, 31, 0.12);
+    border-color: rgba(140, 36, 31, 0.18);
+    color: #84221e;
+}
+
+.user-list-page .user-role-badge.is-editor {
+    background: rgba(183, 143, 61, 0.16);
+    border-color: rgba(183, 143, 61, 0.22);
+    color: #8a5a1f;
+}
+
+.user-list-page .user-role-badge.is-member {
+    background: rgba(244, 230, 191, 0.92);
+    border-color: rgba(183, 143, 61, 0.22);
+    color: #8f2020;
 }
 
 .user-list-page .btn-edit {

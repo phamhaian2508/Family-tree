@@ -30,8 +30,17 @@
     }
     .app-nav-item-child {
         padding-left: 42px !important;
-        min-height: 40px !important;
+        padding-right: 16px !important;
+        min-height: 48px !important;
         font-size: 13px;
+        line-height: 1.35;
+        align-items: center !important;
+        gap: 12px !important;
+    }
+    .app-nav-item-child > span {
+        display: block;
+        line-height: 1.35;
+        white-space: normal;
     }
 </style>
 
@@ -44,7 +53,7 @@
             <div class="app-brand-main">
                 <div class="brand-mark">Gia ph&#7843;</div>
                 <div class="brand-copy">
-                    <div class="brand-title">${currentFamilyTreeName}</div>
+                    <div class="brand-title"><c:out value="${currentFamilyTreeName}"/></div>
                 </div>
             </div>
             <img class="brand-dragon brand-dragon-right" src="<c:url value='/admin/assets/images/dragon-right.png'/>" alt="" aria-hidden="true">

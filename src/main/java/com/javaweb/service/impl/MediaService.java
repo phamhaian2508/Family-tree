@@ -16,6 +16,7 @@ import com.javaweb.repository.PersonRepository;
 import com.javaweb.repository.UserRepository;
 import com.javaweb.security.utils.SecurityUtils;
 import com.javaweb.service.IMediaService;
+import com.javaweb.utils.InputSanitizationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,11 +36,14 @@ import java.nio.file.StandardCopyOption;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -52,6 +56,10 @@ public class MediaService implements IMediaService {
     private static final DateTimeFormatter DATE_FORMAT =
             DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     private static final String MEDIA_FILE_API_PREFIX = "/api/media/file/";
+    private static final long MAX_UPLOAD_SIZE_BYTES = 50L * 1024L * 1024L;
+    private static final Set<String> IMAGE_EXTENSIONS = new HashSet<>(Arrays.asList(".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp"));
+    private static final Set<String> VIDEO_EXTENSIONS = new HashSet<>(Arrays.asList(".mp4", ".mov", ".webm", ".mkv", ".avi"));
+    private static final Set<String> AUDIO_EXTENSIONS = new HashSet<>(Arrays.asList(".mp3", ".wav", ".m4a", ".ogg", ".flac"));
 
     @Autowired
     private MediaRepository mediaRepository;
@@ -111,17 +119,14 @@ public class MediaService implements IMediaService {
     @Transactional
     public MediaAlbumDTO createAlbum(String name, String description, String accessScope, Long personId, Long branchId) {
         assertCanManageMedia();
-        if (StringUtils.isBlank(name)) {
-            throw new IllegalArgumentException("Ten album khong duoc de trong");
-        }
         UserEntity uploader = resolveCurrentUser();
         PersonEntity person = resolvePerson(personId);
         FamilyTreeEntity familyTree = resolveFamilyTree(person, null);
         BranchEntity branch = resolveBranch(branchId, person, familyTree);
 
         MediaAlbumEntity entity = new MediaAlbumEntity();
-        entity.setName(name.trim());
-        entity.setDescription(StringUtils.defaultString(description, "").trim());
+        entity.setName(InputSanitizationUtils.requirePlainText(name, 150, "Ten album khong duoc de trong"));
+        entity.setDescription(InputSanitizationUtils.normalizeMultilineText(description, 1000));
         entity.setCoverUrl(null);
         entity.setFamilyTree(familyTree);
         entity.setPerson(person);
@@ -449,6 +454,7 @@ public class MediaService implements IMediaService {
                                         PersonEntity person,
                                         BranchEntity branch,
                                         MediaAlbumEntity album) {
+        validateUploadFile(file);
         String originalName = file.getOriginalFilename();
         String extension = "";
         if (StringUtils.isNotBlank(originalName) && originalName.lastIndexOf('.') >= 0) {
@@ -582,10 +588,38 @@ public class MediaService implements IMediaService {
         if (StringUtils.isBlank(input)) {
             return "";
         }
-        String sanitized = input.trim().replaceAll("[\\\\/:*?\"<>|]", "_");
+        String sanitized = InputSanitizationUtils.normalizePlainText(input, 120).replaceAll("[\\\\/:*?\"<>|]", "_");
         sanitized = sanitized.replaceAll("\\s+", "_");
         sanitized = sanitized.replaceAll("_+", "_");
         return sanitized;
+    }
+
+    private void validateUploadFile(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("Danh sach file upload dang rong");
+        }
+        if (file.getSize() <= 0 || file.getSize() > MAX_UPLOAD_SIZE_BYTES) {
+            throw new IllegalArgumentException("Kich thuoc file khong hop le");
+        }
+        String extension = "";
+        String originalName = StringUtils.defaultString(file.getOriginalFilename());
+        if (originalName.lastIndexOf('.') >= 0) {
+            extension = originalName.substring(originalName.lastIndexOf('.')).toLowerCase(Locale.ROOT);
+        }
+        if (!IMAGE_EXTENSIONS.contains(extension) && !VIDEO_EXTENSIONS.contains(extension) && !AUDIO_EXTENSIONS.contains(extension)) {
+            throw new IllegalArgumentException("Dinh dang file khong duoc ho tro");
+        }
+        String contentType = StringUtils.defaultString(file.getContentType()).toLowerCase(Locale.ROOT);
+        boolean hasSpecificContentType = StringUtils.isNotBlank(contentType) && !"application/octet-stream".equals(contentType);
+        if (IMAGE_EXTENSIONS.contains(extension) && hasSpecificContentType && !contentType.startsWith("image/")) {
+            throw new IllegalArgumentException("Noi dung file khong hop le");
+        }
+        if (VIDEO_EXTENSIONS.contains(extension) && hasSpecificContentType && !contentType.startsWith("video/")) {
+            throw new IllegalArgumentException("Noi dung file khong hop le");
+        }
+        if (AUDIO_EXTENSIONS.contains(extension) && hasSpecificContentType && !contentType.startsWith("audio/")) {
+            throw new IllegalArgumentException("Noi dung file khong hop le");
+        }
     }
 
     private String extractStoredFileName(String fileUrl) {

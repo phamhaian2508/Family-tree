@@ -40,8 +40,17 @@ public class MessageUtils {
 		} else if (message.equals("register_username_existed")) {
 			responseText = "Ten dang nhap da ton tai.";
 			alertType = "danger";
+		} else if (message.equals("username_invalid")) {
+			responseText = "Ten dang nhap khong hop le.";
+			alertType = "danger";
 		} else if (message.equals("register_email_existed")) {
 			responseText = "Email da duoc su dung.";
+			alertType = "danger";
+		} else if (message.equals("email_invalid")) {
+			responseText = "Email khong hop le.";
+			alertType = "danger";
+		} else if (message.equals("phone_invalid")) {
+			responseText = "So dien thoai khong hop le.";
 			alertType = "danger";
 		} else if (message.equals("register_gender_invalid")) {
 			responseText = "Gioi tinh khong hop le.";

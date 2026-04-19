@@ -16,6 +16,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
 @Configuration
 @EnableWebSecurity
@@ -54,6 +56,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 http
                         .csrf()
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .and()
+                        .headers()
+                        .contentTypeOptions()
+                        .and()
+                        .frameOptions().sameOrigin()
+                        .addHeaderWriter(new ReferrerPolicyHeaderWriter(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+                        .addHeaderWriter(new StaticHeadersWriter("Content-Security-Policy",
+                                "default-src 'self'; "
+                                        + "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://ajax.googleapis.com https://code.jquery.com https://cdnjs.cloudflare.com; "
+                                        + "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://ajax.googleapis.com https://code.jquery.com https://cdnjs.cloudflare.com; "
+                                        + "img-src 'self' data: blob: https:; "
+                                        + "media-src 'self' blob: https:; "
+                                        + "font-src 'self' data: https://cdnjs.cloudflare.com; "
+                                        + "connect-src 'self' ws: wss:; "
+                                        + "frame-ancestors 'self'; object-src 'none'; base-uri 'self';"))
                         .and()
                         .authorizeRequests()
 

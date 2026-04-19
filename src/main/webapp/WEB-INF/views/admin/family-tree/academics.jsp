@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="/common/taglib.jsp"%>
-<title>H&#7885;c h&#224;m h&#7885;c v&#7883;</title>
+<title>Học hàm học vị</title>
 <jsp:include page="/WEB-INF/views/admin/family-tree/partials/record-page.jsp">
-    <jsp:param name="pageTitle" value="H&#7885;c h&#224;m h&#7885;c v&#7883;"/>
-    <jsp:param name="pageSubtitle" value="L&#432;u tr&#7919; h&#7891; s&#417; h&#7885;c h&#224;m, h&#7885;c v&#7883;, chuy&#234;n m&#244;n v&#224; th&#224;nh t&#237;ch n&#7893;i b&#7853;t c&#7911;a c&#225;c th&#224;nh vi&#234;n trong c&#226;y gia ph&#7843; hi&#7879;n t&#7841;i."/>
+    <jsp:param name="pageTitle" value="Học hàm học vị"/>
+    <jsp:param name="pageSubtitle" value="Lưu trữ hồ sơ học hàm, học vị, chuyên môn và thành tích nổi bật của các thành viên trong cây gia phả hiện tại."/>
 </jsp:include>
 <script>
     window.familyContentPageConfig = {

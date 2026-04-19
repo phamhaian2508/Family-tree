@@ -4,6 +4,7 @@ import com.javaweb.model.dto.MediaDTO;
 import com.javaweb.model.dto.MediaAlbumDTO;
 import com.javaweb.service.IMediaService;
 import com.javaweb.service.impl.FamilyTreeContextService;
+import com.javaweb.utils.InputSanitizationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -142,9 +143,12 @@ public class MediaAPI {
             if (contentType == null) {
                 contentType = resolveContentTypeByExtension(storedFileName);
             }
-            String downloadName = StringUtils.isNotBlank(media.getFileName()) ? media.getFileName() : storedFileName;
+            String downloadName = InputSanitizationUtils.sanitizeContentDispositionFilename(
+                    StringUtils.isNotBlank(media.getFileName()) ? media.getFileName() : storedFileName,
+                    storedFileName);
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(contentType))
+                    .header("X-Content-Type-Options", "nosniff")
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + downloadName + "\"")
                     .body(resource);
         } catch (IOException ex) {
@@ -185,8 +189,9 @@ public class MediaAPI {
             }
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(contentType))
+                    .header("X-Content-Type-Options", "nosniff")
                     .header(HttpHeaders.CACHE_CONTROL, "public, max-age=604800")
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileName + "\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + InputSanitizationUtils.sanitizeContentDispositionFilename(fileName, fileName) + "\"")
                     .body(resource);
         } catch (IOException ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

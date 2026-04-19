@@ -65,8 +65,9 @@
                                         <label for="roleFilter">Vai trò</label>
                                         <select class="form-control" name="roleFilter" id="roleFilter">
                                             <option value="">Tất cả vai trò</option>
-                                            <option value="MANAGER">Admin</option>
-                                            <option value="STAFF">Thành viên</option>
+                                            <option value="MANAGER">Trưởng quản phả</option>
+                                            <option value="EDITOR">Biên tập phả</option>
+                                            <option value="STAFF">Thành viên họ tộc</option>
                                         </select>
                                     </div>
                                     <div class="user-filter-field">
@@ -94,7 +95,7 @@
                                     <button type="button" class="close" data-dismiss="alert">
                                         <i class="ace-icon fa fa-times"></i>
                                     </button>
-                                        ${messageResponse}
+                                        <c:out value="${messageResponse}"/>
                                 </div>
                             </c:if>
 
@@ -141,8 +142,21 @@
                                                                id="checkbox_${tableList.id}" class="check-box-element"/>
                                                     </fieldset>
                                                 </display:column>
-                                                <display:column headerClass="text-left" property="userName" title="Tên đăng nhập"/>
                                                 <display:column headerClass="text-left" property="fullName" title="Họ và tên"/>
+                                                <display:column headerClass="text-left" property="userName" title="Tài khoản"/>
+                                                <display:column headerClass="text-left user-role-col" title="Vai trò">
+                                                    <c:choose>
+                                                        <c:when test="${tableList.roleCode == 'MANAGER'}">
+                                                            <span class="user-role-badge is-manager">Trưởng quản phả</span>
+                                                        </c:when>
+                                                        <c:when test="${tableList.roleCode == 'EDITOR'}">
+                                                            <span class="user-role-badge is-editor">Biên tập phả</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="user-role-badge is-member">Thành viên họ tộc</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </display:column>
                                                 <display:column headerClass="col-actions" title="Thao tác">
                                                     <c:if test="${tableList.roleCode != 'MANAGER'}">
                                                         <a class="btn btn-sm btn-primary btn-edit" data-toggle="tooltip"

@@ -254,9 +254,9 @@
                 <c:forEach var="item" items="${familyTreeList}">
                     <div class="family-tree-seed"
                          data-id="${item.id}"
-                         data-name="${item.name}"
-                         data-description="${item.description}"
-                         data-cover="${item.coverImage}"
+                         data-name="<c:out value='${item.name}'/>"
+                         data-description="<c:out value='${item.description}'/>"
+                         data-cover="<c:out value='${item.coverImage}'/>"
                          data-branches="${item.totalBranches}"
                          data-members="${item.totalMembers}"
                          data-albums="${item.totalAlbums}"></div>

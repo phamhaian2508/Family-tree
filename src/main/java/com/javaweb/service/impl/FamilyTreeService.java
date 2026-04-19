@@ -14,6 +14,7 @@ import com.javaweb.repository.SpouseRelationRepository;
 import com.javaweb.repository.UserRepository;
 import com.javaweb.security.utils.SecurityUtils;
 import com.javaweb.service.IFamilyTreeService;
+import com.javaweb.utils.InputSanitizationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -144,18 +145,18 @@ public class FamilyTreeService implements IFamilyTreeService {
     }
 
     private void apply(FamilyTreeEntity entity, FamilyTreeDTO dto) {
-        entity.setName(dto.getName().trim());
-        entity.setDescription(dto.getDescription() == null ? "" : dto.getDescription().trim());
-        entity.setCoverImage(dto.getCoverImage() == null ? "" : dto.getCoverImage().trim());
+        entity.setName(InputSanitizationUtils.requirePlainText(dto.getName(), 150, "Ten gia pha khong duoc de trong"));
+        entity.setDescription(InputSanitizationUtils.normalizeMultilineText(dto.getDescription(), 1000));
+        entity.setCoverImage(InputSanitizationUtils.normalizeUrl(dto.getCoverImage(), 1000));
     }
 
     private void validate(FamilyTreeDTO dto) {
         if (dto == null) {
             throw new IllegalArgumentException("Du lieu cay gia pha khong hop le");
         }
-        if (StringUtils.isBlank(dto.getName())) {
-            throw new IllegalArgumentException("Ten gia pha khong duoc de trong");
-        }
+        InputSanitizationUtils.requirePlainText(dto.getName(), 150, "Ten gia pha khong duoc de trong");
+        InputSanitizationUtils.normalizeMultilineText(dto.getDescription(), 1000);
+        InputSanitizationUtils.normalizeUrl(dto.getCoverImage(), 1000);
     }
 
     private UserEntity resolveCurrentUser() {

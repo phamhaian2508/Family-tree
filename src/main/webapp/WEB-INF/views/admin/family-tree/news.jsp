@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="/common/taglib.jsp"%>
-<title>Tin t&#7913;c</title>
+<title>Tin tức</title>
 <jsp:include page="/WEB-INF/views/admin/family-tree/partials/record-page.jsp">
-    <jsp:param name="pageTitle" value="Tin t&#7913;c"/>
-    <jsp:param name="pageSubtitle" value="Qu&#7843;n l&#253; tin t&#7913;c, th&#244;ng b&#225;o v&#224; c&#225;c ho&#7841;t &#273;&#7897;ng n&#7893;i b&#7853;t c&#7911;a d&#242;ng h&#7885; theo c&#226;y gia ph&#7843; hi&#7879;n t&#7841;i."/>
+    <jsp:param name="pageTitle" value="Tin tức"/>
+    <jsp:param name="pageSubtitle" value="Quản lý tin tức, thông báo và các hoạt động nổi bật của dòng họ theo cây gia phả hiện tại."/>
 </jsp:include>
 <script>
     window.familyContentPageConfig = {

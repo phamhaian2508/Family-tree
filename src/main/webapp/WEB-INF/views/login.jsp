@@ -62,7 +62,7 @@
                     </c:if>
                     <c:if test="${not empty registerSuccessMessage}">
                         <div class="gpo-alert gpo-alert-success">
-                            ${registerSuccessMessage}
+                            <c:out value="${registerSuccessMessage}"/>
                         </div>
                     </c:if>
 
