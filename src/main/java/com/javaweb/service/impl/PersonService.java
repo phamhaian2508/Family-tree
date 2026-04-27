@@ -2,20 +2,30 @@ package com.javaweb.service.impl;
 
 import com.javaweb.entity.BranchEntity;
 import com.javaweb.entity.FamilyTreeEntity;
+import com.javaweb.entity.AcademicProfileEntity;
+import com.javaweb.entity.AwardRecordEntity;
 import com.javaweb.entity.PersonEntity;
+import com.javaweb.entity.UserEntity;
 import com.javaweb.familytree.service.FamilyTreeReadService;
+import com.javaweb.model.dto.FamilyTreeMemberListItemDTO;
 import com.javaweb.model.dto.PersonDTO;
+import com.javaweb.repository.AcademicProfileRepository;
+import com.javaweb.repository.AwardRecordRepository;
 import com.javaweb.repository.BranchRepository;
 import com.javaweb.repository.FamilyTreeRepository;
 import com.javaweb.repository.PersonRepository;
+import com.javaweb.repository.UserRepository;
 import com.javaweb.service.IPersonService;
 import com.javaweb.utils.FamilyTreeBranchUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.Normalizer;
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.MonthDay;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -38,6 +48,9 @@ public class PersonService implements IPersonService {
     private static final int MAX_GENERATION = 50;
     private static final int MAX_SHORT_TEXT_LENGTH = 255;
     private static final int MAX_NOTE_LENGTH = 5000;
+    private static final DateTimeFormatter DIRECTORY_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final Pattern DOD_DISPLAY_MARKER = Pattern.compile("\\[\\[DOD_DISPLAY=([^\\]]*)\\]\\]");
+    private static final Pattern PARTIAL_DOD_DISPLAY_PATTERN = Pattern.compile("^(\\d{2}/\\d{2}|\\d{4})$");
     private static final Set<String> ALLOWED_GENDERS =
             Collections.unmodifiableSet(new HashSet<>(Arrays.asList("male", "female", "other")));
 
@@ -46,17 +59,26 @@ public class PersonService implements IPersonService {
     private final FamilyTreeRepository familyTreeRepository;
     private final FamilyTreeReadService familyTreeReadService;
     private final FamilyTreeContextService familyTreeContextService;
+    private final AcademicProfileRepository academicProfileRepository;
+    private final AwardRecordRepository awardRecordRepository;
+    private final UserRepository userRepository;
 
     public PersonService(PersonRepository personRepository,
                          BranchRepository branchRepository,
                          FamilyTreeRepository familyTreeRepository,
                          FamilyTreeReadService familyTreeReadService,
-                         FamilyTreeContextService familyTreeContextService) {
+                         FamilyTreeContextService familyTreeContextService,
+                         AcademicProfileRepository academicProfileRepository,
+                         AwardRecordRepository awardRecordRepository,
+                         UserRepository userRepository) {
         this.personRepository = personRepository;
         this.branchRepository = branchRepository;
         this.familyTreeRepository = familyTreeRepository;
         this.familyTreeReadService = familyTreeReadService;
         this.familyTreeContextService = familyTreeContextService;
+        this.academicProfileRepository = academicProfileRepository;
+        this.awardRecordRepository = awardRecordRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -434,6 +456,39 @@ public class PersonService implements IPersonService {
         );
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<FamilyTreeMemberListItemDTO> findMemberDirectory(Long familyTreeId) {
+        if (familyTreeId == null || familyTreeId <= 0) {
+            return new ArrayList<>();
+        }
+
+        List<PersonEntity> persons = personRepository.findAllByFamilyTreeIdWithRelations(familyTreeId);
+        if (persons.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<Long> userIds = persons.stream()
+                .map(PersonEntity::getUserId)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+        Map<Long, UserEntity> usersById = userIds.isEmpty()
+                ? new LinkedHashMap<Long, UserEntity>()
+                : userRepository.findByIdIn(userIds).stream()
+                .collect(Collectors.toMap(UserEntity::getId, user -> user, (left, right) -> left, LinkedHashMap::new));
+
+        Map<String, String> educationByExactKey = buildEducationByExactKey(familyTreeId);
+        Map<String, String> educationByUniqueName = buildEducationByUniqueName(familyTreeId, persons);
+
+        return persons.stream()
+                .sorted(Comparator
+                        .comparing((PersonEntity person) -> person.getGeneration() == null ? Integer.MAX_VALUE : person.getGeneration())
+                        .thenComparing(PersonEntity::getId, Comparator.nullsLast(Long::compareTo)))
+                .map(person -> toDirectoryItem(person, usersById, educationByExactKey, educationByUniqueName))
+                .collect(Collectors.toList());
+    }
+
     private List<PersonDTO> buildTreeRoots(Long branchId, boolean strictMainScope) {
         TreeGraph graph = buildTreeGraph(branchId, strictMainScope);
         if (graph.membersById.isEmpty()) {
@@ -499,7 +554,7 @@ public class PersonService implements IPersonService {
             }
         }
         for (List<PersonEntity> children : childrenByParentId.values()) {
-            children.sort(personTreeComparator());
+            children.sort(childCreationComparator());
         }
 
         List<PersonEntity> candidates = membersById.values().stream()
@@ -531,7 +586,7 @@ public class PersonService implements IPersonService {
                     List<PersonEntity> filtered = entry.getValue().stream()
                             .filter(Objects::nonNull)
                             .filter(child -> child.getId() != null && allowedIds.contains(child.getId()))
-                            .sorted(personTreeComparator())
+                            .sorted(childCreationComparator())
                             .collect(Collectors.toList());
                     if (!filtered.isEmpty()) {
                         strictChildrenByParentId.put(parentId, filtered);
@@ -688,6 +743,10 @@ public class PersonService implements IPersonService {
             long idB = b.getId() == null ? Long.MAX_VALUE : b.getId();
             return Long.compare(idA, idB);
         };
+    }
+
+    private Comparator<PersonEntity> childCreationComparator() {
+        return Comparator.comparing(person -> person.getId() == null ? Long.MAX_VALUE : person.getId());
     }
 
     private PersonDTO toPersonDTO(PersonEntity entity) {
@@ -1058,6 +1117,159 @@ public class PersonService implements IPersonService {
         }
     }
 
+    private FamilyTreeMemberListItemDTO toDirectoryItem(PersonEntity person,
+                                                        Map<Long, UserEntity> usersById,
+                                                        Map<String, String> educationByExactKey,
+                                                        Map<String, String> educationByUniqueName) {
+        FamilyTreeMemberListItemDTO item = new FamilyTreeMemberListItemDTO();
+        item.setId(person.getId());
+        item.setFullName(trimToEmpty(person.getFullName()));
+        item.setGeneration(person.getGeneration());
+        item.setGender(toVietnameseGender(person.getGender()));
+        item.setDateOfBirth(formatDirectoryDate(toLocalDate(person.getDob())));
+        item.setDateOfDeath(resolveDodDisplay(toLocalDate(person.getDod()), person.getOtherNote()));
+        item.setFatherFullName(person.getFather() != null ? trimToEmpty(person.getFather().getFullName()) : "");
+        item.setMotherFullName(person.getMother() != null ? trimToEmpty(person.getMother().getFullName()) : "");
+        item.setSpouseFullName(person.getSpouse() != null ? trimToEmpty(person.getSpouse().getFullName()) : "");
+        item.setMaritalStatus(person.getSpouse() != null ? "\u0110\u00e3 k\u1ebft h\u00f4n" : "");
+        item.setEducation(resolveEducation(person, educationByExactKey, educationByUniqueName));
+        item.setBloodType("");
+        item.setPhoneNumber(resolvePhoneNumber(person, usersById));
+        item.setAddress(resolveAddress(person));
+        return item;
+    }
+
+    private String resolveEducation(PersonEntity person,
+                                    Map<String, String> educationByExactKey,
+                                    Map<String, String> educationByUniqueName) {
+        String exactKey = buildPersonEducationKey(person);
+        String exactValue = exactKey == null ? "" : trimToEmpty(educationByExactKey.get(exactKey));
+        if (!exactValue.isEmpty()) {
+            return exactValue;
+        }
+        return trimToEmpty(educationByUniqueName.get(normalizeTextFilter(person.getFullName())));
+    }
+
+    private Map<String, String> buildEducationByExactKey(Long familyTreeId) {
+        Map<String, LinkedHashSet<String>> valuesByKey = new LinkedHashMap<>();
+        for (AcademicProfileEntity profile : academicProfileRepository.findAllByFamilyTreeIdOrderByDegreeNameAscBirthYearAsc(familyTreeId)) {
+            String key = buildEducationKey(profile.getFullName(), profile.getBirthYear());
+            if (key == null) {
+                continue;
+            }
+            appendEducation(valuesByKey, key, profile.getDegreeName(), profile.getAcademicRank(), profile.getSpecialty());
+        }
+        return valuesByKey.entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, entry -> String.join("; ", entry.getValue()),
+                        (left, right) -> left, LinkedHashMap::new));
+    }
+
+    private Map<String, String> buildEducationByUniqueName(Long familyTreeId, List<PersonEntity> persons) {
+        Map<String, Integer> nameCounts = new LinkedHashMap<>();
+        for (PersonEntity person : persons) {
+            String normalizedName = normalizeTextFilter(person.getFullName());
+            if (normalizedName == null) {
+                continue;
+            }
+            nameCounts.put(normalizedName, nameCounts.getOrDefault(normalizedName, 0) + 1);
+        }
+
+        Map<String, LinkedHashSet<String>> valuesByName = new LinkedHashMap<>();
+        for (AcademicProfileEntity profile : academicProfileRepository.findAllByFamilyTreeIdOrderByDegreeNameAscBirthYearAsc(familyTreeId)) {
+            String normalizedName = normalizeTextFilter(profile.getFullName());
+            if (normalizedName == null || nameCounts.getOrDefault(normalizedName, 0) != 1) {
+                continue;
+            }
+            appendEducation(valuesByName, normalizedName, profile.getDegreeName(), profile.getAcademicRank(), profile.getSpecialty());
+        }
+        for (AwardRecordEntity award : awardRecordRepository.findAllByFamilyTreeIdOrderByAwardYearDescIdDesc(familyTreeId)) {
+            String normalizedName = normalizeTextFilter(award.getFullName());
+            if (normalizedName == null || nameCounts.getOrDefault(normalizedName, 0) != 1) {
+                continue;
+            }
+            appendEducation(valuesByName, normalizedName, award.getEducationLevel(), null, award.getSchoolName());
+        }
+        return valuesByName.entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, entry -> String.join("; ", entry.getValue()),
+                        (left, right) -> left, LinkedHashMap::new));
+    }
+
+    private void appendEducation(Map<String, LinkedHashSet<String>> valuesByKey,
+                                 String key,
+                                 String first,
+                                 String second,
+                                 String third) {
+        if (key == null) {
+            return;
+        }
+        LinkedHashSet<String> values = valuesByKey.computeIfAbsent(key, ignored -> new LinkedHashSet<>());
+        appendIfHasText(values, first);
+        appendIfHasText(values, second);
+        appendIfHasText(values, third);
+    }
+
+    private void appendIfHasText(LinkedHashSet<String> values, String value) {
+        String normalized = trimToEmpty(value);
+        if (!normalized.isEmpty()) {
+            values.add(normalized);
+        }
+    }
+
+    private String buildPersonEducationKey(PersonEntity person) {
+        if (person == null) {
+            return null;
+        }
+        LocalDate birthDate = toLocalDate(person.getDob());
+        Integer birthYear = birthDate == null ? null : birthDate.getYear();
+        return buildEducationKey(person.getFullName(), birthYear);
+    }
+
+    private String buildEducationKey(String fullName, Integer birthYear) {
+        String normalizedName = normalizeTextFilter(fullName);
+        if (normalizedName == null || birthYear == null || birthYear <= 0) {
+            return null;
+        }
+        return normalizedName + "|" + birthYear;
+    }
+
+    private String toVietnameseGender(String gender) {
+        String normalized = trimToEmpty(gender).toLowerCase();
+        if ("male".equals(normalized)) {
+            return "Nam";
+        }
+        if ("female".equals(normalized)) {
+            return "N\u1eef";
+        }
+        if ("other".equals(normalized)) {
+            return "Kh\u00e1c";
+        }
+        return "";
+    }
+
+    private String formatDirectoryDate(LocalDate date) {
+        return date == null ? "" : DIRECTORY_DATE_FORMAT.format(date);
+    }
+
+    private String resolvePhoneNumber(PersonEntity person, Map<Long, UserEntity> usersById) {
+        if (person == null || person.getUserId() == null) {
+            return "";
+        }
+        UserEntity user = usersById.get(person.getUserId());
+        return user == null ? "" : trimToEmpty(user.getPhone());
+    }
+
+    private String resolveAddress(PersonEntity person) {
+        String currentResidence = person == null ? "" : trimToEmpty(person.getCurrentResidence());
+        if (!currentResidence.isEmpty()) {
+            return currentResidence;
+        }
+        return person == null ? "" : trimToEmpty(person.getHometown());
+    }
+
+    private String trimToEmpty(String value) {
+        return value == null ? "" : value.trim();
+    }
+
     private void bindSpouseFields(PersonDTO person, PersonDTO spouse) {
         if (person == null || spouse == null || spouse.getId() == null) {
             return;
@@ -1074,6 +1286,7 @@ public class PersonService implements IPersonService {
         person.setSpouseCurrentResidence(spouse.getCurrentResidence());
         person.setSpouseOccupation(spouse.getOccupation());
         person.setSpouseOtherNote(spouse.getOtherNote());
+        person.setSpouseDodDisplay(spouse.getDodDisplay());
     }
 
     private void clearSpouseFields(PersonDTO person) {
@@ -1090,6 +1303,7 @@ public class PersonService implements IPersonService {
         person.setSpouseCurrentResidence(null);
         person.setSpouseOccupation(null);
         person.setSpouseOtherNote(null);
+        person.setSpouseDodDisplay(null);
     }
 
     private PersonDTO buildPersonDtoWithoutChildren(PersonEntity entity, Long branchId) {
@@ -1101,7 +1315,7 @@ public class PersonService implements IPersonService {
         dto.setHometown(entity.getHometown());
         dto.setCurrentResidence(entity.getCurrentResidence());
         dto.setOccupation(entity.getOccupation());
-        dto.setOtherNote(entity.getOtherNote());
+        dto.setOtherNote(stripDodDisplayMarker(entity.getOtherNote()));
         dto.setUserId(entity.getUserId());
         dto.setGeneration(entity.getGeneration());
         if (entity.getFather() != null) {
@@ -1116,6 +1330,7 @@ public class PersonService implements IPersonService {
         }
         dto.setDob(toLocalDate(entity.getDob()));
         dto.setDod(toLocalDate(entity.getDod()));
+        dto.setDodDisplay(resolveDodDisplay(dto.getDod(), entity.getOtherNote()));
         if (entity.getSpouse() != null) {
             dto.setSpouseId(entity.getSpouse().getId());
             dto.setSpouseFullName(entity.getSpouse().getFullName());
@@ -1127,10 +1342,11 @@ public class PersonService implements IPersonService {
             dto.setSpouseAvatar(entity.getSpouse().getAvatar());
             dto.setSpouseDob(toLocalDate(entity.getSpouse().getDob()));
             dto.setSpouseDod(toLocalDate(entity.getSpouse().getDod()));
+            dto.setSpouseDodDisplay(resolveDodDisplay(dto.getSpouseDod(), entity.getSpouse().getOtherNote()));
             dto.setSpouseHometown(entity.getSpouse().getHometown());
             dto.setSpouseCurrentResidence(entity.getSpouse().getCurrentResidence());
             dto.setSpouseOccupation(entity.getSpouse().getOccupation());
-            dto.setSpouseOtherNote(entity.getSpouse().getOtherNote());
+            dto.setSpouseOtherNote(stripDodDisplayMarker(entity.getSpouse().getOtherNote()));
         }
         dto.setChildren(new ArrayList<>());
         return dto;
@@ -1152,6 +1368,7 @@ public class PersonService implements IPersonService {
                     childDto.setGeneration(child.getGeneration());
                     childDto.setDob(toLocalDate(child.getDob()));
                     childDto.setDod(toLocalDate(child.getDod()));
+                    childDto.setDodDisplay(resolveDodDisplay(childDto.getDod(), child.getOtherNote()));
                     return childDto;
                 })
                 .collect(Collectors.toList()));
@@ -1177,7 +1394,9 @@ public class PersonService implements IPersonService {
         String hometown = normalizeOptionalText(dto.getHometown(), MAX_SHORT_TEXT_LENGTH);
         String currentResidence = normalizeOptionalText(dto.getCurrentResidence(), MAX_SHORT_TEXT_LENGTH);
         String occupation = normalizeOptionalText(dto.getOccupation(), MAX_SHORT_TEXT_LENGTH);
-        String otherNote = normalizeOptionalText(dto.getOtherNote(), MAX_NOTE_LENGTH);
+        String otherNote = normalizeOptionalText(stripDodDisplayMarker(dto.getOtherNote()), MAX_NOTE_LENGTH);
+        String dodDisplay = normalizeDodDisplay(dto.getDodDisplay(), dto.getDod());
+        String storedOtherNote = mergeOtherNoteAndDodDisplay(otherNote, dto.getDod() == null ? dodDisplay : null);
         if (overwriteNull || hometown != null) {
             person.setHometown(hometown);
         }
@@ -1187,8 +1406,8 @@ public class PersonService implements IPersonService {
         if (overwriteNull || occupation != null) {
             person.setOccupation(occupation);
         }
-        if (overwriteNull || otherNote != null) {
-            person.setOtherNote(otherNote);
+        if (overwriteNull || storedOtherNote != null) {
+            person.setOtherNote(storedOtherNote);
         }
     }
 
@@ -1201,6 +1420,77 @@ public class PersonService implements IPersonService {
             throw new IllegalArgumentException("Nội dung vượt quá độ dài cho phép");
         }
         return trimmed.isEmpty() ? null : trimmed;
+    }
+
+    private String normalizeDodDisplay(String dodDisplay, LocalDate dod) {
+        if (dod != null) {
+            return null;
+        }
+        String normalized = normalizeOptionalText(dodDisplay, 20);
+        if (normalized == null) {
+            return null;
+        }
+        if (!isValidPartialDodDisplay(normalized)) {
+            throw new IllegalArgumentException("Ngay mat chi nhap theo dang dd/MM hoac yyyy khi chua ro du ngay thang nam");
+        }
+        return normalized;
+    }
+
+    private boolean isValidPartialDodDisplay(String value) {
+        if (!PARTIAL_DOD_DISPLAY_PATTERN.matcher(value).matches()) {
+            return false;
+        }
+        if (value.indexOf('/') < 0) {
+            return true;
+        }
+        String[] parts = value.split("/");
+        try {
+            int day = Integer.parseInt(parts[0]);
+            int month = Integer.parseInt(parts[1]);
+            MonthDay.of(month, day);
+            return true;
+        } catch (DateTimeException | NumberFormatException ex) {
+            return false;
+        }
+    }
+
+    private String mergeOtherNoteAndDodDisplay(String otherNote, String dodDisplay) {
+        String normalizedNote = normalizeOptionalText(stripDodDisplayMarker(otherNote), MAX_NOTE_LENGTH);
+        String normalizedDodDisplay = dodDisplay == null ? null : dodDisplay.trim();
+        if (normalizedDodDisplay == null || normalizedDodDisplay.isEmpty()) {
+            return normalizedNote;
+        }
+        String marker = "[[DOD_DISPLAY=" + normalizedDodDisplay + "]]";
+        return normalizedNote == null ? marker : normalizedNote + "\n" + marker;
+    }
+
+    private String stripDodDisplayMarker(String value) {
+        if (value == null) {
+            return null;
+        }
+        String stripped = DOD_DISPLAY_MARKER.matcher(value).replaceAll("");
+        stripped = stripped.replaceAll("\\n{3,}", "\n\n").trim();
+        return stripped.isEmpty() ? null : stripped;
+    }
+
+    private String extractDodDisplay(String value) {
+        if (value == null) {
+            return null;
+        }
+        Matcher matcher = DOD_DISPLAY_MARKER.matcher(value);
+        if (!matcher.find()) {
+            return null;
+        }
+        String extracted = matcher.group(1);
+        return extracted == null ? null : extracted.trim();
+    }
+
+    private String resolveDodDisplay(LocalDate dod, String otherNote) {
+        if (dod != null) {
+            return DIRECTORY_DATE_FORMAT.format(dod);
+        }
+        String extracted = extractDodDisplay(otherNote);
+        return extracted == null ? "" : extracted;
     }
 
     private String normalizeRequiredFullName(String fullName) {

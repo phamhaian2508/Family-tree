@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,10 +36,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
 public class FamilyTreeReadService {
+    private static final DateTimeFormatter DISPLAY_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final Pattern DOD_DISPLAY_MARKER = Pattern.compile("\\[\\[DOD_DISPLAY=([^\\]]*)\\]\\]");
     private final PersonRepository personRepository;
     private final SpouseRelationRepository spouseRelationRepository;
     private final FamilyTreeContextService familyTreeContextService;
@@ -78,7 +83,7 @@ public class FamilyTreeReadService {
                 .stream()
                 .map(dataset.membersById::get)
                 .filter(Objects::nonNull)
-                .sorted(memberComparator())
+                .sorted(childMemberComparator())
                 .map(this::toBasePersonDto)
                 .collect(Collectors.toList());
         dto.setChildren(children);
@@ -265,7 +270,7 @@ public class FamilyTreeReadService {
         Map<Long, List<Long>> childIdsByParentId = new LinkedHashMap<>();
         for (Map.Entry<Long, LinkedHashSet<Long>> entry : childrenByParentId.entrySet()) {
             List<Long> childIds = new ArrayList<>(entry.getValue());
-            childIds.sort(memberIdComparator(membersById));
+            childIds.sort(childIdComparator());
             childIdsByParentId.put(entry.getKey(), childIds);
         }
 
@@ -642,7 +647,7 @@ public class FamilyTreeReadService {
             List<Long> childAnchorIds = new ArrayList<>(
                     childAnchorIdsByParentAnchorId.getOrDefault(node.getAnchorPersonId(), new LinkedHashSet<Long>())
             );
-            childAnchorIds.sort(anchorComparator(nodesByAnchorId));
+            childAnchorIds.sort(childIdComparator());
             node.setChildAnchorIds(childAnchorIds);
         }
 
@@ -944,11 +949,12 @@ public class FamilyTreeReadService {
         dto.setAvatar(member.getAvatar());
         dto.setDob(member.getDob());
         dto.setDod(member.getDod());
+        dto.setDodDisplay(resolveDodDisplay(member.getDod(), member.getOtherNote()));
         dto.setGeneration(member.getGeneration());
         dto.setHometown(member.getHometown());
         dto.setCurrentResidence(member.getCurrentResidence());
         dto.setOccupation(member.getOccupation());
-        dto.setOtherNote(member.getOtherNote());
+        dto.setOtherNote(stripDodDisplayMarker(member.getOtherNote()));
         dto.setFatherId(member.getFatherId());
         dto.setMotherId(member.getMotherId());
         dto.setBranch(member.getBranchId() == null ? null : String.valueOf(member.getBranchId()));
@@ -958,6 +964,35 @@ public class FamilyTreeReadService {
         dto.setChildrenIds(new ArrayList<Long>());
         dto.setMediaUrls(new ArrayList<String>());
         return dto;
+    }
+
+    private String stripDodDisplayMarker(String value) {
+        if (value == null) {
+            return null;
+        }
+        String stripped = DOD_DISPLAY_MARKER.matcher(value).replaceAll("");
+        stripped = stripped.replaceAll("\\n{3,}", "\n\n").trim();
+        return stripped.isEmpty() ? null : stripped;
+    }
+
+    private String extractDodDisplay(String value) {
+        if (value == null) {
+            return null;
+        }
+        Matcher matcher = DOD_DISPLAY_MARKER.matcher(value);
+        if (!matcher.find()) {
+            return null;
+        }
+        String extracted = matcher.group(1);
+        return extracted == null ? null : extracted.trim();
+    }
+
+    private String resolveDodDisplay(LocalDate dod, String otherNote) {
+        if (dod != null) {
+            return DISPLAY_DATE_FORMAT.format(dod);
+        }
+        String extracted = extractDodDisplay(otherNote);
+        return extracted == null ? "" : extracted;
     }
 
     private void bindParents(PersonDTO dto, Dataset dataset) {
@@ -1034,6 +1069,7 @@ public class FamilyTreeReadService {
         dto.setSpouseAvatar(primarySpouse.getAvatar());
         dto.setSpouseDob(primarySpouse.getDob());
         dto.setSpouseDod(primarySpouse.getDod());
+        dto.setSpouseDodDisplay(primarySpouse.getDodDisplay());
         dto.setSpouseHometown(primarySpouse.getHometown());
         dto.setSpouseCurrentResidence(primarySpouse.getCurrentResidence());
         dto.setSpouseOccupation(primarySpouse.getOccupation());
@@ -1052,6 +1088,7 @@ public class FamilyTreeReadService {
         dto.setSpouseAvatar(null);
         dto.setSpouseDob(null);
         dto.setSpouseDod(null);
+        dto.setSpouseDodDisplay(null);
         dto.setSpouseHometown(null);
         dto.setSpouseCurrentResidence(null);
         dto.setSpouseOccupation(null);
@@ -1072,6 +1109,7 @@ public class FamilyTreeReadService {
             dto.setSpouseAvatar(anchor.getAvatar());
             dto.setSpouseDob(anchor.getDob());
             dto.setSpouseDod(anchor.getDod());
+            dto.setSpouseDodDisplay(anchor.getDodDisplay());
             dto.setSpouseHometown(anchor.getHometown());
             dto.setSpouseCurrentResidence(anchor.getCurrentResidence());
             dto.setSpouseOccupation(anchor.getOccupation());
@@ -1332,6 +1370,14 @@ public class FamilyTreeReadService {
 
     private Comparator<Long> memberIdComparator(Map<Long, FamilyMember> membersById) {
         return Comparator.comparing(membersById::get, Comparator.nullsLast(memberComparator()));
+    }
+
+    private Comparator<FamilyMember> childMemberComparator() {
+        return Comparator.comparing(member -> member.getId() == null ? Long.MAX_VALUE : member.getId());
+    }
+
+    private Comparator<Long> childIdComparator() {
+        return Comparator.nullsLast(Long::compareTo);
     }
 
     private Comparator<FamilyTreeAuditIssue> issueComparator() {

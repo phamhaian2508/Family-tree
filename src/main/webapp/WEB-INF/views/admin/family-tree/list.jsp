@@ -345,6 +345,7 @@
             grid.innerHTML = state.items.map(function (item) {
                 var active = item.id === currentFamilyTreeId ? ' is-active' : '';
                 var openUrl = '/admin/familytree?familyTreeId=' + item.id;
+                var listUrl = '/admin/family-tree-members?familyTreeId=' + item.id;
                 var coverHtml = item.coverImage
                     ? '<a class="family-tree-cover-link" href="' + openUrl + '" aria-label="M\u1edf c\u00e2y gia ph\u1ea3 ' + h(item.name) + '">'
                         + '<img class="family-tree-cover-image" src="' + h(item.coverImage) + '" alt="' + h(item.name) + '" loading="lazy" decoding="async">'
@@ -369,6 +370,7 @@
                     + '      </div>'
                     + '      <div class="family-tree-actions">'
                     + '          <a class="tree-btn tree-btn-primary" href="' + openUrl + '">V\u00e0o xem ngay</a>'
+                    + '          <a class="tree-btn tree-btn-secondary" href="' + listUrl + '">Danh s\u00e1ch</a>'
                     + manageActions
                     + '      </div>'
                     + '  </div>'

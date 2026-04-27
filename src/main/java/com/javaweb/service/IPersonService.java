@@ -1,5 +1,6 @@
 package com.javaweb.service;
 
+import com.javaweb.model.dto.FamilyTreeMemberListItemDTO;
 import com.javaweb.model.dto.PersonDTO;
 
 import java.time.LocalDate;
@@ -23,4 +24,5 @@ public interface IPersonService {
     PersonDTO addChild(Long personId, PersonDTO childDTO);
     PersonDTO updatePerson(Long personId, PersonDTO personDTO);
     void deletePerson(Long personId);
+    List<FamilyTreeMemberListItemDTO> findMemberDirectory(Long familyTreeId);
 }

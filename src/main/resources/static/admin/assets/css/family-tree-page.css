@@ -116,6 +116,10 @@
         content:"";display:inline-block;margin-left:.35rem;vertical-align:middle;
         border-top:.35em solid;border-right:.35em solid transparent;border-left:.35em solid transparent;
     }
+    #ftApp .ft-export-toggle::after{
+        content:none;
+        display:none;
+    }
     #ftApp .filter-chip{
         border-radius: 999px;
         padding: .35rem .6rem;
