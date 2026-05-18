@@ -22,8 +22,8 @@
     }
     #ftApp #treeRoot .li-person {
         z-index: 1;
-        padding-left: 18px !important;
-        padding-right: 18px !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
     }
     #ftApp #treeRoot .box-person {
         z-index: 1;
@@ -91,12 +91,12 @@
     /* Lam o loc ten de thay ro hon */
     #ftApp #advancedFilterBar #ftFilterName {
         width: 100% !important;
-        min-height: 40px;
-        font-size: 14px;
+        min-height: 36px;
+        font-size: 13px;
         font-weight: 600;
         border: 2px solid #94a3b8;
         border-radius: 10px;
-        padding: 8px 12px;
+        padding: 6px 10px;
         background: #ffffff;
     }
     #ftApp #advancedFilterBar #ftFilterName::placeholder {
@@ -112,7 +112,7 @@
         display: grid !important;
         grid-template-columns: minmax(260px, 1.8fr) minmax(160px, 1fr) minmax(190px, 1fr) auto;
         align-items: end;
-        gap: 10px !important;
+        gap: 8px !important;
         min-width: 100%;
     }
     #ftApp #advancedFilterBar .ft-filter-field {
@@ -120,7 +120,7 @@
         display: flex;
         flex-direction: column;
         align-items: stretch;
-        gap: 6px;
+        gap: 4px;
     }
     #ftApp #advancedFilterBar .ft-filter-field-search {
         grid-column: span 1;
@@ -133,7 +133,7 @@
         display: none !important;
     }
     #ftApp #advancedFilterBar .ft-filter-label {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 700;
         color: #475569;
         line-height: 1.2;
@@ -147,11 +147,11 @@
     }
     #ftApp #advancedFilterBar .form-control {
         width: 100% !important;
-        height: 40px;
+        height: 36px;
         border: 2px solid #cbd5e1;
         border-radius: 10px;
-        padding: 8px 12px;
-        font-size: 14px;
+        padding: 6px 10px;
+        font-size: 13px;
         background: #fff;
     }
     #ftApp #advancedFilterBar .form-control:focus {
@@ -159,11 +159,12 @@
         box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
     }
     #ftApp #advancedFilterBar #ftFilterReset {
-        height: 40px;
-        min-width: 92px;
+        height: 36px;
+        min-width: 86px;
         border-radius: 10px;
         border: 1px solid #15803d;
         background: #16a34a;
+        font-size: 13px;
         font-weight: 600;
         color: #ffffff;
     }
@@ -233,13 +234,24 @@
     }
 
     /* ===== Heritage redesign overrides ===== */
+    body.admin-modern .main-content,
+    body.admin-modern .main-content-inner,
+    body.admin-modern .page-content.family-tree-page,
+    body.admin-modern .main-content-inner > #breadcrumbs {
+        background: #f8f0df !important;
+    }
+    body.admin-modern .page-content.family-tree-page {
+        padding: 6px 8px 14px !important;
+    }
     #ftApp {
         position: relative;
-        background: transparent !important;
+        background: #f8f0df !important;
         color: #35241a;
         font-family: "Segoe UI", Tahoma, sans-serif;
     }
     #ftApp .container-fluid {
+        width: 100% !important;
+        max-width: none !important;
         padding-left: 0 !important;
         padding-right: 0 !important;
     }
@@ -361,10 +373,10 @@
         justify-content: flex-end;
     }
     #ftApp .ft-filter-strip {
-        margin-bottom: 12px;
-        padding: 12px 14px;
+        margin-bottom: 8px;
+        padding: 8px 10px;
         border: 1px solid rgba(122, 74, 42, 0.14);
-        border-radius: 8px;
+        border-radius: 10px;
         background:
             linear-gradient(180deg, rgba(255, 250, 238, 0.96), rgba(244, 230, 199, 0.98)),
             url("/web/images/paper-texture.png");
@@ -373,8 +385,8 @@
     }
     #ftApp .ft-filter-grid {
         display: grid !important;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 10px !important;
+        grid-template-columns: minmax(320px, 2.25fr) minmax(180px, 1.2fr) minmax(180px, 1.2fr) auto;
+        gap: 6px !important;
         align-items: end;
         min-width: 100% !important;
     }
@@ -382,41 +394,41 @@
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 4px;
     }
     #ftApp .ft-filter-field.ft-view-mode-field {
         display: none !important;
     }
     #ftApp .ft-filter-field-search {
-        grid-column: span 2;
+        grid-column: auto;
     }
     #ftApp .ft-filter-label {
         margin: 0;
         color: #704f37 !important;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 700;
     }
     #ftApp .ft-filter-dropdown .btn {
         width: 100%;
         justify-content: space-between;
-        min-height: 40px;
+        min-height: 36px;
     }
     #ftApp .ft-filter-grid .form-control,
     #ftApp .ft-filter-grid .form-select,
     #ftApp .ft-filter-grid .btn {
-        min-height: 40px;
+        min-height: 36px;
     }
     #ftApp .ft-filter-grid .form-control,
     #ftApp .ft-filter-grid .form-select {
-        font-size: 14px;
+        font-size: 13px;
     }
     #ftApp .ft-quick-strip {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 10px;
-        margin-top: 10px;
-        padding-top: 10px;
+        gap: 8px;
+        margin-top: 6px;
+        padding-top: 6px;
         border-top: 1px solid rgba(177, 144, 88, 0.22);
     }
     #ftApp .ft-quick-stats,
@@ -424,25 +436,37 @@
         display: flex;
         align-items: center;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 6px;
+    }
+    #ftApp .ft-quick-stats {
+        flex: 0 0 auto;
+    }
+    #ftApp .ft-tree-controls {
+        flex: 1 1 auto;
+        justify-content: flex-end;
     }
     #ftApp .ft-stat-chip,
     #ftApp .ft-meta-chip {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-height: 34px;
-        padding: 6px 12px;
+        min-height: 30px;
+        padding: 4px 10px;
         border-radius: 999px;
         border: 1px solid rgba(167, 119, 49, 0.24);
         background: rgba(247, 238, 214, 0.95);
         color: #6c211e;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 700;
     }
+    #ftApp .ft-tree-controls .btn {
+        min-height: 36px !important;
+        padding: 0.38rem 0.68rem !important;
+        font-size: 13px;
+    }
     #ftApp .ft-canvas-shell {
-        border: 3px solid rgba(140, 36, 31, 0.42);
-        border-radius: 10px;
+        border: 2px solid rgba(140, 36, 31, 0.42);
+        border-radius: 12px;
         overflow: hidden;
         background:
             linear-gradient(180deg, rgba(255, 251, 243, 0.96), rgba(244, 229, 194, 0.98)),
@@ -450,7 +474,7 @@
         background-size: auto, 300px;
         box-shadow:
             inset 0 0 0 1px rgba(247, 224, 214, 0.92),
-            0 10px 22px rgba(73, 37, 18, 0.06);
+            0 14px 30px rgba(73, 37, 18, 0.08);
     }
     #ftApp .ft-canvas-head {
         display: flex;
@@ -483,8 +507,8 @@
         justify-content: flex-end;
     }
     #ftApp .ft-canvas {
-        height: calc(100vh - 218px) !important;
-        min-height: 620px;
+        height: calc(100vh - 168px) !important;
+        min-height: 700px;
         background:
             linear-gradient(180deg, rgba(255, 250, 241, 0.88), rgba(238, 220, 178, 0.74)),
             url("/web/images/hero-paper-bg.png") !important;
@@ -494,7 +518,7 @@
         box-shadow: none !important;
     }
     #ftApp .ft-scroll {
-        padding: 22px 28px 44px !important;
+        padding: 14px 18px 28px !important;
         overflow: hidden !important;
         position: relative;
         user-select: none;
@@ -534,7 +558,7 @@
     #ftApp #treeRoot {
         --connector-color: #8b5a36 !important;
         --connector-width: 4px !important;
-        --connector-height: 72px !important;
+        --connector-height: 64px !important;
     }
     #ftApp #treeRoot .li-person::before,
     #ftApp #treeRoot .li-person::after {
@@ -548,6 +572,15 @@
         border-left-width: 4px !important;
         border-right-color: #8b5a36 !important;
         border-right-width: 4px !important;
+    }
+    #ftApp #treeRoot .li-person.ft-single-child-branch > .ft-branch-subtree > .ul-person {
+        padding-top: var(--connector-height) !important;
+    }
+    #ftApp #treeRoot .li-person.ft-single-child-branch > .ft-branch-subtree > .ul-person::before {
+        height: var(--connector-height) !important;
+    }
+    #ftApp #treeRoot .li-person.ft-single-child-branch > .ft-branch-subtree > .ul-person > .li-person {
+        padding-top: 0 !important;
     }
     #ftApp #treeRoot .box-person {
         --node-width: 206px;
@@ -1235,7 +1268,7 @@
     }
     @media (max-width: 1200px) {
         #ftApp .ft-filter-grid {
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: minmax(260px, 2fr) minmax(160px, 1fr) minmax(160px, 1fr) auto;
         }
     }
     @media (max-width: 991px) {
@@ -1255,8 +1288,8 @@
             grid-column: span 3;
         }
         #ftApp .ft-canvas {
-            height: calc(100vh - 200px) !important;
-            min-height: 560px;
+            height: calc(100vh - 158px) !important;
+            min-height: 600px;
         }
         #ftApp #treeRoot .box-person {
             --node-width: 168px;
@@ -1300,17 +1333,20 @@
             width: 100%;
             gap: 8px;
         }
+        #ftApp .ft-tree-controls {
+            justify-content: flex-start;
+        }
         #ftApp .ft-tree-controls .btn,
         #ftApp .ft-canvas-meta .ft-meta-chip {
             width: calc(50% - 4px);
             justify-content: center;
         }
         #ftApp .ft-canvas {
-            min-height: 360px;
-            height: calc(100vh - 210px) !important;
+            min-height: 420px;
+            height: calc(100vh - 176px) !important;
         }
         #ftApp .ft-scroll {
-            padding: 12px 8px 20px !important;
+            padding: 10px 8px 18px !important;
         }
         #ftApp #treeRoot .box-person {
             --node-width: 138px;
@@ -1348,8 +1384,8 @@
             gap: 4px !important;
         }
         #ftApp #treeRoot .li-person {
-            padding-left: 4px !important;
-            padding-right: 4px !important;
+            padding-left: 8px !important;
+            padding-right: 8px !important;
         }
         #ftApp #treeRoot .ul-person.ft-forest-roots,
         #ftApp #treeRoot .ul-person {
@@ -1423,7 +1459,7 @@
         }
         #ftApp .ft-canvas {
             min-height: 320px;
-            height: calc(100vh - 230px) !important;
+            height: calc(100vh - 218px) !important;
         }
         #ftApp #treeRoot .box-person {
             --node-width: 126px;
@@ -1539,6 +1575,12 @@
     }
     #ftApp .ft-export-host #treeRoot {
         --connector-height: 44px !important;
+    }
+    #ftApp .ft-export-host #treeRoot .li-person.ft-single-child-branch > .ft-branch-subtree > .ul-person {
+        padding-top: var(--connector-height) !important;
+    }
+    #ftApp .ft-export-host #treeRoot .li-person.ft-single-child-branch > .ft-branch-subtree > .ul-person::before {
+        height: var(--connector-height) !important;
     }
     #ftApp .ft-export-host #treeRoot .li-person > .ul-person {
         margin-top: 0 !important;
@@ -1810,16 +1852,6 @@
         </div>
 
         <div class="ft-canvas-shell">
-            <div class="ft-canvas-head">
-                <div>
-                    <div class="ft-canvas-title">Sơ đồ huyết thống</div>
-                    <div class="ft-canvas-note">Thủy tổ ở trên cùng, các đời tiếp nối theo tầng.</div>
-                </div>
-                <div class="ft-canvas-meta">
-                    <span class="ft-meta-chip">Quan hệ vợ chồng nằm ngang</span>
-                    <span class="ft-meta-chip">Cha mẹ - con cái theo trục dọc</span>
-                </div>
-            </div>
 
             <div class="ft-canvas">
                 <div id="treeEmptyState" class="ft-tree-empty-state" aria-live="polite">
@@ -4401,10 +4433,12 @@
                 : '';
             let childrenHtml = '';
             let overflowHtml = '';
+            let visibleChildCount = 0;
             if (children.length > 0) {
                 const allowedChildren = children.filter(function (child) {
                     return shouldRenderChildNode(person, child, depth + 1, maxDepth);
                 });
+                visibleChildCount = allowedChildren.length;
                 if (depth >= maxDepth) {
                     overflowHtml = renderOverflowLane(allowedChildren);
                 } else if (allowedChildren.length > 0) {
@@ -4426,9 +4460,10 @@
             const branchSubtreeHtml = children.length > 0
                 ? ('<div class="ft-branch-subtree' + (isCollapsed ? ' is-collapsed' : '') + '" data-branch-owner-id="' + personId + '"' + (isCollapsed ? ' aria-hidden="true" style="max-height:0px;"' : ' aria-hidden="false"') + '>' + branchContentHtml + '</div>')
                 : '';
+            const singleChildBranchClass = (!overflowHtml && visibleChildCount === 1) ? ' ft-single-child-branch' : '';
 
             return '' +
-                '<li class="li-person' + (overflowHtml ? ' ft-depth-capped' : '') + '" data-tree-node-id="' + personId + '">' +
+                '<li class="li-person' + (overflowHtml ? ' ft-depth-capped' : '') + singleChildBranchClass + '" data-tree-node-id="' + personId + '">' +
                     '<div class="ft-branch-head' + (overflowHtml ? ' ft-depth-cap-row' : '') + '">' +
                         '<div class="box-person ' + (hasAnySpouse(person) ? 'has-spouse' : 'no-spouse') + (options.isRoot ? ' ft-root-box' : '') + '">' +
                             rootOrnamentHtml +
